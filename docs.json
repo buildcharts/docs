@@ -87,8 +87,8 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "GitHub",
+        "href": "https://github.com/eddietisma/buildcharts"
       }
     ],
     "primary": {
