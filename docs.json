@@ -23,10 +23,11 @@
             ]
           },
           {
-            "group": "Quickstart",
+            "group": "Core Features",
             "pages": [
-              "quickstart",
-              "guides/github-actions"
+              "core-features/generate",
+              "core-features/oci-charts",
+              "core-features/plugins"
             ]
           },
           {
@@ -38,11 +39,10 @@
             ]
           },
           {
-            "group": "Core Features",
+            "group": "Quickstart",
             "pages": [
-              "core-features/generate",
-              "core-features/oci-charts",
-              "core-features/plugins"
+              "quickstart",
+              "guides/github-actions"
             ]
           },
           {
