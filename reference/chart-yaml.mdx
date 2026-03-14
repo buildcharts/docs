@@ -105,4 +105,9 @@ The current implementation supports:
 - `auths`
 - `credsStore`
 
-That is usually enough for Docker Hub, private OCI registries, and Azure Container Registry-backed flows.
+So the practical model is:
+- your chart dependency points to a container registry
+- BuildCharts resolves and pulls the chart from that registry
+- if the registry is private, BuildCharts reuses Docker credentials for that registry
+
+That covers standard `docker login`-style auth, external Docker credential helpers, and Azure Container Registry token formats that are stored in Docker config or returned by Docker credential helpers.
