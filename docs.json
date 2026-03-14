@@ -29,6 +29,7 @@
               "core-features/metadata",
               "core-features/generate",
               "core-features/docker-bake",
+              "core-features/summary",
               "charts",
               "core-features/lock-files",
               "core-features/plugins"
