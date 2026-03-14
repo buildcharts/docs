@@ -7,6 +7,8 @@ BuildCharts can pin chart dependencies from `charts/buildcharts/Chart.yaml` in `
 
 The purpose of the lock file is to make chart resolution more repeatable across local runs and CI. Instead of always following the current state of a chart tag in the registry, BuildCharts can pin the exact resolved digest for each dependency. That reduces drift from upstream chart changes and lets teams roll out chart updates intentionally instead of picking them up implicitly.
 
+This is also how you avoid the mutable tag problem when you want immutability. A tag such as `0.0.1` or `latest` can be moved or republished in the registry, but the digest recorded in `Chart.lock` points to one exact artifact. If the tag later points somewhere else, BuildCharts detects the mismatch instead of silently consuming changed chart content.
+
 ## `Chart.lock`
 
 `buildcharts update` resolves the current digest for each dependency and writes `charts/buildcharts/Chart.lock`.
