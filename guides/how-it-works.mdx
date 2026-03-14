@@ -52,16 +52,3 @@ The generated outputs depend on the type:
 - Every other type exports to `.buildcharts/output/<type>`
 
 That export layout is why the samples can read test results from `.buildcharts/output/test` and NuGet packages from `.buildcharts/output/nuget`.
-
-## Type matrices
-
-Use `types.<type>.matrix` when you want to expand every target of a given type across one or more axes.
-
-```yaml
-types:
-  docker:
-    matrix:
-      platform: ["linux/amd64", "linux/arm64"]
-```
-
-Each axis value is exposed to the chart as an uppercase snake case build arg. In this example, the generated Bake plan exposes `PLATFORM`.

@@ -19,14 +19,14 @@
               "index",
               "install",
               "guides/how-it-works",
-              "guides/github-actions",
               "guides/examples"
             ]
           },
           {
             "group": "Quickstart",
             "pages": [
-              "quickstart"
+              "quickstart",
+              "guides/github-actions"
             ]
           },
           {
@@ -47,7 +47,9 @@
           {
             "group": "Plugins",
             "pages": [
-              "reference/plugins"
+              "reference/plugins",
+              "reference/plugin-nuget-authenticate",
+              "reference/plugin-dind"
             ]
           },
           {

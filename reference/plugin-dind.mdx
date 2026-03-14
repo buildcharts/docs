@@ -1,0 +1,32 @@
+---
+title: "DinD"
+description: "Use TestcontainersDinD@v1 to provide an isolated Docker daemon for Testcontainers-based builds."
+---
+
+`TestcontainersDinD@v1` is the built-in plugin for Docker-in-Docker support during generated test builds.
+
+## When to use it
+
+Use this plugin when your test targets need an isolated Docker daemon for Testcontainers.
+
+## Configure it
+
+```yaml
+plugins:
+  - TestcontainersDinD@v1
+```
+
+## What it does
+
+- Starts or reuses a container named `buildcharts-dind`
+- Uses `docker:27-dind` by default
+- Lets you override the image with `BUILDCHARTS_DIND_IMAGE`
+- Runs the container in privileged mode on port `2375` with TLS disabled
+- Writes `.buildcharts/plugins/TestcontainersDinD@v1/container_debuginfo.json`
+- Patches the generated `test` target with `TESTCONTAINERS_HOST_OVERRIDE`
+- Adds `host.docker.internal=host-gateway` to the generated `test` target
+
+## Notes
+
+- If the generated Bake plan has no `test` target, the patch step is skipped.
+- The plugin leaves the `buildcharts-dind` container running for reuse across builds.

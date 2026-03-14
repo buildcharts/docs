@@ -23,26 +23,4 @@ dotnet tool restore
 buildcharts generate
 docker buildx bake --file .buildcharts/docker-bake.hcl --no-cache
 ```
-
-## Example: testcontainers plugin
-
-The testcontainers sample enables the built-in plugin and shares one `with` block across two types:
-
-```yaml
-version: v1beta
-
-plugins:
-  - TestcontainersDinD@v1
-
-variables:
-  - VERSION
-  - COMMIT
-
-targets:
-  src/dotnet-testcontainers.csproj:
-    type: [build, test]
-    with:
-      base: mcr.microsoft.com/dotnet/sdk:10.0
-```
-
 Use the samples as a starting point when you need a known-good layout for a target type or plugin.
