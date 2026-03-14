@@ -1,0 +1,75 @@
+---
+title: "Handle dependencies"
+description: "Manage chart aliases, lock files, OCI pulls, and dependency drift."
+---
+
+BuildCharts resolves stage implementations from `charts/buildcharts/Chart.yaml`.
+
+## Declare stage aliases in `Chart.yaml`
+
+Each dependency maps a stage type in `build.yml` to an OCI-hosted chart:
+
+```yaml
+dependencies:
+  - name: dotnet-build
+    alias: build
+    version: 0.0.1
+    repository: oci://registry-1.docker.io/buildcharts
+
+  - name: dotnet-test
+    alias: test
+    version: 0.0.1
+    repository: oci://registry-1.docker.io/buildcharts
+```
+
+If `build.yml` uses a type that is not declared as an alias here, generation fails.
+
+## Refresh the lock file
+
+Run this when you change chart versions or want to pin current digests:
+
+```bash
+buildcharts update
+```
+
+This resolves each `repository/name:version` reference and writes `charts/buildcharts/Chart.lock`.
+
+## Understand what `generate` validates
+
+When `Chart.lock` exists, `buildcharts generate` checks:
+- Missing lock entries
+- Version mismatches between `Chart.yaml` and `Chart.lock`
+- Orphaned lock entries
+- Registry digest mismatches during pull
+
+If the lock file is out of sync, BuildCharts stops and tells you to run `buildcharts update`.
+
+## Skip lock validation when needed
+
+Use this only when you intentionally want to generate without enforcing the lock file:
+
+```bash
+buildcharts generate --ignore-lock
+```
+
+## Pull a chart directly
+
+Use `buildcharts pull` when you want to inspect a single chart:
+
+```bash
+buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build:0.0.1 --untar
+```
+
+You can also pull by digest:
+
+```bash
+buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:...
+```
+
+## Authenticate to private registries
+
+`pull`, `update`, and `generate` use Docker credentials from:
+- `DOCKER_CONFIG/config.json`
+- `~/.docker/config.json`
+
+If your charts are private, sign in with Docker before running BuildCharts.
