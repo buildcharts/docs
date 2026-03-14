@@ -10,9 +10,11 @@ It sits between handwritten pipeline YAML and raw Dockerfiles. You declare what 
 ## What you define
 
 ```text
-build.yml                     # Targets, variables, plugins, and type matrices
-charts/buildcharts/Chart.yaml # Chart aliases and OCI dependencies
-charts/buildcharts/Chart.lock # Optional digests for reproducible builds
+src/
+├── build.yml            # Build metadata
+├── charts/
+│   └── buildcharts/
+│       └── Chart.yaml   # Chart dependency data
 ```
 
 ## What BuildCharts generates
