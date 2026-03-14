@@ -68,8 +68,6 @@ buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:...
 
 ## Authenticate to private registries
 
-`pull`, `update`, and `generate` use Docker credentials from:
-- `DOCKER_CONFIG/config.json`
-- `~/.docker/config.json`
+If your charts live in a private registry, authenticate to the backing container registry before running BuildCharts.
 
-If your charts are private, sign in with Docker before running BuildCharts.
+See [Charts](/charts#container-registry) for how registry auth works and how BuildCharts reuses Docker credentials.
