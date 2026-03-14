@@ -1,0 +1,42 @@
+---
+title: "Install"
+description: "Install the BuildCharts CLI and verify that your environment is ready."
+---
+
+## Prerequisites
+
+- Docker with `buildx`
+- .NET 10 SDK if you install BuildCharts as a .NET tool
+
+## Install as a global tool
+
+```bash
+dotnet tool install --global dotnet-buildcharts
+```
+
+This makes the `buildcharts` command available in your shell.
+
+## Install in a local tool manifest
+
+Use this when you want the repository to pin the CLI version:
+
+```bash
+dotnet new tool-manifest
+dotnet tool install dotnet-buildcharts
+```
+
+Then restore the tool inside the repo with:
+
+```bash
+dotnet tool restore
+```
+
+## Verify the installation
+
+```bash
+buildcharts version
+```
+
+## Next step
+
+After installation, continue to [Dotnet quickstart](/quickstart).

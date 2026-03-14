@@ -1,9 +1,11 @@
 ---
-title: "BuildCharts"
+title: "Define and generate CI/CD pipelines"
 description: "Generate Docker Buildx Bake plans from declarative build metadata and OCI-hosted charts."
 ---
 
 `buildcharts` is a .NET tool for defining build intent in `build.yml` and turning that metadata into a Docker Buildx Bake plan. You keep build definitions in your repo, pull reusable chart templates from an OCI registry, and run the same generated plan locally or in CI.
+
+It sits between handwritten pipeline YAML and raw Dockerfiles. You declare what should happen, BuildCharts resolves the chart-backed implementation, and Docker Buildx Bake executes the generated plan.
 
 ## What you define
 
@@ -35,7 +37,8 @@ charts/buildcharts/Chart.lock # Optional digests for reproducible builds
 
 ## Start here
 
-- [Quickstart](/quickstart)
+- [Install](/install)
+- [Dotnet quickstart](/quickstart)
 - [How it works](/guides/how-it-works)
 - [GitHub Actions](/guides/github-actions)
 - [CLI reference](/reference/cli)
