@@ -1,0 +1,36 @@
+---
+title: "Plugins"
+description: "Understand how BuildCharts plugins extend generation before and after docker-bake.hcl is created."
+---
+
+Plugins are the main extension point in BuildCharts.
+
+## What plugins do
+
+Plugins run during `buildcharts generate` and can:
+- prepare external state before generation
+- write secret or debug files under `.buildcharts`
+- patch the generated `docker-bake.hcl`
+
+## How to enable them
+
+Declare them in `build.yml`:
+
+```yaml
+plugins:
+  - NuGetAuthenticate@v1
+  - TestcontainersDinD@v1
+```
+
+BuildCharts runs plugins in declaration order and ignores unknown names with a warning.
+
+## Built-in plugins
+
+- [NuGetAuthenticate](/reference/plugin-nuget-authenticate)
+- [DinD](/reference/plugin-dind)
+
+## Related pages
+
+- [Plugins reference](/reference/plugins)
+- [NuGetAuthenticate](/reference/plugin-nuget-authenticate)
+- [DinD](/reference/plugin-dind)

@@ -1,0 +1,49 @@
+---
+title: "OCI Charts"
+description: "Understand how BuildCharts uses OCI-hosted charts to map target aliases to build implementations."
+---
+
+BuildCharts resolves stage implementations from OCI-hosted charts declared in `charts/buildcharts/Chart.yaml`.
+
+## Why OCI charts matter
+
+OCI charts are how BuildCharts separates build intent from build implementation:
+- `build.yml` says what to build
+- OCI charts say how that stage runs
+
+That lets multiple repositories share the same versioned stage implementations.
+
+## Alias mapping
+
+Each dependency declares an alias that you use in `build.yml`:
+
+```yaml
+dependencies:
+  - name: dotnet-docker
+    alias: docker
+    version: 0.0.2
+    repository: oci://registry-1.docker.io/buildcharts
+```
+
+```yaml
+targets:
+  src/App/App.csproj:
+    type: docker
+```
+
+## Lock files
+
+When you run `buildcharts update`, BuildCharts resolves chart digests and writes `charts/buildcharts/Chart.lock`.
+
+That lets `buildcharts generate` detect dependency drift before it renders the Bake plan.
+
+## Authentication
+
+BuildCharts reads registry credentials from Docker config, including:
+- `DOCKER_CONFIG/config.json`
+- `~/.docker/config.json`
+
+## Related pages
+
+- [Chart.yaml and Chart.lock](/reference/chart-yaml)
+- [Handle dependencies](/how-to/handle-dependencies)
