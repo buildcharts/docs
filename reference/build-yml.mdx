@@ -112,7 +112,9 @@ targets:
 
 ### `types`
 
-Optional type-level matrix expansion:
+Optional type-level matrix expansion.
+
+Use `types.<type>.matrix` when you want to expand every target of a given type across one or more axes:
 
 ```yaml
 types:
@@ -121,7 +123,7 @@ types:
       platform: ["linux/amd64", "linux/arm64"]
 ```
 
-Every target of that type is expanded across the matrix axes. Each axis is exposed to the chart as an uppercase snake case build arg such as `PLATFORM`.
+Every target of that type is expanded across the matrix axes. Each axis value is exposed to the chart as an uppercase snake case build arg. In this example, the generated Bake plan exposes `PLATFORM`.
 
 ## `with` keys recognized by the current generator
 

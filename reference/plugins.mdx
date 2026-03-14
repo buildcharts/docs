@@ -19,40 +19,10 @@ BuildCharts loads built-in plugins by name, removes duplicates, and runs them in
 
 ## Built-in plugins
 
-### `NuGetAuthenticate@v1`
+- [NuGetAuthenticate](/reference/plugin-nuget-authenticate)
+- [DinD](/reference/plugin-dind)
 
-Use this plugin when your charts need authenticated access to Azure Artifacts feeds.
-
-What it does:
-- Runs `dotnet nuget list source --format short`
-- Keeps sources whose host ends with `pkgs.dev.azure.com` or `pkgs.visualstudio.com`
-- Prefers existing environment credentials when available
-- Otherwise installs the Microsoft Artifacts Credential Provider under `.buildcharts/plugins/NuGetAuthenticate@v1`
-- Writes `.buildcharts/secrets/ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`
-- Patches the generated `_common` target so BuildKit mounts that secret file
-
-Environment variables it checks first:
-- `ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`
-- `VSS_NUGET_EXTERNAL_FEED_ENDPOINTS`
-- `ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN`
-- `VSS_NUGET_ACCESSTOKEN`
-- `SYSTEM_ACCESSTOKEN`
-- `AZURE_ARTIFACTS_ENV_ACCESS_TOKEN`
-
-### `TestcontainersDinD@v1`
-
-Use this plugin when your test targets need an isolated Docker daemon for Testcontainers.
-
-What it does:
-- Starts or reuses a container named `buildcharts-dind`
-- Uses `docker:27-dind` by default
-- Lets you override the image with `BUILDCHARTS_DIND_IMAGE`
-- Runs the container in privileged mode on port `2375` with TLS disabled
-- Writes `.buildcharts/plugins/TestcontainersDinD@v1/container_debuginfo.json`
-- Patches the generated `test` target with `TESTCONTAINERS_HOST_OVERRIDE`
-- Adds `host.docker.internal=host-gateway` to the generated `test` target
-
-If the generated Bake plan has no `test` target, the patch step is skipped.
+Use the overview page to configure plugins in `build.yml`, then use the plugin pages for behavior and environment details.
 
 ## Example
 

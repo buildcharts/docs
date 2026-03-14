@@ -1,0 +1,40 @@
+---
+title: "NuGetAuthenticate"
+description: "Use NuGetAuthenticate@v1 to inject Azure Artifacts credentials into generated BuildCharts builds."
+---
+
+`NuGetAuthenticate@v1` is the built-in plugin for authenticated NuGet access in generated builds.
+
+## When to use it
+
+Use this plugin when your charts need authenticated access to Azure Artifacts feeds.
+
+## Configure it
+
+```yaml
+plugins:
+  - NuGetAuthenticate@v1
+```
+
+## What it does
+
+- Runs `dotnet nuget list source --format short`
+- Keeps sources whose host ends with `pkgs.dev.azure.com` or `pkgs.visualstudio.com`
+- Prefers existing environment credentials when available
+- Otherwise installs the Microsoft Artifacts Credential Provider under `.buildcharts/plugins/NuGetAuthenticate@v1`
+- Writes `.buildcharts/secrets/ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`
+- Patches the generated `_common` target so BuildKit mounts that secret file
+
+## Environment variables it checks first
+
+- `ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`
+- `VSS_NUGET_EXTERNAL_FEED_ENDPOINTS`
+- `ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN`
+- `VSS_NUGET_ACCESSTOKEN`
+- `SYSTEM_ACCESSTOKEN`
+- `AZURE_ARTIFACTS_ENV_ACCESS_TOKEN`
+
+## Notes
+
+- The plugin only acts on Azure DevOps-hosted NuGet feeds.
+- If no matching NuGet sources are found, the plugin exits without patching the generated HCL.
