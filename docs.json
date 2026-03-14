@@ -30,6 +30,14 @@
             ]
           },
           {
+            "group": "How-to Guides",
+            "pages": [
+              "how-to/define-build-stages",
+              "how-to/using-outputs",
+              "how-to/handle-dependencies"
+            ]
+          },
+          {
             "group": "Configuration",
             "pages": [
               "reference/build-yml",

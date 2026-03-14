@@ -1,0 +1,106 @@
+---
+title: "Define build stages"
+description: "Model build, test, package, and image stages with BuildCharts target definitions."
+---
+
+Use `targets` in `build.yml` to describe the stages BuildCharts should generate.
+
+## Start with one build stage
+
+Every `build.yml` must contain exactly one target with `type: build`.
+
+```yaml
+targets:
+  buildcharts.sln:
+    type: build
+    with:
+      base: mcr.microsoft.com/dotnet/sdk:10.0
+```
+
+BuildCharts validates this rule during `buildcharts generate`.
+
+## Add more stages to a project
+
+A project can declare multiple stages by using a sequence:
+
+```yaml
+targets:
+  src/App/App.csproj:
+    - type: build
+      with:
+        base: mcr.microsoft.com/dotnet/sdk:10.0
+    - type: test
+      with:
+        base: mcr.microsoft.com/dotnet/sdk:10.0
+    - type: docker
+      with:
+        base: mcr.microsoft.com/dotnet/runtime:10.0
+        tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
+```
+
+Each `type` must match an alias in `charts/buildcharts/Chart.yaml`.
+
+## Reuse one `with` block across multiple stages
+
+If stages share the same configuration, use `type: [build, test]`:
+
+```yaml
+targets:
+  src/App/App.csproj:
+    type: [build, test]
+    with:
+      base: mcr.microsoft.com/dotnet/sdk:10.0
+```
+
+BuildCharts expands that into two stage definitions internally.
+
+## Pass stage-specific settings
+
+The current generator recognizes these keys under `with`:
+
+| Key | What it controls |
+| --- | --- |
+| `base` | Named `base` image context |
+| `tags` | Image tags for `docker` stages |
+| `dockerfile` | Override the chart Dockerfile path |
+| `allow` | BuildKit entitlements |
+| `args` | Build args passed into the chart |
+
+Example:
+
+```yaml
+targets:
+  src/Library/Library.csproj:
+    - type: nuget
+      with:
+        args:
+          SOURCELINK_STRICT: 0
+    - type: docker
+      with:
+        base: mcr.microsoft.com/dotnet/runtime:10.0
+        dockerfile: ./Dockerfile
+        allow: ["network.host"]
+        tags: ["docker.io/example/library:${VERSION}-${COMMIT}"]
+```
+
+## Expand a stage with a matrix
+
+Use `types` when every target of the same type should fan out across a matrix:
+
+```yaml
+types:
+  docker:
+    matrix:
+      platform: ["linux/amd64", "linux/arm64"]
+```
+
+That exposes `PLATFORM` as a build arg in the generated Bake target.
+
+## Generate the stages
+
+After updating `build.yml`, regenerate the plan:
+
+```bash
+buildcharts generate
+docker buildx bake --file .buildcharts/docker-bake.hcl
+```
