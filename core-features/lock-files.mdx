@@ -5,6 +5,8 @@ description: "Chart.yaml and Chart.lock for alias resolution and repeatable gene
 
 BuildCharts reads chart dependencies from `charts/buildcharts/Chart.yaml` and can pin them in `charts/buildcharts/Chart.lock`.
 
+The purpose of the lock file is to make chart resolution more repeatable across local runs and CI. Instead of always following the current state of a chart tag in the registry, BuildCharts can pin the exact resolved digest for each dependency. That reduces drift from upstream chart changes and lets teams roll out chart updates intentionally instead of picking them up implicitly.
+
 ## `Chart.yaml`
 
 `buildcharts init` creates a Helm-style chart file with dependency aliases:
@@ -61,6 +63,8 @@ If `docker` is not declared as an alias in `Chart.yaml`, `buildcharts generate` 
 ## `Chart.lock`
 
 `buildcharts update` resolves the current digest for each dependency and writes `charts/buildcharts/Chart.lock`.
+
+This is the repeatability layer for chart dependencies. `Chart.yaml` says which chart version you want, while `Chart.lock` records the exact OCI digest that was resolved at that point in time. In practice, that gives you more reproducible builds, clearer dependency state across repositories, and safer upgrades when platform teams publish new chart versions.
 
 Example:
 
