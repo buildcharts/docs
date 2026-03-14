@@ -5,13 +5,40 @@ description: "Understand how BuildCharts uses OCI-hosted charts to map target al
 
 BuildCharts resolves stage implementations from OCI-hosted charts declared in `charts/buildcharts/Chart.yaml`.
 
-## Why OCI charts matter
+## What charts mean in BuildCharts
 
-OCI charts are how BuildCharts separates build intent from build implementation:
+Charts are how BuildCharts separates build intent from build implementation:
 - `build.yml` says what to build
-- OCI charts say how that stage runs
+- charts say how that stage runs
 
-That lets multiple repositories share the same versioned stage implementations.
+That lets multiple repositories share the same versioned stage implementations without copying pipeline logic into every repository.
+
+## What OCI means here
+
+BuildCharts stores and pulls charts as OCI artifacts from a container registry.
+
+OCI is the Open Container Initiative. OCI defines open specifications around container formats and distribution. The parts that matter most here are:
+- the OCI Image Specification, which defines how manifests, layers, descriptors, and media types are represented
+- the OCI Distribution Specification, which defines how clients push and pull content from registries
+
+In practice, this is why BuildCharts can treat a chart as content stored in the same kind of registry infrastructure that teams already use for container images.
+
+## It is a container registry, not a special BuildCharts server
+
+The `repository` field in `charts/buildcharts/Chart.yaml` points to an OCI-compliant container registry:
+
+```yaml
+repository: oci://registry-1.docker.io/buildcharts
+```
+
+That means authentication is registry authentication.
+
+You do not authenticate to a separate BuildCharts service. You authenticate to the backing container registry, such as:
+- Docker Hub
+- Azure Container Registry
+- another OCI-compatible registry
+
+If the registry is private, `buildcharts pull`, `buildcharts update`, and `buildcharts generate` need valid registry credentials before BuildCharts can resolve chart references.
 
 ## Alias mapping
 
@@ -31,17 +58,49 @@ targets:
     type: docker
 ```
 
+BuildCharts turns that dependency into a chart reference in the form `repository/name:version`.
+
 ## Lock files
 
 When you run `buildcharts update`, BuildCharts resolves chart digests and writes `charts/buildcharts/Chart.lock`.
 
 That lets `buildcharts generate` detect dependency drift before it renders the Bake plan.
 
-## Authentication
+## How authentication works
 
 BuildCharts reads registry credentials from Docker config, including:
 - `DOCKER_CONFIG/config.json`
 - `~/.docker/config.json`
+
+The current implementation supports:
+- `credHelpers`
+- `auths`
+- `credsStore`
+
+So if your charts are stored in a private registry, the practical fix is usually to sign in with Docker first and let BuildCharts reuse those credentials.
+
+## What ORAS is doing here
+
+BuildCharts uses the ORAS client library to talk to the registry and pull chart content.
+
+ORAS is a tool and set of client libraries for working with OCI artifacts in OCI-compliant registries. It treats the stored content as general OCI artifacts, not only as container images.
+
+That matters in BuildCharts because charts are distributed as OCI artifacts:
+- the chart is stored in the registry
+- BuildCharts resolves the manifest and digest
+- BuildCharts pulls the chart blob and unpacks it into `.buildcharts`
+
+You do not need to install the ORAS CLI yourself to use BuildCharts, but the registry interaction model follows the same OCI artifact concepts.
+
+## Why this model is useful
+
+Using OCI-hosted charts gives BuildCharts a few practical benefits:
+
+- Versioned stage implementations that can be shared across many repositories
+- Digest pinning through `Chart.lock`
+- Reuse of existing registry infrastructure, permissions, and auth flows
+- A portable distribution format instead of a custom package server
+- Compatibility with general OCI tooling and OCI-native workflows
 
 ## Related pages
 

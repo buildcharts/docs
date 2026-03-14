@@ -87,7 +87,7 @@ If `Chart.lock` does not exist, `generate` still works. It pulls the current tag
 
 ## Registry authentication
 
-`pull`, `update`, and `generate` read Docker credentials from:
+`pull`, `update`, and `generate` authenticate to the backing container registry and read Docker credentials from:
 - `DOCKER_CONFIG/config.json` when `DOCKER_CONFIG` is set
 - `~/.docker/config.json` otherwise
 
