@@ -76,12 +76,7 @@
   },
   "logo": "/logo/light.svg",
   "navbar": {
-    "links": [
-      {
-        "label": "GitHub",
-        "href": "https://github.com/eddietisma/buildcharts"
-      }
-    ],
+    "links": [],
     "primary": {
       "type": "button",
       "label": "Dashboard",
