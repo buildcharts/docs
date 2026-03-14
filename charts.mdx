@@ -5,6 +5,47 @@ description: "Reusable, versioned pipeline templates distributed as OCI artifact
 
 BuildCharts resolves stage implementations from OCI-hosted charts declared in `charts/buildcharts/Chart.yaml`.
 
+## `Chart.yaml`
+
+`buildcharts init` creates a Helm-style chart file with dependency aliases:
+
+```yaml
+apiVersion: v2
+name: buildcharts
+version: 0.0.1
+description: A meta-chart to define build pipeline targets and templates
+type: application
+
+dependencies:
+  - name: dotnet-build
+    alias: build
+    version: 0.0.1
+    repository: oci://registry-1.docker.io/buildcharts
+
+  - name: dotnet-test
+    alias: test
+    version: 0.0.1
+    repository: oci://registry-1.docker.io/buildcharts
+
+  - name: dotnet-nuget
+    alias: nuget
+    version: 0.0.1
+    repository: oci://registry-1.docker.io/buildcharts
+
+  - name: dotnet-docker
+    alias: docker
+    version: 0.0.2
+    repository: oci://registry-1.docker.io/buildcharts
+```
+
+Each dependency needs:
+- `name`
+- `alias`
+- `version`
+- `repository`
+
+BuildCharts turns that into a chart reference in the form `repository/name:version`.
+
 ## What charts mean in BuildCharts
 
 Charts are how BuildCharts separates build intent from build implementation:
@@ -84,7 +125,7 @@ targets:
     type: docker
 ```
 
-BuildCharts turns that dependency into a chart reference in the form `repository/name:version`.
+If `docker` is not declared as an alias in `Chart.yaml`, `buildcharts generate` fails.
 
 ## Lock files
 
