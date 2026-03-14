@@ -69,18 +69,7 @@
         ]
       }
     ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "GitHub",
-          "href": "https://github.com/eddietisma/buildcharts"
-        },
-        {
-          "anchor": "NuGet",
-          "href": "https://www.nuget.org/packages/dotnet-buildcharts"
-        }
-      ]
-    }
+    "global": {}
   },
   "logo": "/logo/buildcharts.png",
   "navbar": {
