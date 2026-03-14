@@ -1,0 +1,68 @@
+---
+title: "Summary"
+description: "Understand how buildcharts summary turns the latest Buildx history into a readable build summary and portable build record."
+---
+
+`buildcharts summary` turns the latest Docker Buildx history into BuildCharts output files you can read, upload, and inspect later.
+
+## What summary does
+
+After a Bake run, `buildcharts summary`:
+- reads the latest Docker Buildx history
+- reads your `build.yml` and chart config
+- writes `.buildcharts/output/SUMMARY.md`
+- writes `.buildcharts/output/buildcharts.dockerbuild`
+
+This gives you both a human-readable summary and a portable Buildx record you can inspect later.
+
+## Typical flow
+
+```bash
+buildcharts generate
+docker buildx bake --file .buildcharts/docker-bake.hcl
+buildcharts summary
+```
+
+`summary` requires an existing Buildx history entry. If no build has run yet, the command fails and tells you to run a build first.
+
+## Output files
+
+### `SUMMARY.md`
+
+`.buildcharts/output/SUMMARY.md` is the readable summary output.
+
+Use it when you want:
+- a short build summary in CI artifacts
+- a markdown summary you can publish in job output
+- a simpler view than raw Buildx logs
+
+### `buildcharts.dockerbuild`
+
+`.buildcharts/output/buildcharts.dockerbuild` is an exported Buildx history bundle.
+
+Use it when you want:
+- to inspect the build later in Docker Desktop
+- to move a CI build record to another machine
+- to debug a completed build without rerunning it immediately
+
+## CI integration
+
+`buildcharts summary` also integrates with common CI systems:
+
+- on GitHub Actions, it appends the generated markdown to `GITHUB_STEP_SUMMARY`
+- on Azure DevOps, it uploads the summary and `.dockerbuild` bundle as artifacts and publishes the summary to the job output when `TF_BUILD=true`
+
+## Why this is useful
+
+Summary is useful when you want BuildCharts-friendly output after the build has already completed.
+
+It gives you:
+- a stable markdown artifact
+- a portable Buildx build record
+- a cleaner handoff between build execution and troubleshooting
+
+## Related pages
+
+- [Docker Bake](/core-features/docker-bake)
+- [Use buildx history](/troubleshooting/buildx-history)
+- [CLI reference](/reference/cli)
