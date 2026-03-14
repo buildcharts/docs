@@ -109,6 +109,21 @@
     ]
   },
   "footer": {
+    "links": [
+      {
+        "header": "Packages",
+        "items": [
+          {
+            "label": "NuGet",
+            "href": "https://www.nuget.org/packages/dotnet-buildcharts"
+          },
+          {
+            "label": "Docker",
+            "href": "https://hub.docker.com/r/buildcharts/buildcharts"
+          }
+        ]
+      }
+    ],
     "socials": {
       "github": "https://github.com/eddietisma/buildcharts"
     }
