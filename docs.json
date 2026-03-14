@@ -57,7 +57,7 @@
             "pages": [
               "reference/plugins",
               "reference/plugin-nuget-authenticate",
-              "reference/plugin-dind"
+              "reference/plugin-testcontainers-dind"
             ]
           },
           {
@@ -82,7 +82,7 @@
       ]
     }
   },
-  "logo": "/logo/light.svg",
+  "logo": "/logo/buildcharts.png",
   "navbar": {
     "links": [
       {
