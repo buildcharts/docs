@@ -33,7 +33,7 @@ This file is optional. When it exists, `buildcharts generate` validates it again
 
 ## What `buildcharts generate` does
 
-1. Deletes `.buildcharts` from the previous run.
+1. Cleans `.buildcharts` from the previous run.
 2. Reads `build.yml`, `Chart.yaml`, and `Chart.lock` if it exists.
 3. Validates the build target count, target aliases, and lock file state.
 4. Pulls chart artifacts into `.buildcharts`.
