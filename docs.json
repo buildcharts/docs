@@ -17,22 +17,28 @@
             "group": "Getting started",
             "pages": [
               "index",
-              "quickstart",
+              "install",
               "guides/how-it-works",
               "guides/github-actions",
               "guides/examples"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Reference",
-        "groups": [
+          },
+          {
+            "group": "Quickstart",
+            "pages": [
+              "quickstart"
+            ]
+          },
           {
             "group": "Configuration",
             "pages": [
               "reference/build-yml",
-              "reference/chart-yaml",
+              "reference/chart-yaml"
+            ]
+          },
+          {
+            "group": "Plugins",
+            "pages": [
               "reference/plugins"
             ]
           },

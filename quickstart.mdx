@@ -1,28 +1,13 @@
 ---
-title: "Quickstart"
-description: "Install BuildCharts, scaffold metadata, generate a Bake plan, and run it."
+title: "Dotnet"
+description: "Scaffold metadata, generate a Bake plan, and run it."
 ---
 
 ## Prerequisites
 
 - Docker with `buildx`
-- .NET 10 SDK if you install the CLI as a tool
+- BuildCharts installed locally or globally
 - A repository root that contains a `.sln` or `.slnx` file if you want to use `buildcharts init`
-
-## Install the CLI
-
-Global tool:
-
-```bash
-dotnet tool install --global dotnet-buildcharts
-```
-
-Local tool manifest:
-
-```bash
-dotnet new tool-manifest
-dotnet tool install dotnet-buildcharts
-```
 
 ## Scaffold a repository
 
@@ -95,6 +80,7 @@ docker buildx bake --file .buildcharts/docker-bake.hcl
 
 ## Next steps
 
+- [Install BuildCharts](/install)
 - [Learn how the generation flow works](/guides/how-it-works)
 - [Configure GitHub Actions](/guides/github-actions)
 - [Read the `build.yml` reference](/reference/build-yml)
