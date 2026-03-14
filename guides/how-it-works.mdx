@@ -53,6 +53,23 @@ The generated outputs depend on the type:
 
 That export layout is why the samples can read test results from `.buildcharts/output/test` and NuGet packages from `.buildcharts/output/nuget`.
 
+### Why Bake helps
+
+Bake is a strong execution layer for CI/CD and monorepos because it can:
+- parallelize independent targets (for example building multiple services, running tests, and packaging in one run)
+- reduce duplicated context transfers across targets, which matters on remote builders and in CI
+- reuse BuildKit caching and cache exports/imports to reduce build times across repeated runs
+- model complex build graphs declaratively with groups, targets, matrices, and `--set` overrides
+
+This helps teams maintain consistent build execution across dozens or hundreds of services without copy-pasting and drifting CI configuration.
+
+### Read more
+
+- https://docs.docker.com/guides/bake/
+- https://docs.docker.com/build/bake/
+- https://www.docker.com/products/docker-offload/
+- [Docker Bake in BuildCharts](/core-features/docker-bake)
+
 ## Scope
 
 BuildCharts is a build-plan generator. It does not replace your CI/CD platform.
