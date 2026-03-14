@@ -36,15 +36,6 @@ If any of those checks fail, generation stops and tells you to run `buildcharts 
 
 If `Chart.lock` does not exist, `generate` still works. It pulls the current tags from the registry and skips lock validation.
 
-## Trust and integrity
-
-`Chart.lock` improves repeatability by pinning digests, but it is not a full trust mechanism by itself.
-
-If you need stronger supply-chain controls for charts, combine digest pinning with:
-- signed OCI artifacts
-- registry access controls
-- signature verification and trust policy outside BuildCharts
-
 ## Related pages
 
 - [Charts](/charts)
