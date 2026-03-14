@@ -38,6 +38,14 @@
             ]
           },
           {
+            "group": "Core Features",
+            "pages": [
+              "core-features/generate",
+              "core-features/oci-charts",
+              "core-features/plugins"
+            ]
+          },
+          {
             "group": "Configuration",
             "pages": [
               "reference/build-yml",

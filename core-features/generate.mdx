@@ -1,0 +1,48 @@
+---
+title: "Generate"
+description: "Understand what BuildCharts generates and what happens during buildcharts generate."
+---
+
+`buildcharts generate` is the core step that turns repository metadata into an executable Docker Buildx Bake plan.
+
+## What it reads
+
+During generation, BuildCharts reads:
+- `build.yml`
+- `charts/buildcharts/Chart.yaml`
+- `charts/buildcharts/Chart.lock` if it exists
+
+## What it validates
+
+Before writing output, BuildCharts validates:
+- There is exactly one `build` target
+- Every target `type` matches a chart alias from `Chart.yaml`
+- `Chart.lock` is in sync when the file exists and `--ignore-lock` is not set
+
+## What it does
+
+1. Removes the previous `.buildcharts` folder.
+2. Pulls chart artifacts into `.buildcharts`.
+3. Runs configured plugins.
+4. Writes `.buildcharts/docker-bake.hcl`.
+
+## Main output
+
+The generated Bake file lives here:
+
+```text
+.buildcharts/docker-bake.hcl
+```
+
+Run it with:
+
+```bash
+buildcharts generate
+docker buildx bake --file .buildcharts/docker-bake.hcl
+```
+
+## Related pages
+
+- [build.yml reference](/reference/build-yml)
+- [Chart.yaml and Chart.lock](/reference/chart-yaml)
+- [CLI reference](/reference/cli)
