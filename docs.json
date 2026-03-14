@@ -28,7 +28,7 @@
               "core-features/scaffolding",
               "core-features/generate",
               "core-features/docker-bake",
-              "core-features/oci-charts",
+              "charts",
               "core-features/plugins"
             ]
           },
