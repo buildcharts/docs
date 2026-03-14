@@ -25,20 +25,40 @@ In practice, this is why BuildCharts can treat a chart as content stored in the 
 
 ## Container registry
 
-The `repository` field in `charts/buildcharts/Chart.yaml` points to an OCI-compliant container registry:
+Each chart dependency in `charts/buildcharts/Chart.yaml` points to a repository in an OCI-compliant container registry:
 
 ```yaml
 repository: oci://registry-1.docker.io/buildcharts
 ```
 
-That means authentication is registry authentication.
+That registry is the dependency source for the chart. BuildCharts does not call a separate BuildCharts backend or package server. When you run `buildcharts update`, `buildcharts pull`, or `buildcharts generate`, BuildCharts resolves the chart reference against that registry and pulls the chart content from there.
 
-You do not authenticate to a separate BuildCharts service. You authenticate to the backing container registry, such as:
+That also means authentication is registry authentication. You authenticate to the container registry that stores the chart, such as:
 - Docker Hub
 - Azure Container Registry
 - another OCI-compatible registry
 
-If the registry is private, `buildcharts pull`, `buildcharts update`, and `buildcharts generate` need valid registry credentials before BuildCharts can resolve chart references.
+If the registry is public, BuildCharts can pull the chart without credentials. If the registry is private, `buildcharts pull`, `buildcharts update`, and `buildcharts generate` need valid registry credentials before BuildCharts can resolve the manifest or pull the chart blob.
+
+BuildCharts reuses Docker credentials instead of introducing a separate BuildCharts auth model.
+
+It reads Docker config from:
+- `DOCKER_CONFIG/config.json`
+- `~/.docker/config.json`
+
+The current implementation supports:
+- `credHelpers`
+- `auths`
+- `credsStore`
+
+That means the common path is:
+- authenticate to the registry with Docker or the registry's normal Docker-compatible login flow
+- let Docker write credentials or helper configuration
+- run `buildcharts` and let it reuse those credentials
+
+This also covers external Docker credential helpers. If Docker is configured to use a helper, BuildCharts uses the same helper.
+
+Azure Container Registry is also handled explicitly in the current implementation. BuildCharts supports the Azure-style token shapes that appear in Docker config and helper output for `.azurecr.io`, so Azure-backed Docker auth flows continue to work as long as the credentials end up in Docker's config or helper chain.
 
 ## Alias mapping
 
@@ -62,28 +82,17 @@ BuildCharts turns that dependency into a chart reference in the form `repository
 
 ## Lock files
 
-When you run `buildcharts update`, BuildCharts resolves chart digests and writes `charts/buildcharts/Chart.lock`.
+BuildCharts supports an optional `charts/buildcharts/Chart.lock` file for more repeatable builds.
 
-That lets `buildcharts generate` detect dependency drift before it renders the Bake plan.
+When you run `buildcharts update`, BuildCharts resolves chart digests and writes that lock file.
 
-## How authentication works
-
-BuildCharts reads registry credentials from Docker config, including:
-- `DOCKER_CONFIG/config.json`
-- `~/.docker/config.json`
-
-The current implementation supports:
-- `credHelpers`
-- `auths`
-- `credsStore`
-
-So if your charts are stored in a private registry, the practical fix is usually to sign in with Docker first and let BuildCharts reuse those credentials.
+If the lock file exists, `buildcharts generate` uses it to detect dependency drift before it renders the Bake plan. If it does not exist, generation still works, but chart resolution follows the current registry tags instead of pinned digests.
 
 ## What ORAS is doing here
 
 ORAS stands for OCI Registry As Storage.
 
-BuildCharts uses the ORAS C# client library to talk to the registry and pull chart content. In practice, `buildcharts` acts as an embedded ORAS client when it consumes charts:
+BuildCharts uses the [ORAS C# client library](https://github.com/oras-project/oras-dotnet) to talk to the registry and pull chart content. In practice, `buildcharts` acts as an embedded ORAS client when it consumes charts:
 - the chart is stored in the registry as an OCI artifact
 - BuildCharts resolves the manifest and digest
 - BuildCharts fetches the chart blob
