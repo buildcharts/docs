@@ -1,0 +1,48 @@
+---
+title: "Examples"
+description: "Start from the sample repositories that ship with BuildCharts."
+---
+
+The source repository includes small samples that mirror the supported target shapes.
+
+## Sample projects
+
+| Sample | What it shows |
+| --- | --- |
+| [`samples/dotnet-docker`](https://github.com/eddietisma/buildcharts/tree/main/samples/dotnet-docker) | Build a .NET app and export a Docker image |
+| [`samples/dotnet-test`](https://github.com/eddietisma/buildcharts/tree/main/samples/dotnet-test) | Run tests and export TRX output under `.buildcharts/output/test` |
+| [`samples/dotnet-nuget`](https://github.com/eddietisma/buildcharts/tree/main/samples/dotnet-nuget) | Pack a library and export `.nupkg` files under `.buildcharts/output/nuget` |
+| [`samples/dotnet-testcontainers`](https://github.com/eddietisma/buildcharts/tree/main/samples/dotnet-testcontainers) | Use `TestcontainersDinD@v1` for container-based integration tests |
+
+## Common run pattern
+
+Each sample follows the same flow:
+
+```bash
+dotnet tool restore
+buildcharts generate
+docker buildx bake --file .buildcharts/docker-bake.hcl --no-cache
+```
+
+## Example: testcontainers plugin
+
+The testcontainers sample enables the built-in plugin and shares one `with` block across two types:
+
+```yaml
+version: v1beta
+
+plugins:
+  - TestcontainersDinD@v1
+
+variables:
+  - VERSION
+  - COMMIT
+
+targets:
+  src/dotnet-testcontainers.csproj:
+    type: [build, test]
+    with:
+      base: mcr.microsoft.com/dotnet/sdk:10.0
+```
+
+Use the samples as a starting point when you need a known-good layout for a target type or plugin.
