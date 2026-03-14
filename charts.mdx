@@ -194,6 +194,31 @@ If you want signed charts, use OCI-native signing tools outside of BuildCharts, 
 
 These tools let you sign OCI artifacts in the registry and verify them later as part of your supply-chain policy.
 
+### Repository governance
+
+Trust and integrity also depend on how your chart source is managed before publication.
+
+A strong model is to keep BuildCharts OCI templates in a dedicated repository and protect that repository with:
+- branch protection
+- required pull requests
+- mandatory reviews
+- controlled publishing to the target registry
+
+That gives teams one central place to review and approve changes to shared build logic before those changes are published and consumed by many repositories.
+
+### Validation and scanning
+
+It is also useful to enforce automated quality gates before publishing chart artifacts.
+
+Typical checks include:
+- CI validation for chart packaging and publishing rules
+- Dockerfile linting
+- static analysis
+- policy checks
+- central Dockerfile and image scanning
+
+This is one of the main benefits of centralized charts. Instead of relying on every application repository to enforce the same checks, platform teams can validate and scan shared OCI templates once in the chart pipeline and publish only approved versions.
+
 For produced images and build outputs, provenance and SBOM belong in the Docker Buildx execution layer rather than the chart distribution layer. See [Docker Bake](/core-features/docker-bake).
 
 ### Recommended model
