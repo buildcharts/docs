@@ -1,0 +1,124 @@
+---
+title: "Use buildx history"
+description: "Use docker buildx history to inspect BuildCharts runs, replay logs, and debug builds locally."
+---
+
+`docker buildx history` is one of the best ways to troubleshoot a BuildCharts build after `docker buildx bake` has finished.
+
+BuildCharts already leans on this data:
+- `buildcharts summary` reads the latest Buildx history
+- Buildx history records let you inspect completed builds without rerunning them immediately
+
+## When to use it
+
+Use `buildx history` when you need to:
+- see which build record failed
+- inspect build metadata and outputs
+- print full step logs again
+- open a build record in Docker Desktop
+- import a `.dockerbuild` artifact from CI into Docker Desktop
+
+## List recent builds
+
+Start by listing completed build records for the active builder:
+
+```bash
+docker buildx history ls
+```
+
+Useful variants:
+
+```bash
+docker buildx history ls --local
+docker buildx history ls --filter status=error
+docker buildx history ls --no-trunc
+```
+
+This helps you find the build ID you want to inspect.
+
+## Inspect a build record
+
+Once you have a build ID, inspect it:
+
+```bash
+docker buildx history inspect <BUILD_ID>
+```
+
+You can also inspect the most recent build by omitting the ID:
+
+```bash
+docker buildx history inspect
+```
+
+Or use a relative offset such as `^1` for the previous build:
+
+```bash
+docker buildx history inspect ^1
+```
+
+Inspection is useful for checking status, duration, inputs, platforms, outputs, and attached artifacts.
+
+## Replay build logs
+
+To print the logs of a completed build:
+
+```bash
+docker buildx history logs <BUILD_ID>
+```
+
+Examples:
+
+```bash
+docker buildx history logs
+docker buildx history logs ^1
+docker buildx history logs ^1 --progress rawjson
+```
+
+This is the fastest way to revisit step output after a Bake run has already finished.
+
+## Open the build in Docker Desktop
+
+If you use Docker Desktop, open a build record in the Builds UI:
+
+```bash
+docker buildx history open <BUILD_ID>
+```
+
+You can also open the latest build directly:
+
+```bash
+docker buildx history open
+```
+
+This is useful when you want to inspect logs, dependencies, artifacts, and traces visually.
+
+## Import a CI build into Docker Desktop
+
+If your CI system exports a `.dockerbuild` bundle, you can import it locally:
+
+```bash
+docker buildx history import --file ./artifacts/buildcharts.dockerbuild
+```
+
+That gives you local access to the imported record in Docker Desktop for debugging.
+
+This fits well with BuildCharts because `buildcharts summary` exports:
+
+```text
+.buildcharts/output/buildcharts.dockerbuild
+```
+
+## Suggested troubleshooting flow
+
+1. Run `buildcharts generate`.
+2. Run `docker buildx bake --file .buildcharts/docker-bake.hcl`.
+3. Run `docker buildx history ls` to locate the build record.
+4. Run `docker buildx history inspect <BUILD_ID>` for metadata.
+5. Run `docker buildx history logs <BUILD_ID>` for full logs.
+6. If needed, run `buildcharts summary` to export a BuildCharts summary and `.dockerbuild` artifact.
+
+## Related pages
+
+- [Common issues](/troubleshooting/common-issues)
+- [CLI reference](/reference/cli)
+- [Generate](/core-features/generate)

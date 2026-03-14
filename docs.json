@@ -25,7 +25,9 @@
           {
             "group": "Core Features",
             "pages": [
+              "core-features/scaffolding",
               "core-features/generate",
+              "core-features/docker-bake",
               "core-features/oci-charts",
               "core-features/plugins"
             ]
@@ -58,6 +60,13 @@
               "reference/plugins",
               "reference/plugin-nuget-authenticate",
               "reference/plugin-testcontainers-dind"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "troubleshooting/buildx-history",
+              "troubleshooting/common-issues"
             ]
           },
           {

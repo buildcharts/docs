@@ -1,0 +1,55 @@
+---
+title: "Scaffolding"
+description: "Understand how BuildCharts scaffolds repository metadata and starter files with buildcharts init."
+---
+
+`buildcharts init` scaffolds the files that BuildCharts needs to generate a Bake plan.
+
+## What it creates
+
+In a supported .NET repository, `buildcharts init` creates:
+- `build.yml`
+- `charts/buildcharts/Chart.yaml`
+- `.github/workflows/buildcharts.yml` when the repository remote points to GitHub
+
+## What it detects
+
+The current scaffolding flow is .NET-specific.
+
+It detects:
+- a `.sln` or `.slnx` file
+- test projects
+- NuGet package projects
+- projects with a local `Dockerfile`
+- the .NET SDK version from `global.json` or target frameworks
+
+## What the generated metadata looks like
+
+The scaffolded `build.yml` includes:
+- `version: v1beta`
+- `VERSION` and `COMMIT` variables
+- one `build` target for the solution
+- additional `test`, `nuget`, or `docker` targets when matching projects are found
+
+## What the generated chart file looks like
+
+The scaffolded `Chart.yaml` maps default aliases to OCI-hosted charts:
+- `build`
+- `test`
+- `nuget`
+- `docker`
+
+## Typical flow
+
+```bash
+buildcharts init
+buildcharts update
+buildcharts generate
+docker buildx bake --file .buildcharts/docker-bake.hcl
+```
+
+## Related pages
+
+- [Install](/install)
+- [dotnet](/quickstart)
+- [CLI reference](/reference/cli)
