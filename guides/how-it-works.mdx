@@ -52,3 +52,28 @@ The generated outputs depend on the type:
 - Every other type exports to `.buildcharts/output/<type>`
 
 That export layout is why the samples can read test results from `.buildcharts/output/test` and NuGet packages from `.buildcharts/output/nuget`.
+
+## Scope
+
+BuildCharts is a build-plan generator. It does not replace your CI/CD platform.
+
+BuildCharts also does not:
+- manage deployments or runtime configuration
+- host secrets or artifacts for you
+- package or publish charts/templates for you
+- provide a built-in signing or trust system for charts
+
+## When it fits
+
+BuildCharts tends to fit well when you:
+- already use Docker and BuildKit for builds
+- want to centralize build logic across many repositories
+- want the same build plan to run locally and in CI
+- benefit from parallel builds and BuildKit caching
+
+## When it doesn't
+
+BuildCharts tends to be a poor fit when you:
+- cannot run Docker daemons or BuildKit in your environment
+- have highly bespoke build steps that do not map well to Docker-based stages
+- have very constrained runners where Bake parallelism and caching backfires
