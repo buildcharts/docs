@@ -23,7 +23,7 @@ OCI is the Open Container Initiative. OCI defines open specifications around con
 
 In practice, this is why BuildCharts can treat a chart as content stored in the same kind of registry infrastructure that teams already use for container images.
 
-## It is a container registry, not a special BuildCharts server
+## Container registry
 
 The `repository` field in `charts/buildcharts/Chart.yaml` points to an OCI-compliant container registry:
 
@@ -81,16 +81,21 @@ So if your charts are stored in a private registry, the practical fix is usually
 
 ## What ORAS is doing here
 
-BuildCharts uses the ORAS client library to talk to the registry and pull chart content.
+ORAS stands for OCI Registry As Storage.
 
-ORAS is a tool and set of client libraries for working with OCI artifacts in OCI-compliant registries. It treats the stored content as general OCI artifacts, not only as container images.
-
-That matters in BuildCharts because charts are distributed as OCI artifacts:
-- the chart is stored in the registry
+BuildCharts uses the ORAS C# client library to talk to the registry and pull chart content. In practice, `buildcharts` acts as an embedded ORAS client when it consumes charts:
+- the chart is stored in the registry as an OCI artifact
 - BuildCharts resolves the manifest and digest
-- BuildCharts pulls the chart blob and unpacks it into `.buildcharts`
+- BuildCharts fetches the chart blob
+- BuildCharts unpacks it into `.buildcharts`
 
-You do not need to install the ORAS CLI yourself to use BuildCharts, but the registry interaction model follows the same OCI artifact concepts.
+ORAS itself is a CLI and set of client libraries for working with OCI artifacts in OCI-compliant registries. The important part here is that it works with general OCI artifacts, not only with container images.
+
+You do not need to install the ORAS CLI yourself to use BuildCharts. Registry access is already built into the `buildcharts` CLI.
+
+BuildCharts is also not tied to ORAS as the publishing tool. It consumes OCI artifacts by registry, repository, tag, and digest, so teams can publish compatible chart artifacts with ORAS, Helm, or another OCI-capable CLI.
+
+Helm is a common option because `Chart.yaml` uses Helm-style chart metadata and [Helm supports OCI registries](https://helm.sh/docs/topics/registries/). ORAS is a common option when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
 
 ## Why this model is useful
 
@@ -101,6 +106,70 @@ Using OCI-hosted charts gives BuildCharts a few practical benefits:
 - Reuse of existing registry infrastructure, permissions, and auth flows
 - A portable distribution format instead of a custom package server
 - Compatibility with general OCI tooling and OCI-native workflows
+
+## Securing charts
+
+If you want to secure your chart supply chain, treat charts like other OCI artifacts.
+
+The practical baseline is:
+- pin digests with `Chart.lock`
+- store charts in a controlled container registry
+- sign published chart artifacts
+- verify signatures and trust policy in your publishing or promotion flow
+
+### Digest pinning
+
+`Chart.lock` is the first line of defense. It pins the resolved digest for each chart dependency so `buildcharts generate` can detect drift between:
+- `Chart.yaml`
+- `Chart.lock`
+- the current registry manifest digest
+
+That improves reproducibility, but digest pinning alone does not prove who published the artifact.
+
+### Signing
+
+BuildCharts does not implement its own signing or trust system.
+
+If you want signed charts, use OCI-native signing tools outside of BuildCharts, such as:
+- Notation
+- Cosign
+
+These tools let you sign OCI artifacts in the registry and verify them later as part of your supply-chain policy.
+
+### SBOM and provenance
+
+There are two related but separate concerns:
+
+- securing the chart artifact itself
+- securing the images and outputs produced by the generated build
+
+For the chart artifact, signing and policy verification are usually the most important controls.
+
+For built images, use Buildx attestations to attach:
+- provenance
+- SBOM
+
+This fits BuildCharts well because the generated `docker-bake.hcl` is executed by Docker Buildx, which already supports provenance and SBOM attestations in the image build flow.
+
+### Recommended model
+
+A practical model for teams using private or shared charts is:
+
+1. Publish charts to a controlled OCI registry.
+2. Sign the published chart artifacts with Notation or Cosign.
+3. Pin digests in `Chart.lock`.
+4. Verify signatures before promotion or consumption.
+5. Generate provenance and SBOM attestations for produced images in the Buildx layer.
+
+## What BuildCharts does not do
+
+BuildCharts currently does not:
+- sign charts
+- verify signatures
+- manage trust stores or policy
+- generate SBOMs for pulled chart artifacts
+
+Those controls belong in your chart publishing pipeline, registry policy, and image build policy.
 
 ## Related pages
 
