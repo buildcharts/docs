@@ -1,9 +1,9 @@
 ---
-title: "Chart.yaml and Chart.lock"
-description: "Map target aliases to OCI charts and optionally pin digests for reproducible generation."
+title: "Lock files"
+description: "Use Chart.yaml and Chart.lock to resolve chart aliases and pin digests for repeatable generation."
 ---
 
-BuildCharts reads chart dependencies from `charts/buildcharts/Chart.yaml`.
+BuildCharts reads chart dependencies from `charts/buildcharts/Chart.yaml` and can pin them in `charts/buildcharts/Chart.lock`.
 
 ## `Chart.yaml`
 
