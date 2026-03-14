@@ -7,6 +7,23 @@ description: "Generate Docker Buildx Bake plans from declarative build metadata 
 
 It sits between handwritten pipeline YAML and raw Dockerfiles. You declare what should happen, BuildCharts resolves the chart-backed implementation, and Docker Buildx Bake executes the generated plan.
 
+BuildCharts is designed for teams that want to standardize builds across many repositories without locking themselves into one CI provider. The model is simple:
+- intent stays in repository metadata
+- implementation lives in versioned OCI charts
+- execution runs through Docker Buildx Bake
+
+That gives you a portable build layer that can be debugged locally and reused across repositories.
+
+## What problem it solves
+
+BuildCharts exists to reduce common CI/CD problems such as:
+- duplicated or nested pipeline YAML across many repositories
+- platform-specific pipeline logic that is hard to move between providers
+- fragile template rollouts where repositories drift onto different versions
+- poor local debuggability, where troubleshooting requires repeated CI runs
+
+Instead of copying CI steps repo by repo, teams can centralize the build implementation in charts and let repositories consume versioned updates through normal dependency changes.
+
 ## What you define
 
 ```text
@@ -32,6 +49,9 @@ src/
 
 - Keep CI logic in versioned OCI charts instead of copying pipeline YAML across repos.
 - Run the same generated build plan locally and in CI.
+- Keep repository config lightweight by separating intent in `build.yml` from implementation in charts.
+- Stay provider-agnostic by generating Docker-native build plans instead of provider-specific steps.
+- Adopt chart updates gradually with versioned dependencies and optional lock files.
 - Describe intent with aliases such as `build`, `test`, `nuget`, and `docker`.
 - Extend generation with built-in plugins such as `NuGetAuthenticate@v1` and `TestcontainersDinD@v1`.
 
