@@ -26,9 +26,11 @@
             "group": "Core Features",
             "pages": [
               "core-features/scaffolding",
+              "core-features/metadata",
               "core-features/generate",
               "core-features/docker-bake",
               "charts",
+              "core-features/lock-files",
               "core-features/plugins"
             ]
           },
@@ -45,13 +47,6 @@
             "pages": [
               "quickstart",
               "guides/github-actions"
-            ]
-          },
-          {
-            "group": "Configuration",
-            "pages": [
-              "reference/build-yml",
-              "reference/chart-yaml"
             ]
           },
           {
