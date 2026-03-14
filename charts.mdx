@@ -13,6 +13,12 @@ Charts are how BuildCharts separates build intent from build implementation:
 
 That lets multiple repositories share the same versioned stage implementations without copying pipeline logic into every repository.
 
+You can think of charts as OCI-versioned stages in a centrally managed multi-stage build model. Each chart dependency provides the implementation for a stage type such as `build`, `test`, `nuget`, or `docker`, and repositories opt into those stages by alias instead of embedding the stage logic themselves.
+
+That central model matters when you want to manage pipeline behavior across many repositories. You can update the chart once, publish a new version, and let repositories adopt that version through normal dependency updates instead of editing CI definitions repo by repo.
+
+This is similar to Helm charts in one important way: both use versioned chart metadata and both can be distributed through OCI registries. Like Helm charts, BuildCharts charts are versioned packages you can manage centrally and consume from many repositories. The difference is what the chart configures. Helm charts describe how an application is deployed to Kubernetes. BuildCharts charts describe how build stages are generated into a Docker Bake plan for CI and local builds.
+
 ## What OCI means here
 
 BuildCharts stores and pulls charts as OCI artifacts from a container registry.
@@ -86,7 +92,7 @@ BuildCharts supports an optional `charts/buildcharts/Chart.lock` file for more r
 
 When you run `buildcharts update`, BuildCharts resolves chart digests and writes that lock file.
 
-If the lock file exists, `buildcharts generate` uses it to detect dependency drift before it renders the Bake plan. If it does not exist, generation still works, but chart resolution follows the current registry tags instead of pinned digests.
+If the lock file exists, `buildcharts generate` uses it to detect dependency drift before it renders the Bake plan. If the lock file and the resolved chart state do not match, generation stops with a discrepancy warning and tells you to refresh the lock file. If it does not exist, generation still works, but chart resolution follows the current registry tags instead of pinned digests.
 
 ## What ORAS is doing here
 
@@ -145,20 +151,7 @@ If you want signed charts, use OCI-native signing tools outside of BuildCharts, 
 
 These tools let you sign OCI artifacts in the registry and verify them later as part of your supply-chain policy.
 
-### SBOM and provenance
-
-There are two related but separate concerns:
-
-- securing the chart artifact itself
-- securing the images and outputs produced by the generated build
-
-For the chart artifact, signing and policy verification are usually the most important controls.
-
-For built images, use Buildx attestations to attach:
-- provenance
-- SBOM
-
-This fits BuildCharts well because the generated `docker-bake.hcl` is executed by Docker Buildx, which already supports provenance and SBOM attestations in the image build flow.
+For produced images and build outputs, provenance and SBOM belong in the Docker Buildx execution layer rather than the chart distribution layer. See [Docker Bake](/core-features/docker-bake).
 
 ### Recommended model
 

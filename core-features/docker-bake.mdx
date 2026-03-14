@@ -65,6 +65,20 @@ Bake exposes first-class support for features that matter in BuildCharts:
 - provenance and SBOM attestation
 - target overrides with `--set`
 
+## SBOM and provenance
+
+There are two related but separate concerns:
+- securing the chart artifact itself
+- securing the images and outputs produced by the generated build
+
+For the chart artifact, signing and policy verification are usually the most important controls.
+
+For built images, use Buildx attestations to attach:
+- provenance
+- SBOM
+
+This fits BuildCharts well because the generated `docker-bake.hcl` is executed by Docker Buildx, which already supports provenance and SBOM attestations in the image build flow.
+
 ## Typical BuildCharts flow
 
 ```bash
