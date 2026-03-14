@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "Mint Starter Kit",
+  "name": "BuildCharts",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0F766E",
+    "light": "#14B8A6",
+    "dark": "#115E59"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -18,61 +18,75 @@
             "pages": [
               "index",
               "quickstart",
-              "development"
+              "guides/how-it-works",
+              "guides/github-actions",
+              "guides/examples"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "groups": [
+          {
+            "group": "Configuration",
+            "pages": [
+              "reference/build-yml",
+              "reference/chart-yaml",
+              "reference/plugins"
             ]
           },
           {
-            "group": "Customization",
+            "group": "CLI",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "reference/cli"
             ]
           }
         ]
       }
-    ]
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "GitHub",
+          "href": "https://github.com/eddietisma/buildcharts"
+        },
+        {
+          "anchor": "NuGet",
+          "href": "https://www.nuget.org/packages/dotnet-buildcharts"
+        }
+      ]
+    }
   },
   "logo": "/logo/light.svg",
   "navbar": {
-    "links": [],
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/eddietisma/buildcharts"
+      }
+    ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "View package",
+      "href": "https://www.nuget.org/packages/dotnet-buildcharts"
     }
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/mintlify"
+      "github": "https://github.com/eddietisma/buildcharts"
     }
   },
   "appearance": {
