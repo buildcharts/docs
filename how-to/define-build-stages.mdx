@@ -116,4 +116,25 @@ types:
       platform: ["linux/amd64", "linux/arm64"]
 ```
 
-That exposes `PLATFORM` as a build arg in the generated Bake target.
+Each matrix axis is expanded into multiple generated Bake variants for that type, and every axis value is exposed to the chart as an uppercase build arg.
+
+For example, this metadata:
+
+```yaml
+targets:
+  src/dotnet-krp/dotnet-krp.csproj:
+    - type: publish
+
+types:
+  publish:
+    matrix:
+      runtime: ["win-x64", "win-arm64"]
+```
+
+becomes a generated Bake matrix for `publish` where:
+- the same source target is reused
+- the `runtime` axis expands into one variant per value
+- the generated target name includes the matrix value
+- the chart receives `RUNTIME` as a build arg
+
+In practice, that one `type: publish` entry turns into two generated publish variants, one for `win-x64` and one for `win-arm64`.

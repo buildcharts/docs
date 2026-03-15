@@ -124,7 +124,28 @@ types:
       platform: ["linux/amd64", "linux/arm64"]
 ```
 
-Every target of that type is expanded across the matrix axes. Each axis value is exposed to the chart as an uppercase snake case build arg. In this example, the generated Bake plan exposes `PLATFORM`.
+Every target of that type is expanded across the matrix axes. Each axis value is exposed to the chart as an uppercase snake case build arg.
+
+For example, this metadata:
+
+```yaml
+targets:
+  src/dotnet-krp/dotnet-krp.csproj:
+    - type: publish
+
+types:
+  publish:
+    matrix:
+      runtime: ["win-x64", "win-arm64"]
+```
+
+produces one generated Bake target per matrix value. In the generated `docker-bake.hcl`, the `publish` target becomes a Bake matrix with:
+- one `item` entry for the source target
+- one `runtime` axis with both values
+- a target name pattern such as `${item.name}_${runtime}`
+- an injected build arg `RUNTIME="${runtime}"`
+
+That means a single `type: publish` definition expands into two generated publish variants, one for `win-x64` and one for `win-arm64`.
 
 ## `with` keys recognized by the current generator
 
