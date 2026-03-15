@@ -1,0 +1,7 @@
+#sidebar ul.px-4.py-3.w-\[calc\(19rem-1px\)\].left-0.right-0.bottom-0 > li:has(> div.hidden.lg\:flex.items-center.gap-x-2:empty) {
+  display: none !important;
+}
+
+#sidebar ul.px-4.py-3.w-\[calc\(19rem-1px\)\].left-0.right-0.bottom-0:has(> li:only-child > div.hidden.lg\:flex.items-center.gap-x-2:empty) {
+  display: none !important;
+}
