@@ -40,6 +40,27 @@ targets:
 
 Each `type` must match an alias in `charts/buildcharts/Chart.yaml`.
 
+## Use built-in target variables
+
+Every generated target gets a small set of built-in build args automatically.
+
+For example:
+
+```yaml
+targets:
+  src/MyApp/MyApp.csproj:
+    type: build
+```
+
+BuildCharts injects:
+
+| Variable | Meaning |
+| --- | --- |
+| `BUILDCHARTS_SRC` | The target source path, for example `src/MyApp/MyApp.csproj` |
+| `BUILDCHARTS_TYPE` | The generated target type, for example `build` |
+
+Charts can use these variables inside their Dockerfiles and build logic. `BUILDCHARTS_SRC` lets a chart know which source entry it is building, and `BUILDCHARTS_TYPE` identifies the resolved stage type behind the chart alias.
+
 ## Reuse one `with` block across multiple stages
 
 If stages share the same configuration, use `type: [build, test]`:
