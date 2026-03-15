@@ -8,20 +8,8 @@ This plugin provisions a dedicated Docker-in-Docker (DinD) daemon and configures
 ## Usage
 
 ```yaml
-# build.yml
-version: v1beta
-
 plugins:
   - TestcontainersDinD@v1
-
-variables:
-  - VERSION
-  - COMMIT
-
-targets:
-  test/BuildCharts.Tests/BuildCharts.Tests.csproj:
-    type: test
-  # define your solution and project targets here
 ```
 
 When running `buildcharts generate`, the plugin starts or reuses the DinD container, updates `.buildcharts/docker-bake.hcl`, and leaves the Docker daemon running for reuse.
@@ -44,3 +32,7 @@ When running `buildcharts generate`, the plugin starts or reuses the DinD contai
 
 - If the generated Bake plan has no `test` target, the patch step is skipped.
 - The plugin leaves the `buildcharts-dind` container running for reuse across builds.
+
+## Read more
+
+- [Testcontainers DinD patterns](https://java.testcontainers.org/supported_docker_environment/continuous_integration/dind_patterns/)
