@@ -18,6 +18,7 @@
             "pages": [
               "index",
               "install",
+              "considerations",
               "guides/how-it-works",
               "guides/examples"
             ]
