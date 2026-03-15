@@ -11,3 +11,11 @@ If you want to avoid relying on external package feeds at build time, mirror or 
 
 This only affects how you acquire the BuildCharts CLI. Chart dependencies are resolved separately from an OCI container registry. See [Charts](/charts).
 
+## Run BuildCharts from your own ecosystem (optional)
+
+If you want to reduce supply-chain risk (for example vendor compromise or mutable upstream artifacts), you can fork and operate BuildCharts within your own ecosystem:
+
+- Build and publish the `dotnet-buildcharts` tool package to your own NuGet feed, and restore it from there in CI.
+- Publish charts to your own OCI registry or organization, and point `charts/buildcharts/Chart.yaml` to your internal `repository: oci://...`.
+- Use [Chart lock files](/core-features/lock-files) to pin chart digests and make builds deterministic even if tags move.
+- Apply chart governance and validation in CI (review policies, signing, scanning). See [Trust and integrity](/charts#trust-and-integrity).
