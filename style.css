@@ -1,0 +1,10 @@
+/* Mintlify themes are Tailwind-based.
+   Override dark-mode utility backgrounds used in the left sidebar to match BuildCharts branding. */
+
+.dark\:bg-white\/5:is(.dark *) {
+  background-color: rgb(12 140 94 / 0.18) !important;
+}
+
+.dark\:hover\:bg-white\/5:hover:is(.dark *) {
+  background-color: rgb(12 140 94 / 0.24) !important;
+}
