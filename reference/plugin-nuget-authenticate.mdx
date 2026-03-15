@@ -5,16 +5,14 @@ description: "Inject Azure Artifacts credentials into generated builds with NuGe
 
 This plugin configures NuGet tools to authenticate with Azure Artifacts and other NuGet repositories. Similar to [NuGetAuthenticate@1](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-authenticate-v1?view=azure-pipelines) in Azure DevOps.
 
-## When to use it
-
-Use this plugin when your charts need authenticated access to Azure Artifacts feeds.
-
-## Configure it
+## Usage
 
 ```yaml
 plugins:
   - NuGetAuthenticate@v1
 ```
+
+With this configuration in place, running `buildcharts generate` automatically injects the necessary secrets and modifications so that `dotnet restore` and NuGet push operations can authenticate against Azure Artifacts feeds.
 
 ## What it does
 
