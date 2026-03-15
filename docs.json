@@ -91,10 +91,10 @@
   "footer": {
     "links": [
       {
-        "header": "-",
+        "header": "BuildCharts",
         "items": [
           {
-            "label": "-",
+            "label": "GitHub",
             "href": "https://github.com/eddietisma/buildcharts"
           }
         ]
