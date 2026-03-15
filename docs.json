@@ -7,7 +7,7 @@
     "light": "#7718BC",
     "dark": "#7718BC"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "navigation": {
     "groups": [
       {
@@ -66,10 +66,7 @@
       }
     ]
   },
-  "logo": "/logo/buildcharts.png",
-  "navbar": {
-    "links": []
-  },
+  "logo": "/favicon.png",
   "contextual": {
     "options": [
       "copy",
