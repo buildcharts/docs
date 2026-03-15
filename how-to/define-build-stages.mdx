@@ -105,6 +105,29 @@ targets:
         tags: ["docker.io/example/library:${VERSION}-${COMMIT}"]
 ```
 
+## Custom build arguments
+
+You can define custom `ARG` values in chart Dockerfiles and pass values from `build.yml` through `with.args`.
+
+Dockerfile example:
+
+```dockerfile
+ARG SOURCELINK_STRICT=1
+```
+
+`build.yml` example:
+
+```yaml
+targets:
+  src/Library/Library.csproj:
+    - type: nuget
+      with:
+        args:
+          SOURCELINK_STRICT: 0
+```
+
+BuildCharts writes these values into the generated Bake target, so the chart Dockerfile receives them as standard build args at execution time.
+
 ## Expand a stage with a matrix
 
 Use `types` when every target of the same type should fan out across a matrix:
