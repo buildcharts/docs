@@ -33,9 +33,11 @@ BuildCharts requires exactly one `build` target in `build.yml`, so this `build` 
 
 ## Depend on other targets
 
+This is currently not configurable in `build.yml`, but you can still do it with Bake overrides at execution time.
+
 Bake supports linking any target to any other target by using `target:<name>` as a context value.
 
-Conceptually, this is the wiring you want:
+Conceptually, this is the wiring you want (and what a Bake override adds):
 
 ```hcl
 contexts = {
