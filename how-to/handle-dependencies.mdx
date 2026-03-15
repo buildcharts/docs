@@ -34,14 +34,6 @@ When `Chart.lock` exists, `buildcharts generate` checks:
 
 If the lock file is out of sync, BuildCharts stops and tells you to refresh it. See [Lock files](/core-features/lock-files).
 
-## Skip lock validation when needed
-
-Use this only when you intentionally want to generate without enforcing the lock file:
-
-```bash
-buildcharts generate --ignore-lock
-```
-
 ## Pull a chart directly
 
 Use `buildcharts pull` when you want to inspect a single chart:

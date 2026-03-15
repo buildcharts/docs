@@ -48,6 +48,14 @@ If any of those checks fail, generation stops and tells you to run `buildcharts 
 
 If `Chart.lock` does not exist, `generate` still works. It pulls the current tags from the registry and skips lock validation.
 
+### Skip lock validation when needed
+
+Use this only when you intentionally want to generate without enforcing the lock file:
+
+```bash
+buildcharts generate --ignore-lock
+```
+
 ## Related pages
 
 - [Charts](/charts)
