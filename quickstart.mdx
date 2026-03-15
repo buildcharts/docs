@@ -115,6 +115,8 @@ targets:
 
 That shifts test parallelization to `dotnet test`, which then delegates to the test framework and runner, such as xUnit, NUnit, or MSTest.
 
+From [.NET 9](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9/sdk#run-tests-in-parallel), the same test project can run across different target frameworks in parallel through MSBuild.
+
 The tradeoff is execution strategy:
 - solution-level `test` keeps the config simpler and matches normal .NET workflows
 - separate test targets can let Docker Bake parallelize more work across targets
