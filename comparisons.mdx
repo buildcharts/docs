@@ -1,0 +1,62 @@
+---
+title: "Comparisons"
+description: "How BuildCharts compares to related build and CI/CD approaches."
+---
+
+This page compares BuildCharts with adjacent tools and patterns, based on the project assessment and referenced ecosystem docs.
+
+## What BuildCharts optimizes for
+
+BuildCharts is not a hosted CI platform. It is a build plan generator:
+- you define intent in `build.yml`
+- BuildCharts resolves OCI-hosted chart templates
+- it generates `docker-bake.hcl`
+- Docker Buildx Bake executes the plan locally or in CI
+
+That makes BuildCharts strongest when you want:
+- local and CI parity with the same Docker execution layer
+- centrally versioned build logic across many repositories
+- OCI-based distribution and digest pinning
+
+## Comparison with common alternatives
+
+| Tool | Strength | Tradeoff vs BuildCharts |
+| --- | --- | --- |
+| [Dagger](https://github.com/dagger/dagger) | Programmable container-native pipelines with SDK workflows | Introduces its own execution/programming model instead of `build.yml` + generated Bake |
+| [Earthly](https://github.com/earthly/earthly) | BuildKit-based automation with local/CI parity | Uses Earthfile DSL and different authoring model |
+| [Tekton](https://github.com/tektoncd/pipeline) | Kubernetes-native pipelines at platform scale | Requires Kubernetes control plane and is less local-first |
+| Buildkite | Mature hosted orchestration and job controls | Higher platform coupling than local-first generated Bake plans |
+| Bazel | Strong hermetic builds and caching for large mono-repos | Steeper adoption and different build graph model |
+| Nix | Reproducible environments and package builds | Different ecosystem and workflow than Docker Buildx-centric pipelines |
+
+## Related systems and inspirations
+
+These are useful references, but they solve different layers than BuildCharts:
+- [dotnet/arcade](https://github.com/dotnet/arcade)
+- [facebook/buck](https://github.com/facebook/buck)
+- [twitter/pants](https://github.com/twitter/pants)
+- [Nebula plugins](https://nebula-plugins.github.io)
+- [kustomizer.dev](https://kustomizer.dev)
+- [kustomizer.dev FluxCD guide](https://kustomizer.dev/guides/fluxcd)
+
+## Docker and BuildKit references
+
+BuildCharts relies on Docker Buildx/BuildKit behavior. These references are useful when evaluating tradeoffs:
+- [Dockerfile `ONBUILD`](https://docs.docker.com/reference/dockerfile/#onbuild)
+- [Bake target reference](https://docs.docker.com/build/bake/reference#target)
+- [Bake contexts and deduplication](https://docs.docker.com/build/bake/contexts/#deduplicate-context-transfer)
+- [Build cache backends](https://docs.docker.com/build/cache/backends/registry/)
+- [Build contexts](https://docs.docker.com/build/concepts/context/#git-repositories)
+- [Exporting build artifacts with Bake](https://docs.docker.com/guides/bake/#exporting-build-artifacts)
+- [docker/metadata-action](https://github.com/docker/metadata-action?tab=readme-ov-file)
+- [Moby BuildKit workflows](https://github.com/moby/buildkit/blob/master/.github/workflows/buildkit.yml)
+- [Buildx issue: `/var/run/docker.sock` during build](https://github.com/docker/buildx/issues/1991)
+
+## Registry and CI integration references
+
+- [Azure ACR ORAS artifacts](https://github.com/Azure/acr/blob/main/docs/container-registry-oras-artifacts.md)
+- [Azure Pipelines logging commands](https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/authoring/commands.md)
+
+## Practical takeaway
+
+BuildCharts is a good fit if you want Docker-native, chart-driven build standardization without introducing a separate pipeline runtime. If you need deep hosted orchestration, non-Docker execution engines, or Kubernetes-native pipeline control planes, one of the alternatives above may be a better primary platform.

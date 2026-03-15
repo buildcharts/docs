@@ -21,7 +21,8 @@
               "reference/cli",
               "guides/how-it-works",
               "guides/examples",
-              "considerations"
+              "considerations",
+              "comparisons"
             ]
           },
           {
@@ -62,8 +63,8 @@
           {
             "group": "Troubleshooting",
             "pages": [
-              "troubleshooting/buildx-history",
-              "troubleshooting/common-issues"
+              "troubleshooting/common-issues",
+              "troubleshooting/buildx-history"
             ]
           }
         ]
