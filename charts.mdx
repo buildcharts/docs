@@ -48,7 +48,7 @@ BuildCharts turns that into a chart reference in the form `repository/name:versi
 
 ### Governance with dependency automation
 
-Because chart dependencies are declared in `charts/buildcharts/Chart.yaml`, teams can use existing dependency tooling such as Dependabot and Renovate to automate update PRs.
+Because chart dependencies are declared in `charts/buildcharts/Chart.yaml`, teams can use existing dependency tooling such as [Dependabot](https://github.com/dependabot) and [Renovate](https://github.com/renovatebot/renovate) to automate update PRs.
 
 In practice, this lets you centralize build-stage governance in chart versions and let automation open PRs when new chart releases are available. If a chart release updates underlying Docker images or build logic, repositories can adopt that change through a standard dependency update workflow instead of manual CI edits.
 
