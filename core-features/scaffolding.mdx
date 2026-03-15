@@ -15,7 +15,7 @@ At a high level, the goal is:
 - generate a starter `build.yml`
 - generate a matching `charts/buildcharts/Chart.yaml`
 
-You can think of this as automatic stage wiring. Instead of starting from an empty config, BuildCharts looks at the repository shape and scaffolds the most likely target types for each project.
+This is automatic stage wiring. Instead of starting from an empty config, BuildCharts inspects the repository shape and scaffolds the most likely target types for each project.
 
 ## How the current implementation works
 
@@ -53,7 +53,7 @@ The scaffolded `build.yml` includes:
 - one `build` target for the solution
 - additional `test`, `nuget`, or `docker` targets when matching projects are found
 
-In other words, BuildCharts does not just detect that a repository is `.NET`. It also tries to map each discovered file to the correct stage type automatically.
+BuildCharts does more than detect that a repository is `.NET`. It also maps each discovered file to an appropriate stage type automatically.
 
 ## What the generated chart file looks like
 

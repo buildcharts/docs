@@ -50,7 +50,7 @@ BuildCharts turns that into a chart reference in the form `repository/name:versi
 
 Because chart dependencies are declared in `charts/buildcharts/Chart.yaml`, teams can use existing dependency tooling such as Dependabot and Renovate to automate update PRs.
 
-In practice, that means you can centralize build-stage governance in chart versions and let bots open PRs when newer chart releases are available. If a chart release updates its underlying Docker images or build logic, repositories can adopt that change through a normal dependency update workflow instead of ad-hoc CI edits.
+In practice, this lets you centralize build-stage governance in chart versions and let automation open PRs when new chart releases are available. If a chart release updates underlying Docker images or build logic, repositories can adopt that change through a standard dependency update workflow instead of manual CI edits.
 
 ## What charts mean in BuildCharts
 
@@ -173,7 +173,7 @@ Examples of OCI-capable CLIs in this ecosystem:
 | [Helm](https://helm.sh/docs/topics/registries/) | Helm-style charts in OCI registries |
 | [Kustomizer](https://kustomizer.dev/) | Packaging and publishing Kubernetes manifests as OCI artifacts |
 
-ORAS is a common option when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
+ORAS is a common choice when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
 
 ## What OCI means here
 
@@ -232,7 +232,7 @@ BuildCharts does not sign charts itself. If you need signed charts, use OCI-nati
 
 Trust and integrity also depend on how your chart source is managed before publication.
 
-A strong model is to keep BuildCharts OCI templates in a dedicated repository and protect that repository with:
+A practical governance model is to keep BuildCharts OCI templates in a dedicated repository and protect that repository with:
 - branch protection
 - required pull requests
 - mandatory reviews
