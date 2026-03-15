@@ -99,6 +99,8 @@ That also means authentication is registry authentication. You authenticate to t
 - Azure Container Registry
 - another OCI-compatible registry
 
+### Authenticate to private registries
+
 If the registry is public, BuildCharts can pull the chart without credentials. If the registry is private, `buildcharts pull`, `buildcharts update`, and `buildcharts generate` need valid registry credentials before BuildCharts can resolve the manifest or pull the chart blob.
 
 BuildCharts reuses Docker credentials instead of introducing a separate BuildCharts auth model.
