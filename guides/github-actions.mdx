@@ -3,7 +3,10 @@ title: "GitHub Actions"
 description: "Run BuildCharts in GitHub Actions with the generated workflow and Buildx Bake."
 ---
 
-`buildcharts init` creates `.github/workflows/buildcharts.yml` when the Git remote in `.git/config` points to GitHub.
+## Actions
+
+- [buildcharts/setup-action](https://github.com/buildcharts/setup-action)
+- [buildcharts/generate-action](https://github.com/buildcharts/generate-action)
 
 ## Usage
 
@@ -36,6 +39,10 @@ jobs:
           VERSION: ${{ github.ref_name }}
           COMMIT: ${{ github.sha }}
 ```
+
+## Scaffolding
+
+`buildcharts init` creates `.github/workflows/buildcharts.yml` when the Git remote in `.git/config` points to GitHub.
 
 ## Enable caching
 
@@ -72,8 +79,3 @@ Read more about [BuildKit cache backends](https://docs.docker.com/build/cache/ba
 - `buildcharts/setup-action@v1` installs the CLI.
 - `buildcharts/generate-action@v1` generates `.buildcharts/docker-bake.hcl`.
 - `docker/bake-action@v6` runs the generated plan. Add your own `set` overrides if you want to configure cache backends.
-
-## Read more
-
-- [buildcharts/setup-action](https://github.com/buildcharts/setup-action)
-- [buildcharts/generate-action](https://github.com/buildcharts/generate-action)
