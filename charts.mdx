@@ -103,10 +103,8 @@ If the registry is public, BuildCharts can pull the chart without credentials. I
 BuildCharts reuses the existing Docker credential model.
 
 It reads Docker config from:
-- `<DOCKER_CONFIG>/config.json`
+- `<DOCKER_CONFIG>/config.json` (override location with `DOCKER_CONFIG`)
 - `~/.docker/config.json`
-
-You can override the Docker config location by setting the `DOCKER_CONFIG` environment variable.
 
 The current implementation supports:
 - `credHelpers`
