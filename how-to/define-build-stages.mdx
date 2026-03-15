@@ -29,9 +29,11 @@ targets:
     - type: build
       with:
         base: mcr.microsoft.com/dotnet/sdk:10.0
+
     - type: test
       with:
         base: mcr.microsoft.com/dotnet/sdk:10.0
+
     - type: docker
       with:
         base: mcr.microsoft.com/dotnet/runtime:10.0
@@ -96,6 +98,7 @@ targets:
       with:
         args:
           SOURCELINK_STRICT: 0
+
     - type: docker
       with:
         base: mcr.microsoft.com/dotnet/runtime:10.0
