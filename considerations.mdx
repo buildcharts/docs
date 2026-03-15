@@ -35,12 +35,6 @@ If you operate BuildCharts at scale, standardize the Docker/Buildx/BuildKit vers
 
 You can also pin the Dockerfile frontend syntax version in chart Dockerfiles to reduce surprises from Dockerfile parsing changes. Add a `# syntax=docker/dockerfile:1.1` directive as the first line. This pins the Dockerfile syntax frontend, not the Docker Engine version.
 
-## Builder drift across environments
-
-Build output can vary across environments when different machines use different builders, BuildKit versions, or builder settings.
-
-To reduce surprises, keep local and CI execution aligned. Prefer a shared remote builder or a pinned CI image that includes known Docker/Buildx versions.
-
 ## Generator dependency and fallbacks
 
 BuildCharts is a generator. If generation is blocked, your builds are blocked.
