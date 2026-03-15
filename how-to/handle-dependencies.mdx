@@ -7,12 +7,4 @@ BuildCharts resolves stage implementations from `charts/buildcharts/Chart.yaml`.
 
 Stage aliases and chart dependencies are declared in `charts/buildcharts/Chart.yaml`. See [Charts](/charts).
 
-## Understand what `generate` validates
-
-When `Chart.lock` exists, `buildcharts generate` checks:
-- Missing lock entries
-- Version mismatches between `Chart.yaml` and `Chart.lock`
-- Orphaned lock entries
-- Registry digest mismatches during pull
-
-If the lock file is out of sync, BuildCharts stops and tells you to refresh it. See [Lock files](/core-features/lock-files).
+For lock files and validation, see [Lock files](/core-features/lock-files) and [Generate](/core-features/generate).

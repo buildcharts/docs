@@ -17,7 +17,14 @@ During generation, BuildCharts reads:
 Before writing output, BuildCharts validates:
 - There is exactly one `build` target
 - Every target `type` matches a chart alias from `Chart.yaml`
-- `Chart.lock` is in sync when the file exists and `--ignore-lock` is not set
+
+When `Chart.lock` exists and `--ignore-lock` is not set, `buildcharts generate` checks:
+- Missing lock entries
+- Version mismatches between `Chart.yaml` and `Chart.lock`
+- Orphaned lock entries
+- Registry digest mismatches during pull
+
+If the lock file is out of sync, BuildCharts stops and tells you to refresh it. See [Lock files](/core-features/lock-files).
 
 ## What it does
 
