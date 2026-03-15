@@ -91,7 +91,7 @@
   "footer": {
     "links": [
       {
-        "header": "BuildCharts",
+        "header": "-",
         "items": [
           {
             "label": "GitHub",
