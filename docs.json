@@ -137,5 +137,6 @@
   },
   "metadata": {
     "timestamp": true
-  }
+  },
+  "description": "A framework for defining and generating CI/CD pipelines using declarative metadata."
 }
