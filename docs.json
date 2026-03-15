@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
+  "theme": "palm",
   "name": "BuildCharts",
   "colors": {
-    "primary": "#44053c",
+    "primary": "#681656",
     "light": "#b71286",
-    "dark": "#6a0e56"
+    "dark": "#681656"
   },
   "favicon": "/favicon.svg",
   "navigation": {
