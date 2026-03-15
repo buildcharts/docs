@@ -220,9 +220,7 @@ That improves reproducibility, but digest pinning alone does not prove who publi
 
 BuildCharts does not implement its own signing or trust system.
 
-If you want signed charts, use OCI-native signing tooling outside of BuildCharts:
-
-These tools are typically used to sign OCI artifacts in registries and verify them at pull or promotion time under your supply-chain policy.
+BuildCharts does not sign charts itself. If you need signed charts, use OCI-native signing tools and verify signatures during promotion or consumption.
 
 | Tool | Description |
 | --- | --- |
