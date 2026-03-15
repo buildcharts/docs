@@ -53,11 +53,3 @@ targets:
         base: mcr.microsoft.com/dotnet/runtime:10.0
         tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
 ```
-
-## Generate a build summary
-
-`buildcharts summary` exports:
-- `.buildcharts/output/SUMMARY.md`
-- `.buildcharts/output/buildcharts.dockerbuild`
-
-It also appends the summary to `GITHUB_STEP_SUMMARY` on GitHub Actions.
