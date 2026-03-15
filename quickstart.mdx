@@ -29,7 +29,7 @@ In a .NET repository, this command:
 BuildCharts ships with first-class .NET charts for common stage types. These are a practical starting point when you want working defaults before you introduce your own chart ecosystem.
 
 The built-in .NET chart set is documented here:
-- [buildcharts/charts dotnet](https://github.com/buildcharts/charts/tree/main/dotnet)
+- [buildcharts/charts/dotnet](https://github.com/buildcharts/charts/tree/main/dotnet)
 
 The shipped Dockerfiles cover the common .NET workflows:
 - `build` runs `dotnet build`
@@ -162,3 +162,13 @@ docker buildx bake --file .buildcharts/docker-bake.hcl
 - [Read the `Metadata` guide](/core-features/metadata)
 - [Read the lock files guide](/core-features/lock-files)
 - [Enable built-in plugins](/core-features/plugins)
+
+## Read more
+
+- [Azure DevOps publish test results task](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2?view=azure-pipelinesl#docker)
+- [.NET `ContinuousIntegrationBuild`](https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#continuousintegrationbuild)
+- [.NET Source Link guidance](https://learn.microsoft.com/en-us/dotnet/standard/library-guidance/sourcelink)
+- [Microsoft Artifacts Credential Provider](https://github.com/microsoft/artifacts-credprovider)
+- [dotnet/dotnet-docker](https://github.com/dotnet/dotnet-docker/blob/main/README.md)
+- [NuGet credentials in dotnet-docker](https://github.com/dotnet/dotnet-docker/blob/main/documentation/scenarios/nuget-credentials.md)
+- [Minimal git repository metadata for Source Link](https://github.com/dotnet/sourcelink/tree/main/docs#minimal-git-repository-metadata)
