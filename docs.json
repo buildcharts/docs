@@ -80,17 +80,6 @@
     ]
   },
   "footer": {
-    "links": [
-      {
-        "header": "BuildCharts",
-        "items": [
-          {
-            "label": "GitHub",
-            "href": "https://github.com/eddietisma/buildcharts"
-          }
-        ]
-      }
-    ],
     "socials": {
       "github": "https://github.com/eddietisma/buildcharts"
     }
