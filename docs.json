@@ -3,9 +3,9 @@
   "theme": "maple",
   "name": "BuildCharts",
   "colors": {
-    "primary": "#681656",
-    "light": "#b71286",
-    "dark": "#681656"
+    "primary": "#0C8C5E",
+    "light": "#18E299",
+    "dark": "#0C8C5E"
   },
   "favicon": "/favicon.svg",
   "navigation": {
