@@ -18,11 +18,11 @@
             "pages": [
               "index",
               "install",
-              "reference/cli",
               "guides/how-it-works",
               "guides/examples",
               "considerations",
-              "comparisons"
+              "comparisons",
+              "reference/cli"
             ]
           },
           {
