@@ -157,7 +157,11 @@ You do not need to install the ORAS CLI yourself to use BuildCharts. Registry ac
 
 BuildCharts is also not tied to ORAS as the publishing tool. It consumes OCI artifacts by registry, repository, tag, and digest, so teams can publish compatible chart artifacts with ORAS, Helm, or another OCI-capable CLI.
 
-Helm is a common option because `Chart.yaml` uses Helm-style chart metadata and [Helm supports OCI registries](https://helm.sh/docs/topics/registries/). ORAS is a common option when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
+Examples of OCI-capable CLIs in this ecosystem:
+- [Helm](https://helm.sh/docs/topics/registries/) for Helm-style charts in OCI registries
+- [Kustomizer](https://github.com/stefanprodan/kustomizer) for packaging and publishing Kubernetes manifests as OCI artifacts
+
+ORAS is a common option when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
 
 ## What OCI means here
 
