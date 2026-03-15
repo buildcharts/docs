@@ -33,9 +33,3 @@ When `Chart.lock` exists, `buildcharts generate` checks:
 - Registry digest mismatches during pull
 
 If the lock file is out of sync, BuildCharts stops and tells you to refresh it. See [Lock files](/core-features/lock-files).
-
-## Authenticate to private registries
-
-If your charts live in a private registry, authenticate to the backing container registry before running BuildCharts.
-
-See [Charts](/charts#container-registry) for how registry auth works and how BuildCharts reuses Docker credentials.
