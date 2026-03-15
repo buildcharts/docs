@@ -138,5 +138,8 @@
     "color": {
       "dark": "#191819"
     }
+  },
+  "metadata": {
+    "timestamp": true
   }
 }
