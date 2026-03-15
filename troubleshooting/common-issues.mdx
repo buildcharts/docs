@@ -61,6 +61,34 @@ dependencies:
 
 If `build.yml` uses `type: test`, the alias must exist in `Chart.yaml`.
 
+## `buildcharts generate` says `build.yml` is invalid
+
+This usually means the YAML shape does not match what BuildCharts expects for `variables` or target definitions.
+
+Common causes:
+- a variable scalar contains `=`
+- a variable name is empty
+- a variable mapping contains more than one entry
+- a variable mapping is missing `default`
+- a target mapping is missing `type`
+- `type` is not a string or list of strings
+
+Fix:
+- validate the structure against the [Metadata](/core-features/metadata) page
+- keep `variables` as either a mapping or a sequence of scalars/mappings
+- make sure every target definition includes a valid `type`
+
+## `buildcharts generate` shows a warning for an unknown plugin
+
+If a plugin name is not registered, BuildCharts does not fail generation. It skips that plugin and prints a warning instead.
+
+Check:
+- the plugin name is spelled exactly right
+- the version suffix is included, for example `NuGetAuthenticate@v1`
+- the plugin exists in the built-in plugin list
+
+If you expected the plugin to modify the generated HCL or write files under `.buildcharts`, verify those outputs explicitly after generation.
+
 ## `buildcharts summary` cannot find Docker build history
 
 `buildcharts summary` uses the latest Docker Buildx history. It only works after you have run a Bake build.
