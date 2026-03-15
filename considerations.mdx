@@ -27,6 +27,42 @@ If you use ephemeral CI runners, consider persisting the blob cache between runs
 
 This is the same kind of dependency you already have when building Docker images that reference base images from a registry. If your container registry (for example Azure Container Registry) is unavailable, builds and generation that depend on it will be affected.
 
+## Docker toolchain dependency
+
+BuildCharts generates a plan that you execute with Docker Buildx/BuildKit. Changes in Docker tooling, builder configuration, or security posture can affect all builds that rely on it.
+
+If you operate BuildCharts at scale, standardize the Docker/Buildx/BuildKit versions you use in CI and on remote builders.
+
+## Builder drift across environments
+
+Build output can vary across environments when different machines use different builders, BuildKit versions, or builder settings.
+
+To reduce surprises, keep local and CI execution aligned. Prefer a shared remote builder or a pinned CI image that includes known Docker/Buildx versions.
+
+## Generator dependency and fallbacks
+
+BuildCharts is a generator. If generation is blocked, your builds are blocked.
+
+As a fallback, you can check in the generated Bake plan (and optionally inline Dockerfiles) to remove the runtime generator dependency. You trade off chart update flow and can drift from upstream fixes and improvements.
+
+## Parallelism and caching trade-offs
+
+Bake can execute many targets in parallel. On large repositories and shared runners, this can saturate CPU, I/O, and cache storage.
+
+Treat cache strategy as part of your build design. Misconfigured cache exports/imports can make builds slower and harder to troubleshoot than a simpler pipeline.
+
+## Template indirection and troubleshooting
+
+Chart indirection helps you reuse stages, but it can also obscure root causes when builds fail.
+
+Plan for troubleshooting workflows that inspect generated artifacts and execution output. See [Docker Bake](/core-features/docker-bake) and [Troubleshooting](/troubleshooting/buildx-history).
+
+## Secrets and credentials
+
+BuildCharts does not manage secrets. You still need to provision credentials and decide how they flow into builds.
+
+Plugins can help write local config files and environment variables for common ecosystems, but ownership of secret lifecycle, auditability, and access control stays with your CI/platform setup. See [Plugins](/core-features/plugins).
+
 ## Run BuildCharts from your own ecosystem (optional)
 
 If you want to reduce supply-chain risk (for example vendor compromise or mutable upstream artifacts), you can fork and operate BuildCharts within your own ecosystem:
