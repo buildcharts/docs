@@ -73,12 +73,7 @@
   },
   "logo": "/logo/buildcharts.png",
   "navbar": {
-    "links": [],
-    "primary": {
-      "type": "button",
-      "label": "View package",
-      "href": "https://www.nuget.org/packages/dotnet-buildcharts"
-    }
+    "links": []
   },
   "contextual": {
     "options": [
@@ -93,17 +88,7 @@
     ]
   },
   "footer": {
-    "links": [
-      {
-        "header": "Packages",
-        "items": [
-          {
-            "label": "NuGet",
-            "href": "https://www.nuget.org/packages/dotnet-buildcharts"
-          }
-        ]
-      }
-    ],
+    "links": [],
     "socials": {
       "github": "https://github.com/eddietisma/buildcharts"
     }
