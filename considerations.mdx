@@ -11,6 +11,20 @@ If you want to avoid relying on external package feeds at build time, mirror or 
 
 This only affects how you acquire the BuildCharts CLI. Chart dependencies are resolved separately from an OCI container registry. See [Charts](/charts).
 
+## Container registry runtime dependency
+
+BuildCharts pulls charts from an OCI-compliant container registry during `buildcharts update` and `buildcharts generate`.
+
+That makes the registry a runtime dependency for generation:
+- Your builds depend on registry uptime and authentication.
+- Registry outages or auth misconfiguration can block generation.
+
+BuildCharts partially mitigates this with a local blob cache. Charts are cached by digest under your temp directory (`<temp>/buildcharts/oci/blobs`). If the digest already exists in that cache, BuildCharts reuses the chart blob instead of downloading it again.
+
+Caching improves performance and reduces registry traffic, but you should still treat the registry as a dependency. You still need registry access to resolve digests and validate lock files.
+
+If you use ephemeral CI runners, consider persisting the blob cache between runs using your CI cache mechanism.
+
 ## Run BuildCharts from your own ecosystem (optional)
 
 If you want to reduce supply-chain risk (for example vendor compromise or mutable upstream artifacts), you can fork and operate BuildCharts within your own ecosystem:
