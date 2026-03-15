@@ -41,6 +41,12 @@ You do not need to manually reconstruct build arguments, output settings, or tar
 
 Bake runs specified targets in parallel. This is useful in BuildCharts because a repository can generate separate `build`, `test`, `nuget`, and `docker` targets from one metadata model.
 
+You can also run a single generated target when you only want one stage. For example, run only tests with:
+
+```bash
+docker buildx bake --file .buildcharts/docker-bake.hcl test
+```
+
 ### Better reuse of shared configuration
 
 Bake groups related targets and centralizes shared settings. BuildCharts uses that to emit common variables and target-level configuration without duplicating command-line flags per step.
