@@ -110,10 +110,6 @@
           {
             "label": "NuGet",
             "href": "https://www.nuget.org/packages/dotnet-buildcharts"
-          },
-          {
-            "label": "Docker",
-            "href": "https://hub.docker.com/r/buildcharts/buildcharts"
           }
         ]
       }
