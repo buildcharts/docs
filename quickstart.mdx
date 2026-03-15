@@ -101,9 +101,9 @@ targets:
         tags: ["docker.io/eddietisma/dotnet-docker:${VERSION}-${COMMIT}"]
 ```
 
-You must define exactly one `build` target somewhere in `targets`.
+You must define exactly one `build` target.
 
-## Parallelization using multi-targets vs `dotnet test`
+### Parallelization using multi-targets vs `dotnet test`
 
 If you prefer, you can also put `build` and `test` directly on the solution target. This works well for .NET because `dotnet build` and `dotnet test` can run directly against a solution, so the solution can act as the shared source for both stages:
 
