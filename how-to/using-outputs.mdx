@@ -15,6 +15,30 @@ BuildCharts writes outputs based on the target type it generates into the Bake p
 
 That means `test`, `nuget`, and any custom non-docker type export local files under `.buildcharts/output`.
 
+## How local exports work
+
+BuildCharts implements local outputs using Docker Buildx Bake build artifact exports.
+
+For any non-`build` and non-`docker` stage type, the generated `docker-bake.hcl` includes a local output like:
+
+```hcl
+output = [
+  "type=cacheonly,mode=max",
+  "type=local,dest=.buildcharts/output/nuget"
+]
+```
+
+`type=local` exports the filesystem contents of the target stage to a local directory. That means everything that exists in the final stage is copied to `.buildcharts/output/<type>`.
+
+This is why charts that export artifacts typically use a final `FROM scratch` stage and copy only the artifacts into it, for example:
+
+```dockerfile
+FROM scratch AS nuget
+COPY --from=pre-nuget /output /
+```
+
+For the underlying Docker pattern, see [Exporting build artifacts](https://docs.docker.com/guides/bake/#exporting-build-artifacts).
+
 ## Consume test outputs
 
 The shipped test sample reads TRX files from `.buildcharts/output/test`.
@@ -62,15 +86,3 @@ targets:
 - `.buildcharts/output/buildcharts.dockerbuild`
 
 It also appends the summary to `GITHUB_STEP_SUMMARY` on GitHub Actions.
-
-## Keep outputs stable in scripts
-
-If you script around exported files, reference the type folder directly:
-
-```powershell
-Get-ChildItem .buildcharts/output/nuget -Filter *.nupkg
-```
-
-```powershell
-& "$PSScriptRoot\..\Parse-Trx.ps1" ".buildcharts/output/test"
-```
