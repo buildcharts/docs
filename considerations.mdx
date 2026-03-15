@@ -3,14 +3,6 @@ title: "Considerations"
 description: "Build-time dependencies and environment considerations when you adopt BuildCharts."
 ---
 
-## Avoid external tool restore dependencies (optional)
-
-When you run `dotnet tool install` or `dotnet tool restore`, the .NET SDK resolves the tool package from a NuGet feed (by default `nuget.org`) and downloads it if needed.
-
-If you want to avoid relying on external package feeds at build time, mirror or publish the tool package to your own NuGet feed (for example Azure Artifacts) and configure your `NuGet.config` (or `--add-source`) to use it. Another option is to install the tool once in your build image so CI does not need to download it on every run.
-
-This only affects how you acquire the BuildCharts CLI. Chart dependencies are resolved separately from an OCI container registry. See [Charts](/charts).
-
 ## Container registry runtime dependency
 
 BuildCharts pulls charts from an OCI-compliant container registry during `buildcharts update` and `buildcharts generate`.
@@ -67,3 +59,11 @@ If you want to reduce supply-chain risk (for example vendor compromise or mutabl
 - Publish charts to your own OCI registry or organization, and point `charts/buildcharts/Chart.yaml` to your internal `repository: oci://...`.
 - Use [Chart lock files](/core-features/lock-files) to pin chart digests and make builds deterministic even if tags move.
 - Apply chart governance and validation in CI (review policies, signing, scanning). See [Trust and integrity](/charts#trust-and-integrity).
+
+## Avoid external tool restore dependencies (optional)
+
+When you run `dotnet tool install` or `dotnet tool restore`, the .NET SDK resolves the tool package from a NuGet feed (by default `nuget.org`) and downloads it if needed.
+
+If you want to avoid relying on external package feeds at build time, mirror or publish the tool package to your own NuGet feed (for example Azure Artifacts) and configure your `NuGet.config` (or `--add-source`) to use it. Another option is to install the tool once in your build image so CI does not need to download it on every run.
+
+This only affects how you acquire the BuildCharts CLI. Chart dependencies are resolved separately from an OCI container registry. See [Charts](/charts).
