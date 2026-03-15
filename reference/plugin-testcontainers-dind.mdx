@@ -20,8 +20,9 @@ When running `buildcharts generate`, the plugin starts or reuses the DinD contai
 - Reuses the container if it already exists, or removes and recreates it if the image differs
 - Runs the container in privileged mode, binds port `2375`, and disables TLS
 - Supports `BUILDCHARTS_DIND_IMAGE` to override the Docker image tag
-- Patches the generated `docker-bake.hcl` for `target "test"` with `TESTCONTAINERS_HOST_OVERRIDE`
-- Adds `host.docker.internal` as an extra host that resolves to the host gateway
+- Patches the generated `docker-bake.hcl` for `target "test"`:
+  - `TESTCONTAINERS_HOST_OVERRIDE` - arg with DinD container IP
+  - `host.docker.internal` - extra host that resolves to the host gateway
 - Writes `.buildcharts/plugins/TestcontainersDinD@v1/container_debuginfo.json`
 
 ## Environment variables
