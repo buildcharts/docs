@@ -4,7 +4,7 @@
   "name": "BuildCharts",
   "colors": {
     "primary": "#5f1f5f",
-    "light": "#5f1f5f",
+    "light": "#7b207b",
     "dark": "#5f1f5f"
   },
   "favicon": "/favicon.svg",
@@ -131,7 +131,8 @@
     }
   },
   "styling": {
-    "codeblocks": "dark"
+    "codeblocks": "dark",
+    "eyebrows": "section"
   },
   "background": {
     "color": {
