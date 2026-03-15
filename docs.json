@@ -18,6 +18,7 @@
             "pages": [
               "index",
               "install",
+              "reference/cli",
               "guides/how-it-works",
               "guides/examples",
               "considerations"
@@ -63,12 +64,6 @@
             "pages": [
               "troubleshooting/buildx-history",
               "troubleshooting/common-issues"
-            ]
-          },
-          {
-            "group": "CLI",
-            "pages": [
-              "reference/cli"
             ]
           }
         ]
