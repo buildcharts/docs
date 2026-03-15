@@ -21,11 +21,11 @@ plugins:
 - Runs `dotnet nuget list source --format short`
 - Keeps sources whose host ends with `pkgs.dev.azure.com` or `pkgs.visualstudio.com`
 - Prefers existing environment credentials when available
-- Otherwise installs the Microsoft Artifacts Credential Provider under `.buildcharts/plugins/NuGetAuthenticate@v1`
+- Otherwise installs the [Microsoft Artifacts Credential Provider](https://github.com/microsoft/artifacts-credprovider) under `.buildcharts/plugins/NuGetAuthenticate@v1`
 - Writes `.buildcharts/secrets/ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`
 - Patches the generated `_common` target so BuildKit mounts that secret file
 
-## Environment variables it checks first
+## Environment variables
 
 - `ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`
 - `VSS_NUGET_EXTERNAL_FEED_ENDPOINTS`
