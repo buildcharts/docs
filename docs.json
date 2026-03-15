@@ -131,7 +131,7 @@
     }
   },
   "styling": {
-    "codeblocks": "dark",
+    "codeblocks": "system",
     "eyebrows": "breadcrumbs"
   },
   "background": {
