@@ -7,7 +7,7 @@ BuildCharts resolves stage implementations from OCI-hosted charts declared in `c
 
 ## Declare stage aliases in `Chart.yaml`
 
-BuildCharts uses a Helm-style chart file with dependency aliases:
+BuildCharts uses a Helm chart file with dependency aliases:
 
 ```yaml
 apiVersion: v2
@@ -92,6 +92,7 @@ That registry is the dependency source for the chart. BuildCharts does not call 
 
 That also means authentication is registry authentication. You authenticate to the container registry that stores the chart, such as:
 - Docker Hub
+- GitHub Container Registry (`ghcr.io`)
 - Azure Container Registry
 - another OCI-compatible registry
 
