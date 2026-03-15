@@ -37,7 +37,7 @@
             ]
           },
           {
-            "group": "Building Charts",
+            "group": "Charts",
             "pages": [
               "how-to/define-build-stages",
               "how-to/using-outputs",
