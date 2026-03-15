@@ -24,6 +24,22 @@ In a .NET repository, this command:
 
 `init` currently supports .NET repositories only.
 
+## Use the built-in .NET charts
+
+BuildCharts ships with first-class .NET charts for common stage types. These are a practical starting point when you want working defaults before you introduce your own chart ecosystem.
+
+The built-in .NET chart set is documented here:
+- [buildcharts/charts dotnet](https://github.com/buildcharts/charts/tree/main/dotnet)
+
+The shipped Dockerfiles cover the common .NET workflows:
+- `build` runs `dotnet build`
+- `test` runs `dotnet test` and prepares test artifacts
+- `nuget` runs `dotnet pack` and prepares package output
+- `publish` runs `dotnet publish`
+- `docker` publishes the app and assembles the runtime image
+
+These charts are implemented as reusable Dockerfiles behind the chart aliases you reference from `build.yml`.
+
 ## Review the generated metadata
 
 This shape matches the shipped samples:
