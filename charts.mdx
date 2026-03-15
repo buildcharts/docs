@@ -193,13 +193,13 @@ Using OCI-hosted charts gives BuildCharts a few practical benefits:
 
 If you want to secure your chart supply chain, treat charts like other OCI artifacts.
 
-This is about securing the published BuildCharts OCI templates themselves. It is not primarily a `Chart.lock` concern. `Chart.lock` helps with repeatability, but trust and integrity are about who published the chart artifact, what exactly was published, and whether you trust that artifact at consumption time.
+This section is about securing the published BuildCharts OCI templates themselves: who published them, what content was published, and what policy decides whether they are trusted for use.
 
 The practical baseline is:
-- pin digests with `Chart.lock`
 - store charts in a controlled container registry
 - sign published chart artifacts
 - verify signatures and trust policy in your publishing or promotion flow
+- consume immutable artifact references where possible (digest pinning)
 
 ### Digest pinning
 
