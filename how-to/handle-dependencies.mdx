@@ -5,24 +5,7 @@ description: "Manage chart aliases, lock files, OCI pulls, and dependency drift.
 
 BuildCharts resolves stage implementations from `charts/buildcharts/Chart.yaml`.
 
-## Declare stage aliases in `Chart.yaml`
-
-Each dependency maps a stage type in `build.yml` to an OCI-hosted chart:
-
-```yaml
-dependencies:
-  - name: dotnet-build
-    alias: build
-    version: 0.0.1
-    repository: oci://registry-1.docker.io/buildcharts
-
-  - name: dotnet-test
-    alias: test
-    version: 0.0.1
-    repository: oci://registry-1.docker.io/buildcharts
-```
-
-If `build.yml` uses a type that is not declared as an alias here, generation fails.
+Stage aliases and chart dependencies are declared in `charts/buildcharts/Chart.yaml`. See [Charts](/charts).
 
 ## Understand what `generate` validates
 
