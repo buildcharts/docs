@@ -99,6 +99,12 @@ targets:
       with:
         base: mcr.microsoft.com/dotnet/runtime:10.0
         tags: ["docker.io/eddietisma/dotnet-docker:${VERSION}-${COMMIT}"]
+
+  test/BuildCharts.Tests/BuildCharts.Tests.csproj:
+    type: test
+
+  test/BuildCharts.Tests1/BuildCharts.Tests1.csproj:
+    type: test
 ```
 
 You must define exactly one `build` target.
