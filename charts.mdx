@@ -220,10 +220,13 @@ That improves reproducibility, but digest pinning alone does not prove who publi
 
 BuildCharts does not implement its own signing or trust system.
 
-If you want signed charts, use OCI-native signing tools outside of BuildCharts, such as:
-- [Notation](https://github.com/notaryproject/notation)
-- [Cosign](https://github.com/sigstore/cosign)
-- [Helm provenance](https://helm.sh/docs/topics/provenance/)
+If you want signed charts, use OCI-native signing tooling outside of BuildCharts:
+
+| Tool | Description |
+| --- | --- |
+| [Notation](https://github.com/notaryproject/notation) | A CLI from the Notary Project for attaching and verifying OCI artifact signatures as first-class registry metadata. |
+| [Cosign](https://github.com/sigstore/cosign) | A Sigstore CLI for signing and verifying OCI artifacts, often paired with keyless or key-based supply-chain workflows. |
+| [Helm provenance](https://helm.sh/docs/topics/provenance/) | Helm's chart signing and provenance model for proving chart origin and integrity in Helm-based workflows. |
 
 These tools let you sign OCI artifacts in the registry and verify them later as part of your supply-chain policy.
 
