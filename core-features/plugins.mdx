@@ -3,7 +3,7 @@ title: "Plugins"
 description: "Built-in plugins that extend generation before and after HCL creation."
 ---
 
-Plugins are the main extension point in BuildCharts and run during `buildcharts generate`.
+Plugins hook into the `buildcharts` generation pipeline and run during `buildcharts generate`. They are the main extension point in BuildCharts for custom logic before and after the build configuration is produced.
 
 ## What plugins do
 
@@ -11,6 +11,8 @@ Plugins can:
 - prepare external state before generation
 - write secret or debug files under `.buildcharts`
 - patch the generated `docker-bake.hcl`
+- generate additional output files
+- perform validation or environment setup
 
 ## How to enable them
 
@@ -22,7 +24,7 @@ plugins:
   - TestcontainersDinD@v1
 ```
 
-BuildCharts runs plugins in declaration order and ignores unknown names with a warning.
+When you run `buildcharts generate`, BuildCharts loads built-in plugins by name, removes duplicates, and runs them in declaration order. Unknown plugin names are skipped with a warning.
 
 ## Built-in plugins
 
