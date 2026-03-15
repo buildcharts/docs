@@ -153,7 +153,13 @@ BuildCharts uses the [ORAS C# client library](https://github.com/oras-project/or
 
 ORAS itself is a CLI and set of client libraries for working with OCI artifacts in OCI-compliant registries. The important part here is that it works with general OCI artifacts, not only with container images.
 
-### What OCI means here
+You do not need to install the ORAS CLI yourself to use BuildCharts. Registry access is already built into the `buildcharts` CLI.
+
+BuildCharts is also not tied to ORAS as the publishing tool. It consumes OCI artifacts by registry, repository, tag, and digest, so teams can publish compatible chart artifacts with ORAS, Helm, or another OCI-capable CLI.
+
+Helm is a common option because `Chart.yaml` uses Helm-style chart metadata and [Helm supports OCI registries](https://helm.sh/docs/topics/registries/). ORAS is a common option when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
+
+## What OCI means here
 
 BuildCharts stores and pulls charts as OCI artifacts from a container registry.
 
@@ -162,12 +168,6 @@ OCI is the Open Container Initiative. OCI defines open specifications around con
 - the OCI Distribution Specification, which defines how clients push and pull content from registries
 
 In practice, this is why BuildCharts can treat a chart as content stored in the same kind of registry infrastructure that teams already use for container images.
-
-You do not need to install the ORAS CLI yourself to use BuildCharts. Registry access is already built into the `buildcharts` CLI.
-
-BuildCharts is also not tied to ORAS as the publishing tool. It consumes OCI artifacts by registry, repository, tag, and digest, so teams can publish compatible chart artifacts with ORAS, Helm, or another OCI-capable CLI.
-
-Helm is a common option because `Chart.yaml` uses Helm-style chart metadata and [Helm supports OCI registries](https://helm.sh/docs/topics/registries/). ORAS is a common option when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
 
 ## Why this model is useful
 
