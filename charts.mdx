@@ -74,16 +74,6 @@ You can also pull by digest:
 buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:...
 ```
 
-## What OCI means here
-
-BuildCharts stores and pulls charts as OCI artifacts from a container registry.
-
-OCI is the Open Container Initiative. OCI defines open specifications around container formats and distribution. The parts that matter most here are:
-- the OCI Image Specification, which defines how manifests, layers, descriptors, and media types are represented
-- the OCI Distribution Specification, which defines how clients push and pull content from registries
-
-In practice, this is why BuildCharts can treat a chart as content stored in the same kind of registry infrastructure that teams already use for container images.
-
 ## Container registry
 
 Each chart dependency in `charts/buildcharts/Chart.yaml` points to a repository in an OCI-compliant container registry:
@@ -162,6 +152,16 @@ BuildCharts uses the [ORAS C# client library](https://github.com/oras-project/or
 - BuildCharts unpacks it into `.buildcharts`
 
 ORAS itself is a CLI and set of client libraries for working with OCI artifacts in OCI-compliant registries. The important part here is that it works with general OCI artifacts, not only with container images.
+
+### What OCI means here
+
+BuildCharts stores and pulls charts as OCI artifacts from a container registry.
+
+OCI is the Open Container Initiative. OCI defines open specifications around container formats and distribution. The parts that matter most here are:
+- the OCI Image Specification, which defines how manifests, layers, descriptors, and media types are represented
+- the OCI Distribution Specification, which defines how clients push and pull content from registries
+
+In practice, this is why BuildCharts can treat a chart as content stored in the same kind of registry infrastructure that teams already use for container images.
 
 You do not need to install the ORAS CLI yourself to use BuildCharts. Registry access is already built into the `buildcharts` CLI.
 
