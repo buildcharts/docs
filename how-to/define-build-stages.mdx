@@ -138,3 +138,11 @@ becomes a generated Bake matrix for `publish` where:
 - the chart receives `RUNTIME` as a build arg
 
 In practice, that one `type: publish` entry turns into two generated publish variants, one for `win-x64` and one for `win-arm64`.
+
+This is conceptually similar to:
+- [Azure DevOps strategy matrix](https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/jobs-job-strategy?view=azure-pipelines)
+- [GitHub Actions matrix strategy](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs)
+
+The difference is that BuildCharts expands the matrix into Docker Buildx Bake targets instead of CI jobs. The matrix values become Bake target variants and build args that your chart Dockerfiles can consume.
+
+Read more about [Docker matrix targets](https://docs.docker.com/build/bake/matrices/#multiple-axes).
