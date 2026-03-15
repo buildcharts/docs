@@ -9,64 +9,59 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Documentation",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "install",
-              "guides/how-it-works",
-              "guides/examples",
-              "considerations",
-              "comparisons",
-              "reference/cli"
-            ]
-          },
-          {
-            "group": "Core Features",
-            "pages": [
-              "core-features/scaffolding",
-              "core-features/metadata",
-              "core-features/generate",
-              "core-features/docker-bake",
-              "core-features/summary",
-              "charts",
-              "core-features/lock-files",
-              "core-features/plugins"
-            ]
-          },
-          {
-            "group": "Charts",
-            "pages": [
-              "how-to/define-build-stages",
-              "how-to/using-outputs",
-              "how-to/handle-dependencies"
-            ]
-          },
-          {
-            "group": "Quickstart",
-            "pages": [
-              "quickstart",
-              "guides/github-actions"
-            ]
-          },
-          {
-            "group": "Plugins",
-            "pages": [
-              "reference/plugin-nuget-authenticate",
-              "reference/plugin-testcontainers-dind"
-            ]
-          },
-          {
-            "group": "Troubleshooting",
-            "pages": [
-              "troubleshooting/common-issues",
-              "troubleshooting/buildx-history"
-            ]
-          }
+        "group": "Getting started",
+        "pages": [
+          "index",
+          "install",
+          "guides/how-it-works",
+          "guides/examples",
+          "considerations",
+          "comparisons",
+          "reference/cli"
+        ]
+      },
+      {
+        "group": "Core Features",
+        "pages": [
+          "core-features/scaffolding",
+          "core-features/metadata",
+          "core-features/generate",
+          "core-features/docker-bake",
+          "core-features/summary",
+          "charts",
+          "core-features/lock-files",
+          "core-features/plugins"
+        ]
+      },
+      {
+        "group": "Charts",
+        "pages": [
+          "how-to/define-build-stages",
+          "how-to/using-outputs",
+          "how-to/handle-dependencies"
+        ]
+      },
+      {
+        "group": "Quickstart",
+        "pages": [
+          "quickstart",
+          "guides/github-actions"
+        ]
+      },
+      {
+        "group": "Plugins",
+        "pages": [
+          "reference/plugin-nuget-authenticate",
+          "reference/plugin-testcontainers-dind"
+        ]
+      },
+      {
+        "group": "Troubleshooting",
+        "pages": [
+          "troubleshooting/common-issues",
+          "troubleshooting/buildx-history"
         ]
       }
     ]
