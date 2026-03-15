@@ -3,7 +3,7 @@ title: "Using outputs"
 description: "Export artifacts with Bake and consume them from .buildcharts/output."
 ---
 
-BuildCharts writes outputs based on the target type it generates into the Bake plan.
+Charts can export artifacts by writing files into `/output` inside the Dockerfile. The generated Bake plan then uses a local output to copy that content to `.buildcharts/output/<type>` on the host during `docker buildx bake`.
 
 ## Output behavior by stage type
 
