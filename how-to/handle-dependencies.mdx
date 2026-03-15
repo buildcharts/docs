@@ -35,25 +35,6 @@ BuildCharts requires exactly one `build` target in `build.yml`, so this `build` 
 
 This is currently not configurable in `build.yml`, but you can still do it with Bake overrides at execution time.
 
-Bake supports linking any target to any other target by using `target:<name>` as a context value.
-
-Conceptually, this is the wiring you want (and what a Bake override adds):
-
-```hcl
-contexts = {
-  build = "target:build"
-  publish = "target:publish"
-}
-```
-
-Once you expose a target as a context, you can:
-- inherit from it: `FROM publish`
-- copy files from it: `COPY --from=publish /path /path`
-
-Because `.buildcharts/docker-bake.hcl` is generated, prefer applying this kind of wiring with Bake overrides at execution time, for example:
-
 ```bash
 docker buildx bake --file .buildcharts/docker-bake.hcl docker --set docker.contexts.publish=target:publish
 ```
-
-Then update the relevant chart Dockerfile to use `FROM publish` or `COPY --from=publish` as needed.
