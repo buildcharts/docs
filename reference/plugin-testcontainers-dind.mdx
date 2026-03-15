@@ -12,7 +12,7 @@ plugins:
   - TestcontainersDinD@v1
 ```
 
-When running `buildcharts generate`, the plugin starts or reuses the DinD container, updates `.buildcharts/docker-bake.hcl`, and leaves the Docker daemon running for reuse.
+When running `buildcharts generate`, the plugin starts or reuses the DinD container, updates `.buildcharts/docker-bake.hcl`, and leaves the Docker daemon running for reuse (memory footprint ~40 MB).
 
 ## What it does
 
