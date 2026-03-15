@@ -13,6 +13,16 @@ This is also how you avoid the mutable tag problem when you want immutability. A
 
 `buildcharts update` resolves the current digest for each dependency and writes `charts/buildcharts/Chart.lock`.
 
+### Refresh the lock file
+
+Run this when you change chart versions or want to pin current digests:
+
+```bash
+buildcharts update
+```
+
+This resolves each `repository/name:version` reference and writes `charts/buildcharts/Chart.lock`.
+
 This is the repeatability layer for chart dependencies. `Chart.yaml` says which chart version you want, while `Chart.lock` records the exact OCI digest that was resolved at that point in time. In practice, that gives you more reproducible builds, clearer dependency state across repositories, and safer upgrades when platform teams publish new chart versions.
 
 Example:
