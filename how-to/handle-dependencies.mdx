@@ -34,20 +34,6 @@ When `Chart.lock` exists, `buildcharts generate` checks:
 
 If the lock file is out of sync, BuildCharts stops and tells you to refresh it. See [Lock files](/core-features/lock-files).
 
-## Pull a chart directly
-
-Use `buildcharts pull` when you want to inspect a single chart:
-
-```bash
-buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build:0.0.1 --untar
-```
-
-You can also pull by digest:
-
-```bash
-buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:...
-```
-
 ## Authenticate to private registries
 
 If your charts live in a private registry, authenticate to the backing container registry before running BuildCharts.

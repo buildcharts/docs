@@ -60,6 +60,20 @@ That central model matters when you want to manage pipeline behavior across many
 
 This is similar to Helm charts in one important way: both use versioned chart metadata and both can be distributed through OCI registries. Like Helm charts, BuildCharts charts are versioned packages you can manage centrally and consume from many repositories. The difference is what the chart configures. Helm charts describe how an application is deployed to Kubernetes. BuildCharts charts describe how build stages are generated into a Docker Bake plan for CI and local builds.
 
+### Pull a chart directly
+
+Use `buildcharts pull` when you want to inspect a single chart:
+
+```bash
+buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build:0.0.1 --untar
+```
+
+You can also pull by digest:
+
+```bash
+buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:...
+```
+
 ## What OCI means here
 
 BuildCharts stores and pulls charts as OCI artifacts from a container registry.
