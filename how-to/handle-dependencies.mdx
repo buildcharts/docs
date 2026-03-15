@@ -21,7 +21,7 @@ contexts = {
 }
 ```
 
-That is why chart Dockerfiles can use `build` as an upstream stage, for example:
+This allows chart Dockerfiles to use `build` as an upstream stage, for example:
 
 ```dockerfile
 FROM build AS pre-docker
