@@ -52,7 +52,7 @@ variables:
   - COMMIT
 
 targets:
-  src/dotnet-docker.csproj:
+  buildcharts.sln:
     - type: build
       with:
         base: mcr.microsoft.com/dotnet/sdk:10.0
@@ -63,6 +63,16 @@ targets:
 ```
 
 You must define exactly one `build` target somewhere in `targets`.
+
+If you prefer, you can also put `build` and `test` directly on the solution target so the solution becomes the shared source for those stages:
+
+```yaml
+targets:
+  buildcharts.sln:
+    type: [build, test]
+    with:
+      base: mcr.microsoft.com/dotnet/sdk:10.0
+```
 
 ## Create a lock file
 
