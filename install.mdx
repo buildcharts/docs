@@ -31,13 +31,11 @@ Then restore the tool inside the repo with:
 dotnet tool restore
 ```
 
-## Avoid external build-time dependencies (optional)
+## Avoid external tool restore dependencies (optional)
 
-When you run `buildcharts update` or `buildcharts generate`, BuildCharts resolves chart dependencies from an OCI container registry (for example Docker Hub).
+If you install BuildCharts as a .NET tool, `dotnet tool install` and `dotnet tool restore` download the tool package from a NuGet feed (by default `nuget.org`).
 
-If you want to avoid relying on an external registry at build time, consider forking the chart ecosystem and publishing the charts to your own registry or organization. Then update `charts/buildcharts/Chart.yaml` to point to your internal `repository: oci://...`.
-
-See [Charts](/charts) for details.
+If you want to avoid relying on external package feeds at build time, mirror or publish the tool package to your own NuGet feed (for example Azure Artifacts) and configure your `NuGet.config` (or `--add-source`) to use it. Another option is to install the tool once in your build image so CI does not need to download it on every run.
 
 ## Verify the installation
 
