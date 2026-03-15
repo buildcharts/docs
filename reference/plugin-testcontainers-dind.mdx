@@ -3,28 +3,42 @@ title: "TestcontainersDinD@v1"
 description: "Provide an isolated Docker daemon for Testcontainers-based builds with TestcontainersDinD@v1."
 ---
 
-`TestcontainersDinD@v1` is the built-in plugin for Docker-in-Docker support during generated test builds.
+This plugin provisions a dedicated Docker-in-Docker (DinD) daemon and configures Testcontainers to connect to it during build time, providing an isolated Docker engine.
 
-## When to use it
-
-Use this plugin when your test targets need an isolated Docker daemon for Testcontainers.
-
-## Configure it
+## Usage
 
 ```yaml
+# build.yml
+version: v1beta
+
 plugins:
   - TestcontainersDinD@v1
+
+variables:
+  - VERSION
+  - COMMIT
+
+targets:
+  test/BuildCharts.Tests/BuildCharts.Tests.csproj:
+    type: test
+  # define your solution and project targets here
 ```
+
+When running `buildcharts generate`, the plugin starts or reuses the DinD container, updates `.buildcharts/docker-bake.hcl`, and leaves the Docker daemon running for reuse.
 
 ## What it does
 
-- Starts or reuses a container named `buildcharts-dind`
-- Uses `docker:27-dind` by default
-- Lets you override the image with `BUILDCHARTS_DIND_IMAGE`
-- Runs the container in privileged mode on port `2375` with TLS disabled
+- Starts a `buildcharts-dind` container using the `docker:27-dind` image
+- Reuses the container if it already exists, or removes and recreates it if the image differs
+- Runs the container in privileged mode, binds port `2375`, and disables TLS
+- Supports `BUILDCHARTS_DIND_IMAGE` to override the Docker image tag
+- Patches the generated `docker-bake.hcl` for `target "test"` with `TESTCONTAINERS_HOST_OVERRIDE`
+- Adds `host.docker.internal` as an extra host that resolves to the host gateway
 - Writes `.buildcharts/plugins/TestcontainersDinD@v1/container_debuginfo.json`
-- Patches the generated `test` target with `TESTCONTAINERS_HOST_OVERRIDE`
-- Adds `host.docker.internal=host-gateway` to the generated `test` target
+
+## Environment variables
+
+- `BUILDCHARTS_DIND_IMAGE`
 
 ## Notes
 
