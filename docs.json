@@ -3,7 +3,7 @@
   "theme": "maple",
   "name": "BuildCharts",
   "colors": {
-    "primary": "#681656",
+    "primary": "#e347c1",
     "light": "#b71286",
     "dark": "#681656"
   },
@@ -132,5 +132,10 @@
   },
   "styling": {
     "codeblocks": "dark"
+  },
+  "background": {
+    "color": {
+      "dark": "#242424"
+    }
   }
 }
