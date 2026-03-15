@@ -39,31 +39,6 @@ COPY --from=pre-nuget /output /
 
 For the underlying Docker pattern, see [Exporting build artifacts](https://docs.docker.com/guides/bake/#exporting-build-artifacts).
 
-## Consume test outputs
-
-The shipped test sample reads TRX files from `.buildcharts/output/test`.
-
-```bash
-buildcharts generate
-docker buildx bake --file .buildcharts/docker-bake.hcl
-```
-
-After the build finishes, inspect:
-
-```text
-.buildcharts/output/test
-```
-
-## Consume NuGet outputs
-
-NuGet package stages export artifacts to:
-
-```text
-.buildcharts/output/nuget
-```
-
-This is the same pattern used by the `samples/dotnet-nuget` example.
-
 ## Work with Docker outputs
 
 `docker` stages use `type=docker`, so the image is loaded into your Docker environment instead of being exported to `.buildcharts/output/docker`.
