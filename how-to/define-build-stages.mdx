@@ -95,12 +95,3 @@ types:
 ```
 
 That exposes `PLATFORM` as a build arg in the generated Bake target.
-
-## Generate the stages
-
-After updating `build.yml`, regenerate the plan:
-
-```bash
-buildcharts generate
-docker buildx bake --file .buildcharts/docker-bake.hcl
-```
