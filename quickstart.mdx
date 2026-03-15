@@ -98,7 +98,7 @@ targets:
     - type: docker
       with:
         base: mcr.microsoft.com/dotnet/runtime:10.0
-        tags: ["docker.io/eddietisma/dotnet-docker:${VERSION}-${COMMIT}"]
+        tags: ["docker.io/buildcharts/buildcharts:${VERSION}-${COMMIT}"]
 
   test/BuildCharts.Tests/BuildCharts.Tests.csproj:
     type: test
