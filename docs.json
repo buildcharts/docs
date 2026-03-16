@@ -23,7 +23,7 @@
         ]
       },
       {
-        "group": "Core Features",
+        "group": "Core features",
         "pages": [
           "core-features/scaffolding",
           "core-features/metadata",
