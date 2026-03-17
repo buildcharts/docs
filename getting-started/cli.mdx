@@ -1,39 +1,25 @@
 ---
 title: "Command-line interface"
-description: "Shipped BuildCharts commands, options, and outputs."
+description: "Available BuildCharts commands and how to use them."
 ---
-
-Running `buildcharts` with no subcommand shows help.
 
 ## Commands
 
-| Command    | What it does                                                                              |
-| ---------- | ----------------------------------------------------------------------------------------- |
-| `generate` | Validates metadata, pulls charts, runs plugins, and writes `.buildcharts/docker-bake.hcl` |
-| `init`     | Scaffolds `build.yml` and `charts/buildcharts/Chart.yaml` for a .NET repository          |
-| `pull`     | Downloads a single chart by tag or digest                                                |
-| `summary`  | Exports a summary from the latest Docker Buildx history                                  |
-| `update`   | Resolves OCI chart dependencies and refreshes `charts/buildcharts/Chart.lock`            |
-| `version`  | Prints tool and runtime details                                                          |
+| Command    | What it does                                                  |
+| ---------- | ------------------------------------------------------------- |
+| `generate` | Generates `.buildcharts/docker-bake.hcl` from metadata/charts |
+| `init`     | Scaffolds `build.yml` and `charts/buildcharts/Chart.yaml`     |
+| `pull`     | Pulls a single OCI chart by tag or digest                     |
+| `summary`  | Creates a summary from latest Docker Buildx history           |
+| `update`   | Refreshes `charts/buildcharts/Chart.lock` from `Chart.yaml`   |
+| `version`  | Prints tool and runtime version info                          |
 
 ## `buildcharts generate`
 
 Generates build pipeline using metadata. Outputs a Docker bake file `.buildcharts/docker-bake.hcl`. It also validates `Chart.yaml` digests by comparing them to chart tags, runs plugins, and cleans the `.buildcharts` folder to keep a clean state.
 
 ```bash
-# buildcharts generate [--use-inline-dockerfiles] [--ignore-lock] [--verbose]
-Pulling charts...
-Pulled: registry-1.docker.io/buildcharts/dotnet-test:0.0.1 (581 bytes)
-Digest: sha256:e2fc7641da11faa2f90d2a4991fa8c37e97a0825988f1d4352758da4bc5dd587
-Pulled: registry-1.docker.io/buildcharts/dotnet-docker:0.0.2 (583 bytes)
-Digest: sha256:d3a3957520bff850383d6d79b692888595f437c872c2f860d75544751813ddde
-Pulled: registry-1.docker.io/buildcharts/dotnet-build:0.0.1 (582 bytes)
-Digest: sha256:aca33142a81a9e79d584de7882a740240163e27411ad0f4ebe0336ed2de0cb4e
-Pulled: registry-1.docker.io/buildcharts/dotnet-nuget:0.0.1 (582 bytes)
-Digest: sha256:6b6b99dd94c8b9f388890770fc3f1249c07561c9347d9eb98802c3bf44fbf47a
-
-✅ Generated files:
-  • docker-bake.hcl
+buildcharts generate [--use-inline-dockerfiles] [--ignore-lock] [--verbose]
 ```
 
 <ResponseField name="--use-inline-dockerfiles" type="option">
@@ -52,8 +38,29 @@ Digest: sha256:6b6b99dd94c8b9f388890770fc3f1249c07561c9347d9eb98802c3bf44fbf47a
   Override the Docker config directory used for registry auth
 </ResponseField>
 
+#### Example
+
+```bash
+# buildcharts generate
+Pulling charts...
+Pulled: registry-1.docker.io/buildcharts/dotnet-test:0.0.1 (581 bytes)
+Digest: sha256:e2fc7641da11faa2f90d2a4991fa8c37e97a0825988f1d4352758da4bc5dd587
+Pulled: registry-1.docker.io/buildcharts/dotnet-docker:0.0.2 (583 bytes)
+Digest: sha256:d3a3957520bff850383d6d79b692888595f437c872c2f860d75544751813ddde
+Pulled: registry-1.docker.io/buildcharts/dotnet-build:0.0.1 (582 bytes)
+Digest: sha256:aca33142a81a9e79d584de7882a740240163e27411ad0f4ebe0336ed2de0cb4e
+Pulled: registry-1.docker.io/buildcharts/dotnet-nuget:0.0.1 (582 bytes)
+Digest: sha256:6b6b99dd94c8b9f388890770fc3f1249c07561c9347d9eb98802c3bf44fbf47a
+
+✅ Generated files:
+  • docker-bake.hcl
+```
 
 ## `buildcharts init`
+
+```bash
+buildcharts init
+```
 
 <Warning>
   Currently supports .NET repositories only.
@@ -63,6 +70,8 @@ Scaffolds the working directory and automatically creates:
 
 - `build.yml`
 - `charts/buildcharts/Chart.yaml`
+
+#### Example
 
 ```bash
 # buildcharts init
@@ -91,21 +100,13 @@ buildcharts initialized
 
 ## `buildcharts pull`
 
-Pulls a single OCI chart by tag or digest.
-
 ```bash
 buildcharts pull <reference> [--untar] [--untardir <DIR>] [--output <OUTPUT>]
-
-# buildcharts pull oci://docker.io/buildcharts/dotnet-build:0.0.1                    
-Pulled: docker.io/buildcharts/dotnet-build:0.0.1 (1123 bytes)
-Digest: sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
-
-# buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
-Pulled: registry-1.docker.io/buildcharts/dotnet-build@sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c (1123 bytes)
-Digest: sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
 ```
 
-<ResponseField name="reference" type="argument">
+Pulls a single OCI chart by tag or digest.
+
+<ResponseField name="reference" type="argument" required>
   OCI reference in the form `registry/repo:tag` or `registry/repo@sha256:...`
 </ResponseField>
 
@@ -125,9 +126,37 @@ Digest: sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
   Override the Docker config directory used for registry auth
 </ResponseField>
 
+#### Example
+
+```bash
+buildcharts pull <reference> [--untar] [--untardir <DIR>] [--output <OUTPUT>]
+
+# buildcharts pull oci://docker.io/buildcharts/dotnet-build:0.0.1                    
+Pulled: docker.io/buildcharts/dotnet-build:0.0.1 (1123 bytes)
+Digest: sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
+
+# buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
+Pulled: registry-1.docker.io/buildcharts/dotnet-build@sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c (1123 bytes)
+Digest: sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
+```
+
 ## `buildcharts summary`
 
+```bash
+buildcharts summary
+```
+
 Exports summary artifacts from the latest Docker Buildx history.
+
+<ResponseField name="GITHUB_STEP_SUMMARY" type="environment">
+  When set, `summary` appends the generated Markdown summary to this file (GitHub Actions).
+</ResponseField>
+
+<ResponseField name="TF_BUILD=true" type="environment">
+  When set, `summary` also writes Azure DevOps-oriented outputs (artifacts and job summary metadata).
+</ResponseField>
+
+### Example
 
 ```bash
 # buildcharts summary
@@ -138,17 +167,19 @@ Generating summary for build: <id> (<job>)
   • .buildcharts/output/buildcharts.dockerbuild
 ```
 
-<ResponseField name="GITHUB_STEP_SUMMARY" type="environment">
-  When set, `summary` appends the generated Markdown summary to this file (GitHub Actions).
-</ResponseField>
-
-<ResponseField name="TF_BUILD=true" type="environment">
-  When set, `summary` also writes Azure DevOps-oriented outputs (artifacts and job summary metadata).
-</ResponseField>
-
 ## `buildcharts update`
 
+```bash
+buildcharts update
+```
+
 Resolves chart dependency digests from `charts/buildcharts/Chart.yaml` and refreshes the lock file.
+
+<ResponseField name="DOCKER_CONFIG" type="environment">
+  Override the Docker config directory used for registry auth
+</ResponseField>
+
+### Example
 
 ```bash
 # buildcharts update
@@ -166,13 +197,15 @@ Digest: sha256:978e3277b9618f6a0a56978b96d0b3fd23246cd77b972b66820c53e145c42de4 
   • charts/buildcharts/Chart.lock
 ```
 
-<ResponseField name="DOCKER_CONFIG" type="environment">
-  Override the Docker config directory used for registry auth
-</ResponseField>
-
 ## `buildcharts version`
 
-Prints runtime version details.
+```bash
+buildcharts version
+```
+
+Prints tool and runtime version details.
+
+<bold>Example</bold>
 
 ```bash
 # buildcharts version
