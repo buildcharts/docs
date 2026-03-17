@@ -38,7 +38,7 @@ buildcharts generate [--use-inline-dockerfiles] [--ignore-lock] [--verbose]
   Override the Docker config directory used for registry auth
 </ResponseField>
 
-#### Example
+**Example**
 
 ```bash
 # buildcharts generate
@@ -71,7 +71,7 @@ Scaffolds the working directory and automatically creates:
 - `build.yml`
 - `charts/buildcharts/Chart.yaml`
 
-#### Example
+**Example**
 
 ```bash
 # buildcharts init
@@ -126,7 +126,7 @@ Pulls a single OCI chart by tag or digest.
   Override the Docker config directory used for registry auth
 </ResponseField>
 
-#### Example
+**Example**
 
 ```bash
 buildcharts pull <reference> [--untar] [--untardir <DIR>] [--output <OUTPUT>]
@@ -156,7 +156,7 @@ Exports summary artifacts from the latest Docker Buildx history.
   When set, `summary` also writes Azure DevOps-oriented outputs (artifacts and job summary metadata).
 </ResponseField>
 
-### Example
+**Example**
 
 ```bash
 # buildcharts summary
@@ -179,7 +179,7 @@ Resolves chart dependency digests from `charts/buildcharts/Chart.yaml` and refre
   Override the Docker config directory used for registry auth
 </ResponseField>
 
-### Example
+**Example**
 
 ```bash
 # buildcharts update
@@ -205,7 +205,7 @@ buildcharts version
 
 Prints tool and runtime version details.
 
-<bold>Example</bold>
+**Example**
 
 ```bash
 # buildcharts version
