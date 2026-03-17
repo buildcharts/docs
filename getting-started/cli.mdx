@@ -5,7 +5,7 @@ description: "Shipped BuildCharts commands, options, and outputs."
 
 Running `buildcharts` with no subcommand shows help.
 
-## Command summary
+## Commands
 
 | Command    | What it does                                                                              |
 | ---------- | ----------------------------------------------------------------------------------------- |
@@ -21,8 +21,7 @@ Running `buildcharts` with no subcommand shows help.
 Generates build pipeline using metadata. Outputs a Docker bake file `.buildcharts/docker-bake.hcl`. It also validates `Chart.yaml` digests by comparing them to chart tags, runs plugins, and cleans the `.buildcharts` folder to keep a clean state.
 
 ```bash
-buildcharts generate [--use-inline-dockerfiles] [--ignore-lock] [--verbose]
-
+# buildcharts generate [--use-inline-dockerfiles] [--ignore-lock] [--verbose]
 Pulling charts...
 Pulled: registry-1.docker.io/buildcharts/dotnet-test:0.0.1 (581 bytes)
 Digest: sha256:e2fc7641da11faa2f90d2a4991fa8c37e97a0825988f1d4352758da4bc5dd587
@@ -66,8 +65,7 @@ Scaffolds the working directory and automatically creates:
 - `charts/buildcharts/Chart.yaml`
 
 ```bash
-buildcharts init
-
+# buildcharts init
 buildcharts initialized
 
 ✅ Generated files:
