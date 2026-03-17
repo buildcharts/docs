@@ -4,7 +4,7 @@
   "name": "BuildCharts",
   "colors": {
     "primary": "#7718BC",
-    "light": "#a03be8",
+    "light": "#9e41e1",
     "dark": "#7718BC"
   },
   "favicon": "/logo/buildcharts.png",
@@ -14,12 +14,12 @@
         "group": "Getting started",
         "pages": [
           "index",
-          "install",
+          "guides/install",
           "guides/how-it-works",
           "guides/examples",
-          "considerations",
-          "comparisons",
-          "reference/cli"
+          "guides/considerations",
+          "guides/comparisons",
+          "guides/cli"
         ]
       },
       {
