@@ -13,13 +13,13 @@
       {
         "group": "Getting started",
         "pages": [
-          "index",
-          "guides/install",
-          "guides/how-it-works",
-          "guides/examples",
-          "guides/considerations",
-          "guides/comparisons",
-          "guides/cli"
+          "getting-started/index",
+          "getting-started/install",
+          "getting-started/how-it-works",
+          "getting-started/examples",
+          "getting-started/considerations",
+          "getting-started/comparisons",
+          "getting-started/cli"
         ]
       },
       {
@@ -38,23 +38,23 @@
       {
         "group": "Charts",
         "pages": [
-          "how-to/define-build-stages",
-          "how-to/using-outputs",
-          "how-to/handle-dependencies"
+          "charts/define-build-stages",
+          "charts/using-outputs",
+          "charts/handle-dependencies"
         ]
       },
       {
         "group": "Quickstart",
         "pages": [
-          "quickstart",
-          "guides/github-actions"
+          "quickstart/dotnet",
+          "quickstart/github-actions"
         ]
       },
       {
         "group": "Plugins",
         "pages": [
-          "reference/plugin-nuget-authenticate",
-          "reference/plugin-testcontainers-dind"
+          "plugins/nuget-authenticate",
+          "plugins/testcontainers-dind"
         ]
       },
       {
