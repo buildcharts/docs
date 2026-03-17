@@ -25,7 +25,7 @@ BuildCharts generates a plan that you execute with Docker Buildx/BuildKit. Chang
 
 If you operate BuildCharts at scale, standardize the Docker/Buildx/BuildKit versions you use in CI and on remote builders.
 
-You can also pin the Dockerfile frontend syntax version in chart Dockerfiles to reduce surprises from Dockerfile parsing changes. Add a `# syntax=docker/dockerfile:1.1` directive as the first line. See [Dockerfile syntax directive](https://docs.docker.com/reference/dockerfile/#syntax). This pins the Dockerfile syntax frontend, not the Docker Engine version.
+You can also pin the Dockerfile frontend syntax version in chart Dockerfiles to reduce surprises from Dockerfile parsing changes. Add a `# syntax=docker/dockerfile:1.1` directive as the first line. See [Dockerfile syntax directive](https://docs.docker.com/reference/dockerfile/#syntax). This pins the Dockerfile syntax frontend (which downloads as a docker image).
 
 ## Generator dependency and fallbacks
 
