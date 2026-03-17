@@ -13,13 +13,13 @@
       {
         "group": "Getting started",
         "pages": [
-          "getting-started/index",
-          "getting-started/install",
-          "getting-started/how-it-works",
-          "getting-started/examples",
-          "getting-started/considerations",
-          "getting-started/comparisons",
-          "getting-started/cli"
+          "index",
+          "install",
+          "how-it-works",
+          "examples",
+          "considerations",
+          "comparisons",
+          "cli"
         ]
       },
       {
