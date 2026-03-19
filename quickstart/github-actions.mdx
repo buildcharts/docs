@@ -1,6 +1,6 @@
 ---
 title: "GitHub Actions"
-description: "Run BuildCharts in GitHub Actions with the generated workflow and Buildx Bake."
+description: "Run BuildCharts in GitHub Actions with Buildx Bake."
 ---
 
 ## Actions
@@ -39,10 +39,6 @@ jobs:
           VERSION: ${{ github.ref_name }}
           COMMIT: ${{ github.sha }}
 ```
-
-## Scaffolding
-
-`buildcharts init` creates `.github/workflows/buildcharts.yml` when the Git remote in `.git/config` points to GitHub.
 
 ## Enable caching
 
