@@ -22,8 +22,6 @@ In a .NET repository, this command:
 - Creates `charts/buildcharts/Chart.yaml`
 - Creates `.github/workflows/buildcharts.yml` when the Git remote points to GitHub
 
-`init` currently supports .NET repositories only.
-
 ## Use the built-in .NET charts
 
 BuildCharts ships with first-class .NET charts for common stage types. These are a practical starting point when you want working defaults before you introduce your own chart ecosystem.
@@ -83,28 +81,30 @@ This file maps target aliases in `build.yml` to the built-in .NET charts.
 This shape matches the shipped samples:
 
 ```yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/eddietisma/buildcharts/main/schemas/v1beta.json
+
 version: v1beta
 
 variables:
-  - VERSION
-  - COMMIT
+  VERSION: "1.0.0"
+  COMMIT: "local"
 
 targets:
   buildcharts.sln:
-    - type: build
-      with:
-        base: mcr.microsoft.com/dotnet/sdk:10.0
+    type: build
+    with:
+      base: mcr.microsoft.com/dotnet/sdk:10.0
 
+  src/BuildCharts.Tool/BuildCharts.Tool.csproj:
+    - type: nuget
     - type: docker
       with:
         base: mcr.microsoft.com/dotnet/runtime:10.0
         tags: ["docker.io/buildcharts/buildcharts:${VERSION}-${COMMIT}"]
 
-  test/BuildCharts.Tests/BuildCharts.Tests.csproj:
+  tests/BuildCharts.Tool/BuildCharts.Tests.csproj:
     type: test
 
-  test/BuildCharts.Tests1/BuildCharts.Tests1.csproj:
-    type: test
 ```
 
 You must define exactly one `build` target.
