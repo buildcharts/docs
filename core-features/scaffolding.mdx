@@ -17,34 +17,6 @@ At a high level, the goal is:
 
 This is automatic stage wiring. Instead of starting from an empty config, BuildCharts inspects the repository shape and scaffolds the most likely target types for each project.
 
-## How the current implementation works
-
-The current implementation is file-type driven.
-
-It detects the repository type first, then applies language-specific scaffolding rules. Today, the only supported repository type is .NET:
-- a `.sln` or `.slnx` file identifies the repository as a supported .NET solution
-- `.csproj` files are inspected to infer additional target types
-
-For .NET repositories, the generated stages are based on the [buildcharts/dotnet](https://github.com/buildcharts/charts/tree/main/dotnet) chart set.
-
-## What it creates
-
-In a supported .NET repository, `buildcharts init` creates:
-- `build.yml`
-- `charts/buildcharts/Chart.yaml`
-- `.github/workflows/buildcharts.yml` when the repository remote points to GitHub
-
-## What it detects
-
-The current scaffolding flow is .NET-specific.
-
-It detects:
-- a `.sln` or `.slnx` file
-- test projects from common test package references such as `Microsoft.NET.Test.Sdk`, `xunit`, or `nunit`
-- NuGet package projects from package metadata such as `<PackageId>` or `<GeneratePackageOnBuild>true</GeneratePackageOnBuild>`
-- Docker targets when a project folder contains a local `Dockerfile`
-- the .NET SDK version from `global.json` or target frameworks
-
 ## What the generated metadata looks like
 
 The scaffolded `build.yml` includes:
@@ -54,14 +26,6 @@ The scaffolded `build.yml` includes:
 
 BuildCharts does more than detect that a repository is `.NET`. It also maps each discovered file to an appropriate stage type automatically.
 
-## What the generated chart file looks like
-
-The scaffolded `Chart.yaml` maps default aliases to OCI-hosted charts:
-- `build`
-- `test`
-- `nuget`
-- `docker`
-
 ## Typical flow
 
 ```bash
@@ -70,6 +34,14 @@ buildcharts update
 buildcharts generate
 docker buildx bake --file .buildcharts/docker-bake.hcl
 ```
+
+## How .NET scaffolding works today
+
+<Note>
+Today, the only supported repository type is .NET.
+</Note>
+
+For .NET repositories, the generated stages are based on the [buildcharts/dotnet](https://github.com/buildcharts/charts/tree/main/dotnet) chart set.
 
 ## Related pages
 
