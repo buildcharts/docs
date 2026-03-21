@@ -59,34 +59,6 @@ BuildCharts injects:
 | `BUILDCHARTS_SRC` | The target source path, for example `src/MyApp/MyApp.csproj` |
 | `BUILDCHARTS_TYPE` | The generated target type, for example `build` |
 
-### Dockerfile example
-
-```dockerfile
-###################################
-# Target: pre-sample
-###################################
-FROM build AS pre-sample
-
-# The target source path, for example `src/MyApp/MyApp.csproj`
-ARG BUILDCHARTS_SRC
-
-# The generated target type, for example `build`
-ARG BUILDCHARTS_TYPE
-
-RUN echo "BUILDCHARTS_SRC=$BUILDCHARTS_SRC" && \
-    echo "BUILDCHARTS_TYPE=$BUILDCHARTS_TYPE" && \
-    mkdir -p /output && \
-    echo "$BUILDCHARTS_SRC" > /output/source.txt && \
-    echo "$BUILDCHARTS_TYPE" > /output/type.txt
-
-###################################
-# Target: sample
-###################################
-FROM scratch AS sample
-COPY --from=pre-sample /output/source.txt /output/source.txt
-COPY --from=pre-sample /output/type.txt /output/type.txt
-```
-
 ## Reuse one `with` block across multiple stages
 
 If stages share the same configuration, use `type: [build, test]`:
@@ -195,3 +167,21 @@ This is conceptually similar to:
 The difference is that BuildCharts expands the matrix into Docker Buildx Bake targets instead of CI jobs. The matrix values become Bake target variants and build args that your chart Dockerfiles can consume.
 
 Read more about [Docker matrix targets](https://docs.docker.com/build/bake/matrices/).
+
+## Dockerfile example
+
+```dockerfile
+###################################
+# Target: sample
+###################################
+FROM build AS sample
+
+# The target source path, for example `src/MyApp/MyApp.csproj`
+ARG BUILDCHARTS_SRC
+
+# The generated target type, for example `build`
+ARG BUILDCHARTS_TYPE
+
+RUN echo "BUILDCHARTS_SRC=$BUILDCHARTS_SRC" && \
+    echo "BUILDCHARTS_TYPE=$BUILDCHARTS_TYPE" && 
+```
