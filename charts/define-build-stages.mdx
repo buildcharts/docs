@@ -59,7 +59,33 @@ BuildCharts injects:
 | `BUILDCHARTS_SRC` | The target source path, for example `src/MyApp/MyApp.csproj` |
 | `BUILDCHARTS_TYPE` | The generated target type, for example `build` |
 
-Charts can use these variables inside their Dockerfiles and build logic. `BUILDCHARTS_SRC` lets a chart know which source entry it is building, and `BUILDCHARTS_TYPE` identifies the resolved stage type behind the chart alias.
+### Dockerfile example
+
+```dockerfile
+###################################
+# Target: pre-sample
+###################################
+FROM build AS pre-sample
+
+# The target source path, for example `src/MyApp/MyApp.csproj`
+ARG BUILDCHARTS_SRC
+
+# The generated target type, for example `build`
+ARG BUILDCHARTS_TYPE
+
+RUN echo "BUILDCHARTS_SRC=$BUILDCHARTS_SRC" && \
+    echo "BUILDCHARTS_TYPE=$BUILDCHARTS_TYPE" && \
+    mkdir -p /output && \
+    echo "$BUILDCHARTS_SRC" > /output/source.txt && \
+    echo "$BUILDCHARTS_TYPE" > /output/type.txt
+
+###################################
+# Target: sample
+###################################
+FROM scratch AS sample
+COPY --from=pre-sample /output/source.txt /output/source.txt
+COPY --from=pre-sample /output/type.txt /output/type.txt
+```
 
 ## Reuse one `with` block across multiple stages
 
@@ -79,13 +105,13 @@ BuildCharts expands that into two stage definitions internally.
 
 The current generator recognizes these keys under `with`:
 
-| Key | What it controls |
-| --- | --- |
-| `base` | Named `base` image context |
-| `tags` | Image tags for `docker` stages |
+| Key          | What it controls                  |
+| ------------ | --------------------------------- |
+| `base`       | Named `base` image context        |
+| `tags`       | Image tags for `docker` stages    |
 | `dockerfile` | Override the chart Dockerfile path |
-| `allow` | BuildKit entitlements |
-| `args` | Build args passed into the chart |
+| `allow`      | BuildKit entitlements             |
+| `args`       | Build args passed into the chart  |
 
 Example:
 
