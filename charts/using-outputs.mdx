@@ -53,3 +53,31 @@ targets:
         base: mcr.microsoft.com/dotnet/runtime:10.0
         tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
 ```
+
+## Dockerfile example
+
+```dockerfile
+###################################
+# Target: pre-sample
+###################################
+FROM build AS pre-sample
+
+# The target source path, for example `src/MyApp/MyApp.csproj`
+ARG BUILDCHARTS_SRC
+
+# The generated target type, for example `build`
+ARG BUILDCHARTS_TYPE
+
+RUN echo "BUILDCHARTS_SRC=$BUILDCHARTS_SRC" && \
+    echo "BUILDCHARTS_TYPE=$BUILDCHARTS_TYPE" && \
+    mkdir -p /output && \
+    echo "$BUILDCHARTS_SRC" > /output/source.txt && \
+    echo "$BUILDCHARTS_TYPE" > /output/type.txt
+
+###################################
+# Target: sample
+###################################
+FROM scratch AS sample
+COPY --from=pre-sample /output/source.txt /output/source.txt
+COPY --from=pre-sample /output/type.txt /output/type.txt
+```
