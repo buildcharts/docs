@@ -21,12 +21,12 @@ In a .NET repository, this command:
 - Creates `charts/buildcharts/Chart.yaml`
 - Creates `.github/workflows/buildcharts.yml` when the Git remote points to GitHub
 
-| Target | Description |
-| ---         | ---    |
-| `build`     | `global.json` or target frameworks help determine the .NET SDK base image version |
-| `test`      | Test package references such as `Microsoft.NET.Test.Sdk`, `xunit`, or `nunit` |
-| `nuget`     | Package metadata such as `<PackageId>` or `<GeneratePackageOnBuild>true</GeneratePackageOnBuild>` |
-| `docker`    | A local `Dockerfile` in a project folder |
+| Target   | Description                                                                                           |
+| -------- | ----------------------------------------------------------------------------------------------------- |
+| `build`  | `global.json` or target frameworks help determine the .NET SDK base image version                     |
+| `test`   | Test package references such as `Microsoft.NET.Test.Sdk`, `xunit`, or `nunit`                         |
+| `nuget`  | Package metadata such as `<PackageId>` or `<GeneratePackageOnBuild>true</GeneratePackageOnBuild>`     |
+| `docker` | A local `Dockerfile` in a project folder                                                              |
 
 ## Use the built-in .NET charts
 

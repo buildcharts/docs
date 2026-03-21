@@ -7,11 +7,11 @@ Charts can export artifacts by writing files into `/output` inside the Dockerfil
 
 ## Output behavior by stage type
 
-| Stage type | Output behavior |
-| --- | --- |
-| `build` | `type=cacheonly` |
-| `docker` | `type=docker` |
-| Any other type | Export to `.buildcharts/output/<type>` |
+| Stage type       | Output behavior                         |
+| ---------------- | --------------------------------------- |
+| `build`          | `type=cacheonly`                        |
+| `docker`         | `type=docker`                           |
+| Any other type   | Export to `.buildcharts/output/<type>`  |
 
 That means `test`, `nuget`, and any custom non-docker type export local files under `.buildcharts/output`.
 

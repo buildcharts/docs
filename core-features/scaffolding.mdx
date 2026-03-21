@@ -17,6 +17,10 @@ At a high level, the goal is:
 
 This is automatic stage wiring. Instead of starting from an empty config, BuildCharts inspects the repository shape and scaffolds the most likely target types for each project.
 
+<Warning>
+  Currently only supports .NET applications.
+</Warning>
+
 ## What the generated metadata looks like
 
 The scaffolded `build.yml` includes:
@@ -34,14 +38,6 @@ buildcharts update
 buildcharts generate
 docker buildx bake --file .buildcharts/docker-bake.hcl
 ```
-
-## How .NET scaffolding works today
-
-<Note>
-Today, the only supported repository type is .NET.
-</Note>
-
-For .NET repositories, the generated stages are based on the [buildcharts/dotnet](https://github.com/buildcharts/charts/tree/main/dotnet) chart set.
 
 ## Related pages
 

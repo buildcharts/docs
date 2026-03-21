@@ -168,11 +168,11 @@ BuildCharts is also not tied to ORAS as the publishing tool. It consumes OCI art
 
 Examples of OCI-capable CLIs in this ecosystem:
 
-| CLI | Typical use |
-| --- | --- |
-| [ORAS](https://oras.land/) | General OCI artifact workflows and registry operations |
-| [Helm](https://helm.sh/docs/topics/registries/) | Helm-style charts in OCI registries |
-| [Kustomizer](https://kustomizer.dev/) | Packaging and publishing Kubernetes manifests as OCI artifacts |
+| CLI                                        | Typical use                                                     |
+| ------------------------------------------ | --------------------------------------------------------------- |
+| [ORAS](https://oras.land/)                 | General OCI artifact workflows and registry operations          |
+| [Helm](https://helm.sh/docs/topics/registries/) | Helm-style charts in OCI registries                         |
+| [Kustomizer](https://kustomizer.dev/)      | Packaging and publishing Kubernetes manifests as OCI artifacts  |
 
 ORAS is a common choice when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
 
@@ -223,11 +223,11 @@ BuildCharts does not implement its own signing or trust system.
 
 BuildCharts does not sign charts itself. If you need signed charts, use OCI-native signing tools and verify signatures during promotion or consumption.
 
-| Tool | Description |
-| --- | --- |
-| [Notation](https://github.com/notaryproject/notation) | A CLI from the Notary Project for attaching and verifying OCI artifact signatures as first-class registry metadata. |
-| [Cosign](https://github.com/sigstore/cosign) | A Sigstore CLI for signing and verifying OCI artifacts, often paired with keyless or key-based supply-chain workflows. |
-| [Helm provenance](https://helm.sh/docs/topics/provenance/) | Helm's chart signing and provenance model for proving chart origin and integrity in Helm-based workflows. |
+| Tool                                                  | Description                                                                                                              |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| [Notation](https://github.com/notaryproject/notation) | A CLI from the Notary Project for attaching and verifying OCI artifact signatures as first-class registry metadata.     |
+| [Cosign](https://github.com/sigstore/cosign)          | A Sigstore CLI for signing and verifying OCI artifacts, often paired with keyless or key-based supply-chain workflows. |
+| [Helm provenance](https://helm.sh/docs/topics/provenance/) | Helm's chart signing and provenance model for proving chart origin and integrity in Helm-based workflows.          |
 
 ### Repository governance
 

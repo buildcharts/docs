@@ -54,10 +54,10 @@ targets:
 
 BuildCharts injects:
 
-| Variable | Meaning |
-| --- | --- |
-| `BUILDCHARTS_SRC` | The target source path, for example `src/MyApp/MyApp.csproj` |
-| `BUILDCHARTS_TYPE` | The generated target type, for example `build` |
+| Variable           | Meaning                                                      |
+| ------------------ | ------------------------------------------------------------ |
+| `BUILDCHARTS_SRC`  | The target source path, for example `src/MyApp/MyApp.csproj` |
+| `BUILDCHARTS_TYPE` | The generated target type, for example `build`               |
 
 ## Reuse one `with` block across multiple stages
 
@@ -77,13 +77,13 @@ BuildCharts expands that into two stage definitions internally.
 
 The current generator recognizes these keys under `with`:
 
-| Key          | What it controls                  |
-| ------------ | --------------------------------- |
-| `base`       | Named `base` image context        |
-| `tags`       | Image tags for `docker` stages    |
+| Key          | What it controls                   |
+| ------------ | ---------------------------------- |
+| `base`       | Named `base` image context         |
+| `tags`       | Image tags for `docker` stages     |
 | `dockerfile` | Override the chart Dockerfile path |
-| `allow`      | BuildKit entitlements             |
-| `args`       | Build args passed into the chart  |
+| `allow`      | BuildKit entitlements              |
+| `args`       | Build args passed into the chart   |
 
 Example:
 
