@@ -17,7 +17,9 @@ Caching improves performance and reduces registry traffic, but you should still 
 
 If you use ephemeral CI runners, consider persisting the blob cache between runs.
 
-This is the same kind of dependency you already have when building Docker images that reference base images from a registry. If your container registry (for example Azure Container Registry) is unavailable, builds and generation that depend on it will be affected.
+<Note>
+  This is the same kind of dependency you already have when building Docker images that reference base images from a registry. If your container registry (for example Azure Container Registry) is unavailable, builds and generation that depend on it will be affected.
+</Note>
 
 ## Docker toolchain dependency
 
