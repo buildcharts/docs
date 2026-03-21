@@ -16,10 +16,10 @@
           "index",
           "install",
           "how-it-works",
-          "examples",
           "considerations",
           "comparisons",
-          "cli"
+          "cli",
+          "examples"
         ]
       },
       {
