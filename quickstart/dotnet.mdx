@@ -6,9 +6,8 @@ description: "Get started with BuildCharts in .NET repositories using the built-
 ## Prerequisites
 
 - Docker with `buildx`
-- BuildCharts installed locally or globally
-- A repository root that contains a `.sln` or `.slnx` file if you want to use `buildcharts init`
-
+- BuildCharts installed
+- A repository root that contains a `.sln` or `.slnx` files
 ## Scaffold a repository
 
 Run `buildcharts init` from the repository root.
@@ -21,6 +20,13 @@ In a .NET repository, this command:
 - Creates `build.yml`
 - Creates `charts/buildcharts/Chart.yaml`
 - Creates `.github/workflows/buildcharts.yml` when the Git remote points to GitHub
+
+| Target | Description |
+| ---         | ---    |
+| `build`     | `global.json` or target frameworks help determine the .NET SDK base image version |
+| `test`      | Test package references such as `Microsoft.NET.Test.Sdk`, `xunit`, or `nunit` |
+| `nuget`     | Package metadata such as `<PackageId>` or `<GeneratePackageOnBuild>true</GeneratePackageOnBuild>` |
+| `docker`    | A local `Dockerfile` in a project folder |
 
 ## Use the built-in .NET charts
 
@@ -104,7 +110,6 @@ targets:
 
   tests/BuildCharts.Tool/BuildCharts.Tests.csproj:
     type: test
-
 ```
 
 You must define exactly one `build` target.
