@@ -33,11 +33,17 @@ BuildCharts is a generator. If generation is blocked, your builds are blocked.
 
 As a fallback, you can check in the generated Bake plan (and optionally inline Dockerfiles) to remove the runtime generator dependency. You trade off chart update flow and can drift from upstream fixes and improvements.
 
-## Parallelism and caching trade-offs
+## Parallelism trade-offs
 
 Bake can execute many targets in parallel. On large repositories and shared runners, this can saturate CPU, I/O, and cache storage.
 
-Treat cache strategy as part of your build design. Misconfigured cache exports/imports can make builds slower and harder to troubleshoot than a simpler pipeline.
+If parallel execution overwhelms your runner, you can also limit BuildKit solver concurrency with `max-parallelism` in `buildkitd.toml`. See [Docker BuildKit resource limiting](https://docs.docker.com/build/buildkit/configure/#resource-limiting). This can reduce contention and make builds more predictable, but it also lowers peak throughput, so tune it alongside your cache strategy instead of treating it as a universal fix.
+
+## Caching trade-offs
+
+Treat cache strategy as part of your build design. Docker build cache lets BuildKit reuse previous build results instead of rebuilding every layer on every run. See [Docker build cache](https://docs.docker.com/build/cache/). In practice, good cache reuse can reduce build time and registry traffic, while poor cache design can leave you paying the complexity cost without the speed benefit.
+
+This matters more on ephemeral CI runners, where the local builder cache disappears between jobs. In that case, external cache backends can help preserve useful cache state across runs. Docker documents several cache backends, including `inline`, `registry`, `local`, and `gha`, plus provider-specific backends such as `s3` for AWS S3 and `azblob` for Azure Blob Storage. See [Docker cache storage backends](https://docs.docker.com/build/cache/backends/). Choose a backend that matches your platform and access model, and remember that extra cache import/export steps also add I/O, storage cost, and troubleshooting surface area.
 
 ## Template indirection and troubleshooting
 
