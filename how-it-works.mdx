@@ -3,7 +3,12 @@ title: "How it works"
 description: "Inputs, validation rules, generated files, and Bake outputs in the BuildCharts flow."
 ---
 
-`buildcharts` turns repo-local metadata into a `docker buildx bake` plan.
+BuildCharts uses separate files for separate concerns.
+- `build.yml` is the repository-local abstraction where you define what the build should do: targets, types, variables, and optional plugins.
+- `charts/buildcharts/Chart.yaml` resolves those target types to chart-defined Dockerfile implementations.
+- Those chart implementations are stored in OCI registries.
+
+The goal of this separation is to keep build intent local to the repository while allowing execution logic to be managed and versioned centrally. BuildCharts then pulls OCI charts, validates inputs, applies plugins, and generates the build.
 
 ## Inputs
 
