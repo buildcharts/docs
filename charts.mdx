@@ -118,8 +118,6 @@ That means the common path is:
 
 This also covers external Docker credential helpers. If Docker is configured to use a helper, BuildCharts uses the same helper.
 
-Azure Container Registry is also handled explicitly in the current implementation. BuildCharts supports the Azure-style token shapes that appear in Docker config and helper output for `.azurecr.io`, so Azure-backed Docker auth flows continue to work as long as the credentials end up in Docker's config or helper chain.
-
 ## Alias mapping
 
 Each dependency declares an alias that you use in `build.yml`:
