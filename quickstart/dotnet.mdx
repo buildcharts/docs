@@ -44,6 +44,10 @@ The shipped Dockerfiles cover the common .NET workflows:
 
 These charts are implemented as reusable Dockerfiles behind the chart aliases you reference from `build.yml`.
 
+<Note>
+  You must define exactly one `build` target.
+</Note>
+
 ## Dependency chart
 
 ```yaml
@@ -111,8 +115,6 @@ targets:
   tests/BuildCharts.Tool/BuildCharts.Tests.csproj:
     type: test
 ```
-
-You must define exactly one `build` target.
 
 ### Parallelization: multiple targets vs `dotnet test`
 
