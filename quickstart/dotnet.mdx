@@ -137,7 +137,9 @@ The tradeoff is execution strategy:
 
 Which model is faster depends on your solution shape, test layout, hardware, number of tests, and how test assemblies are distributed, so benchmark both if build time matters.
 
-> From [.NET 9](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9/sdk#run-tests-in-parallel), the same test project can run across different target frameworks in parallel through MSBuild.
+<Tip>
+  In [.NET 9](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9/sdk#run-tests-in-parallel), tests for the same project run in parallel across different target frameworks.
+</Tip>
 
 ## Create a lock file
 
