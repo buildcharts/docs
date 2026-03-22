@@ -13,7 +13,30 @@ This is also how you avoid the mutable tag problem when you want immutability. A
 
 `buildcharts update` resolves the current digest for each dependency and writes `charts/buildcharts/Chart.lock`.
 
-### Refresh the lock file
+**Example**
+
+```yaml
+dependencies:
+- name: dotnet-build
+  version: 0.0.1
+  repository: oci://registry-1.docker.io/buildcharts/dotnet-build
+  digest: sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
+- name: dotnet-docker
+  version: 0.0.2
+  repository: oci://registry-1.docker.io/buildcharts/dotnet-docker
+  digest: sha256:32b65ecc7aef0fee236814f0e1cdd63dc624fcda9d46e8202887624f55622e70
+- name: dotnet-nuget
+  version: 0.0.1
+  repository: oci://registry-1.docker.io/buildcharts/dotnet-nuget
+  digest: sha256:c58bf75a66bbcc271cd16c9480f67523e0b5d80fabec354ee591c0004af7d5e7
+- name: dotnet-test
+  version: 0.0.1
+  repository: oci://registry-1.docker.io/buildcharts/dotnet-test
+  digest: sha256:7b4bae285523bcc341b9be471bc5435f16e6a33322c1c3af3f75f70875c09207
+lockVersion: 1
+```
+
+## Refresh the lock file
 
 Run this when you change chart versions or want to pin current digests:
 
@@ -25,7 +48,7 @@ This resolves each `repository/name:version` reference and writes `charts/buildc
 
 This is the repeatability layer for chart dependencies. `Chart.yaml` says which chart version you want, while `Chart.lock` records the exact OCI digest that was resolved at that point in time. In practice, that gives you more reproducible builds, clearer dependency state across repositories, and safer upgrades when platform teams publish new chart versions.
 
-Example:
+**Example**
 
 ```yaml
 dependencies:
