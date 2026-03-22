@@ -36,10 +36,6 @@ src/
 │       └── Chart.yaml   # Chart dependency data
 ```
 
-## What BuildCharts generates
-
-- `.buildcharts/docker-bake.hcl` from your metadata and chart dependencies
-
 ## Workflow
 
 1. Create or scaffold `build.yml` and `charts/buildcharts/Chart.yaml`.
@@ -49,13 +45,18 @@ src/
 
 ## Why use it
 
-- Keep CI logic in versioned OCI charts instead of copying pipeline YAML across repos.
-- Run the same generated build plan locally and in CI.
-- Keep repository config lightweight by separating intent in `build.yml` from implementation in charts.
-- Stay provider-agnostic by generating Docker-native build plans instead of provider-specific steps.
-- Adopt chart updates gradually with versioned dependencies and optional lock files.
-- Describe intent with aliases such as `build`, `test`, `nuget`, and `docker`.
-- Extend generation with built-in plugins.
+- Centralize build logic in versioned OCI charts instead of duplicating pipeline YAML across repositories.
+- Centralize governance in shared chart implementations, including Dockerfile linting, security scanning, policy checks, and compliance controls, instead of re-creating them per repository.
+- Keep repository configuration lightweight and developer-friendly by expressing build intent in `build.yml` while chart implementations define how it runs.
+- Run the same generated Docker Buildx Bake plan locally and in CI for stronger reproducibility and faster troubleshooting.
+- Stay provider-agnostic by generating Docker-native build plans instead of embedding build logic in provider-specific pipeline steps.
+- Roll out changes through normal dependency management: choose broader tracks such as `1.0`, pin exact versions such as `1.0.1`, use optional lock files for repeatability, and automate update PRs with Renovate or Dependabot.
+- Reduce drift and blast radius by reviewing and versioning chart changes centrally before individual services adopt them.
+- Extend the model with built-in plugins and custom charts for organization-specific build requirements.
+
+<Tip>
+  For a deeper architectural discussion of the problem space, goals, trade-offs, and governance model, read the [Assessment and Rationale](https://github.com/eddietisma/buildcharts/blob/main/docs/assessment.md) on GitHub.
+</Tip>
 
 ## Get started
 
