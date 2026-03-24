@@ -96,12 +96,17 @@
     }
   },
   "styling": {
-    "codeblocks": "dark",
+    "codeblocks": {
+      "theme": {
+        "light": "plastic",
+        "dark": "plastic"
+      }
+    },
     "eyebrows": "breadcrumbs"
   },
   "background": {
     "color": {
-      "dark": "#131014"
+      "dark": "#0f0e12"
     }
   },
   "metadata": {

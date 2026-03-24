@@ -7,19 +7,19 @@ The `buildcharts` CLI scaffolds projects, manages chart dependencies, validates 
 
 ## Commands
 
-| Command    | What it does                                                  |
-| ---------- | ------------------------------------------------------------- |
-| `clean`    | <Badge color="red" size="sm">WIP</Badge>                      |
-| `diff`     | <Badge color="red" size="sm">WIP</Badge>                      |
-| `explain`  | <Badge color="red" size="sm">WIP</Badge>                      |
-| `generate` | Generates `.buildcharts/docker-bake.hcl` from metadata/charts |
-| `init`     | Scaffolds `build.yml` and `charts/buildcharts/Chart.yaml`     |
-| `package`  | <Badge color="red" size="sm">WIP</Badge>                      |
-| `pull`     | Pulls a single OCI chart by tag or digest                     |
-| `summary`  | Creates a summary from latest Docker Buildx history           |
-| `update`   | Refreshes `charts/buildcharts/Chart.lock` from `Chart.yaml`   |
-| `validate` | <Badge color="red" size="sm">WIP</Badge>                      |
-| `version`  | Prints tool and runtime version info                          |
+| Command    | What it does                                                    |
+| ---------- | -------------------------------------------------------------   |
+| `clean`    | <Badge color="yellow" size="sm">WIP</Badge>                      |
+| `diff`     | <Badge color="yellow" size="sm">WIP</Badge>                      |
+| `explain`  | <Badge color="yellow" size="sm">WIP</Badge>                      |
+| `generate` | Generates `.buildcharts/docker-bake.hcl` from metadata/charts   |
+| `init`     | Scaffolds `build.yml` and `charts/buildcharts/Chart.yaml`       |
+| `package`  | <Badge color="yellow" size="sm">WIP</Badge>                      |
+| `pull`     | Pulls a single OCI chart by tag or digest                       |
+| `summary`  | Creates a summary from latest Docker Buildx history             |
+| `update`   | Refreshes `charts/buildcharts/Chart.lock` from `Chart.yaml`     |
+| `validate` | <Badge color="yellow" size="sm">WIP</Badge>                      |
+| `version`  | Prints tool and runtime version info                            |
 
 ## `buildcharts generate`
 
@@ -65,18 +65,14 @@ Digest: sha256:6b6b99dd94c8b9f388890770fc3f1249c07561c9347d9eb98802c3bf44fbf47a
 
 ## `buildcharts init`
 
-```bash
-buildcharts init
-```
-
 Scaffolds the working directory and automatically creates:
 
 - `build.yml`
 - `charts/buildcharts/Chart.yaml`
 
-<Warning>
-  Currently only supports .NET applications.
-</Warning>
+```bash
+buildcharts init
+```
 
 **Example**
 
@@ -107,11 +103,11 @@ buildcharts initialized
 
 ## `buildcharts pull`
 
+Pulls a single OCI chart by tag or digest.
+
 ```bash
 buildcharts pull <reference> [--untar] [--untardir <DIR>] [--output <OUTPUT>]
 ```
-
-Pulls a single OCI chart by tag or digest.
 
 <ResponseField name="reference" type="argument" required>
   OCI reference in the form `registry/repo:tag` or `registry/repo@sha256:...`
@@ -147,11 +143,11 @@ Digest: sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
 
 ## `buildcharts summary`
 
+Exports summary artifacts from the latest Docker Buildx history.
+
 ```bash
 buildcharts summary
 ```
-
-Exports summary artifacts from the latest Docker Buildx history.
 
 <ResponseField name="GITHUB_STEP_SUMMARY" type="environment">
   When set, `summary` appends the generated Markdown summary to this file (GitHub Actions).
@@ -174,11 +170,11 @@ Generating summary for build: <id> (<job>)
 
 ## `buildcharts update`
 
+Resolves chart dependency digests from `charts/buildcharts/Chart.yaml` and refreshes the lock file.
+
 ```bash
 buildcharts update
 ```
-
-Resolves chart dependency digests from `charts/buildcharts/Chart.yaml` and refreshes the lock file.
 
 <ResponseField name="DOCKER_CONFIG" type="environment">
   Override the Docker config directory used for registry auth
