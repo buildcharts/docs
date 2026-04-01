@@ -3,7 +3,7 @@ title: "Comparisons"
 description: "How BuildCharts compares to related build and CI/CD approaches."
 ---
 
-This page compares BuildCharts with related tools and build patterns so you can evaluate tradeoffs and choose the right model for your team.
+BuildCharts overlaps with several familiar CI and build patterns, but its model aligns more closely with Helm-style charts: versioned build logic is distributed through OCI registries, while Docker Buildx provides the execution layer, caching, and local parity with CI.
 
 ## What BuildCharts optimizes for
 
@@ -18,6 +18,16 @@ That makes BuildCharts strongest when you want:
 - centrally versioned build logic across many repositories
 - OCI-based distribution and digest pinning
 
+## Scope
+
+It does not replace your CI/CD platform.
+
+BuildCharts also does not:
+- manage deployments or runtime configuration
+- host secrets or artifacts for you
+- package or publish charts/templates for you
+- provide a built-in signing or trust system for charts
+
 ## Comparison with common alternatives
 
 | Tool                                           | Strength                                                   | Tradeoff vs BuildCharts                                                                |
@@ -28,6 +38,21 @@ That makes BuildCharts strongest when you want:
 | [Buildkite](https://github.com/buildkite)      | Mature hosted orchestration and job controls               | Higher platform coupling than local-first generated Bake plans                         |
 | [Bazel](https://github.com/bazelbuild/bazel)   | Strong hermetic builds and caching for large mono-repos    | Steeper adoption and different build graph model                                       |
 | [Nix](https://github.com/NixOS/nix)            | Reproducible environments and package builds               | Different ecosystem and workflow than Docker Buildx-centric pipelines                  |
+
+## When it fits
+
+BuildCharts tends to fit well when you:
+- already use Docker and BuildKit for builds
+- want to centralize build logic across many repositories
+- want the same build plan to run locally and in CI
+- benefit from parallel builds and BuildKit caching
+
+## When it doesn't
+
+BuildCharts tends to be a poor fit when you:
+- cannot run Docker daemons or BuildKit in your environment
+- have highly bespoke build steps that do not map well to Docker-based stages
+- have very constrained runners where Bake parallelism and caching add more overhead than benefit
 
 ## Related systems and inspirations
 
@@ -46,9 +71,8 @@ BuildCharts relies on Docker Buildx/BuildKit behavior. These references are usef
 - [docker/metadata-action](https://github.com/docker/metadata-action?tab=readme-ov-file)
 - [Moby BuildKit workflows](https://github.com/moby/buildkit/blob/master/.github/workflows/buildkit.yml)
 
-## Registry and CI integration references
+## CI integration references
 
-- [Azure ACR ORAS artifacts](https://github.com/Azure/acr/blob/main/docs/container-registry-oras-artifacts.md)
 - [Azure Pipelines logging commands](https://github.com/microsoft/azure-pipelines-tasks/blob/master/docs/authoring/commands.md)
 
 ## Practical takeaway

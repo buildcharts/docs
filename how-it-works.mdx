@@ -3,14 +3,15 @@ title: "How it works"
 description: "Inputs, validation rules, generated files, and Bake outputs in the BuildCharts flow."
 ---
 
+## File layout
+
 BuildCharts uses separate files for separate concerns.
 - `build.yml` is the repository-local abstraction where you define what the build should do: targets, types, variables, and optional plugins.
 - `charts/buildcharts/Chart.yaml` resolves those target types to chart-defined Dockerfile implementations.
+- `charts/buildcharts/Chart.lock` optionally pins the resolved chart digests for more repeatable builds and drift detection.
 - Those chart implementations are stored in OCI registries.
 
 The goal of this separation is to keep build intent local to the repository while allowing execution logic to be managed and versioned centrally. BuildCharts then pulls OCI charts, validates inputs, applies plugins, and generates the build.
-
-## Inputs
 
 ### `build.yml`
 
@@ -67,28 +68,3 @@ That export layout is why the samples can read test results from `.buildcharts/o
 - model complex build graphs declaratively with groups, targets, matrices, and `--set` overrides
 
 This helps teams maintain consistent build execution across dozens or hundreds of services without copy-pasting and drifting CI configuration.
-
-## Scope
-
-BuildCharts is a build-plan generator. It does not replace your CI/CD platform.
-
-BuildCharts also does not:
-- manage deployments or runtime configuration
-- host secrets or artifacts for you
-- package or publish charts/templates for you
-- provide a built-in signing or trust system for charts
-
-## When it fits
-
-BuildCharts tends to fit well when you:
-- already use Docker and BuildKit for builds
-- want to centralize build logic across many repositories
-- want the same build plan to run locally and in CI
-- benefit from parallel builds and BuildKit caching
-
-## When it doesn't
-
-BuildCharts tends to be a poor fit when you:
-- cannot run Docker daemons or BuildKit in your environment
-- have highly bespoke build steps that do not map well to Docker-based stages
-- have very constrained runners where Bake parallelism and caching add more overhead than benefit
