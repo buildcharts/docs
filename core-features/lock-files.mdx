@@ -3,6 +3,10 @@ title: "Lock files"
 description: "Chart.lock for repeatable chart resolution and controlled updates."
 ---
 
+`buildcharts update` creates a lock file with pinned chart dependencies.
+
+## What lock files does
+
 BuildCharts can pin chart dependencies from `charts/buildcharts/Chart.yaml` in `charts/buildcharts/Chart.lock`.
 
 The purpose of the lock file is to make chart resolution more repeatable across local runs and CI. Instead of always following the current state of a chart tag in the registry, BuildCharts can pin the exact resolved digest for each dependency. That reduces drift from upstream chart changes and lets teams roll out chart updates intentionally instead of picking them up implicitly.
