@@ -3,7 +3,21 @@ title: "Charts"
 description: "Reusable, versioned pipeline templates distributed as OCI artifacts."
 ---
 
-BuildCharts resolves stage implementations from OCI-hosted charts declared in `charts/buildcharts/Chart.yaml`.
+Charts are used for build composition and distributed using OCI-registries.
+
+## What charts mean in BuildCharts
+
+Charts are how BuildCharts separates build intent from build implementation:
+- `build.yml` says what to build
+- charts say how that stage runs
+
+That lets multiple repositories share the same versioned stage implementations without copying pipeline logic into every repository.
+
+You can think of charts as OCI-versioned stages in a centrally managed multi-stage build model. Each chart dependency provides the implementation for a stage type such as `build`, `test`, `nuget`, or `docker`, and repositories opt into those stages by alias instead of embedding the stage logic themselves.
+
+That central model matters when you want to manage pipeline behavior across many repositories. You can update the chart once, publish a new version, and let repositories adopt that version through normal dependency updates instead of editing CI definitions repo by repo.
+
+This is similar to Helm charts in one important way: both use versioned chart metadata and both can be distributed through OCI registries. Like Helm charts, BuildCharts charts are versioned packages you can manage centrally and consume from many repositories. The difference is what the chart configures. Helm charts describe how an application is deployed to Kubernetes. BuildCharts charts describe how build stages are generated into a Docker Bake plan for CI and local builds.
 
 ## Declare stage aliases in `Chart.yaml`
 
@@ -52,33 +66,25 @@ Because chart dependencies are declared in `charts/buildcharts/Chart.yaml`, team
 
 In practice, this lets you centralize build-stage governance in chart versions and let automation open PRs when new chart releases are available. If a chart release updates underlying Docker images or build logic, repositories can adopt that change through a standard dependency update workflow instead of manual CI edits.
 
-## What charts mean in BuildCharts
+## Alias mapping
 
-Charts are how BuildCharts separates build intent from build implementation:
-- `build.yml` says what to build
-- charts say how that stage runs
+Each dependency declares an alias that you use in `build.yml`:
 
-That lets multiple repositories share the same versioned stage implementations without copying pipeline logic into every repository.
-
-You can think of charts as OCI-versioned stages in a centrally managed multi-stage build model. Each chart dependency provides the implementation for a stage type such as `build`, `test`, `nuget`, or `docker`, and repositories opt into those stages by alias instead of embedding the stage logic themselves.
-
-That central model matters when you want to manage pipeline behavior across many repositories. You can update the chart once, publish a new version, and let repositories adopt that version through normal dependency updates instead of editing CI definitions repo by repo.
-
-This is similar to Helm charts in one important way: both use versioned chart metadata and both can be distributed through OCI registries. Like Helm charts, BuildCharts charts are versioned packages you can manage centrally and consume from many repositories. The difference is what the chart configures. Helm charts describe how an application is deployed to Kubernetes. BuildCharts charts describe how build stages are generated into a Docker Bake plan for CI and local builds.
-
-### Pull a chart directly
-
-Use `buildcharts pull` when you want to inspect a single chart:
-
-```bash
-buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build:0.0.1 --untar
+```yaml
+dependencies:
+  - name: dotnet-docker
+    alias: docker
+    version: 0.0.2
+    repository: oci://registry-1.docker.io/buildcharts
 ```
 
-You can also pull by digest:
-
-```bash
-buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:...
+```yaml
+targets:
+  src/App/App.csproj:
+    type: docker
 ```
+
+If `docker` is not declared as an alias in `Chart.yaml`, `buildcharts generate` fails.
 
 ## Container registry
 
@@ -118,25 +124,19 @@ That means the common path is:
 
 This also covers external Docker credential helpers. If Docker is configured to use a helper, BuildCharts uses the same helper.
 
-## Alias mapping
+### Pull a chart directly
 
-Each dependency declares an alias that you use in `build.yml`:
+Use `buildcharts pull` when you want to inspect a single chart:
 
-```yaml
-dependencies:
-  - name: dotnet-docker
-    alias: docker
-    version: 0.0.2
-    repository: oci://registry-1.docker.io/buildcharts
+```bash
+buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build:0.0.1 --untar
 ```
 
-```yaml
-targets:
-  src/App/App.csproj:
-    type: docker
-```
+You can also pull by digest:
 
-If `docker` is not declared as an alias in `Chart.yaml`, `buildcharts generate` fails.
+```bash
+buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:...
+```
 
 ## Lock files
 
@@ -146,9 +146,25 @@ When you run `buildcharts update`, BuildCharts resolves chart digests and writes
 
 If the lock file exists, `buildcharts generate` uses it to detect dependency drift before it renders the Bake plan. If the lock file and the resolved chart state do not match, generation stops with a discrepancy warning and tells you to refresh the lock file. If it does not exist, generation still works, but chart resolution follows the current registry tags instead of pinned digests.
 
+## What OCI means here
+
+BuildCharts stores and pulls charts as OCI artifacts from a container registry.
+
+OCI is the [Open Container Initiative](https://opencontainers.org/). OCI defines open specifications around container formats and distribution. The parts that matter most here are:
+- the OCI Image Specification, which defines how manifests, layers, descriptors, and media types are represented
+- the OCI Distribution Specification, which defines how clients push and pull content from registries
+
+In practice, this is why BuildCharts can treat a chart as content stored in the same kind of registry infrastructure that teams already use for container images. Using OCI-hosted charts gives BuildCharts a few practical benefits:
+
+- Versioned stage implementations that can be shared across many repositories
+- Digest pinning through `Chart.lock`
+- Reuse of existing registry infrastructure, permissions, and auth flows
+- A portable distribution format instead of a custom package server
+- Compatibility with general OCI tooling and OCI-native workflows
+
 ## What ORAS is doing here
 
-ORAS stands for OCI Registry As Storage.
+ORAS stands for [OCI Registry As Storage](https://oras.land/).
 
 BuildCharts uses the [ORAS C# client library](https://github.com/oras-project/oras-dotnet) to talk to the registry and pull chart content. In practice, `buildcharts` acts as an embedded ORAS client when it consumes charts:
 - the chart is stored in the registry as an OCI artifact
@@ -157,6 +173,8 @@ BuildCharts uses the [ORAS C# client library](https://github.com/oras-project/or
 - BuildCharts unpacks it into `.buildcharts`
 
 ORAS itself is a CLI and set of client libraries for working with OCI artifacts in OCI-compliant registries. The important part here is that it works with general OCI artifacts, not only with container images.
+
+If you want a registry-specific example of ORAS artifacts in practice, see [Azure ACR ORAS artifacts](https://github.com/Azure/acr/blob/main/docs/container-registry-oras-artifacts.md).
 
 You do not need to install the ORAS CLI yourself to use BuildCharts. Registry access is already built into the `buildcharts` CLI.
 
@@ -173,26 +191,6 @@ Examples of OCI-capable CLIs in this ecosystem:
 | [Kustomizer](https://kustomizer.dev/)      | Packaging and publishing Kubernetes manifests as OCI artifacts  |
 
 ORAS is a common choice when you want a more general OCI artifact workflow. See [ORAS](https://oras.land/) for the underlying registry client model.
-
-## What OCI means here
-
-BuildCharts stores and pulls charts as OCI artifacts from a container registry.
-
-OCI is the Open Container Initiative. OCI defines open specifications around container formats and distribution. The parts that matter most here are:
-- the OCI Image Specification, which defines how manifests, layers, descriptors, and media types are represented
-- the OCI Distribution Specification, which defines how clients push and pull content from registries
-
-In practice, this is why BuildCharts can treat a chart as content stored in the same kind of registry infrastructure that teams already use for container images.
-
-## Why this model is useful
-
-Using OCI-hosted charts gives BuildCharts a few practical benefits:
-
-- Versioned stage implementations that can be shared across many repositories
-- Digest pinning through `Chart.lock`
-- Reuse of existing registry infrastructure, permissions, and auth flows
-- A portable distribution format instead of a custom package server
-- Compatibility with general OCI tooling and OCI-native workflows
 
 ## Trust and integrity
 
