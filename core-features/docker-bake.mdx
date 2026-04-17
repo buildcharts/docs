@@ -15,9 +15,9 @@ In BuildCharts, that means:
 - `buildcharts generate` renders the final `docker-bake.hcl`
 - `docker buildx bake` executes the generated plan
 
-## Why BuildCharts uses Bake
+## How BuildCharts uses Bake
 
-Bake fits BuildCharts well because it provides:
+BuildCharts uses Bake in the following ways:
 
 - Declarative build configuration in a file instead of long CLI commands
 - A native way to run multiple targets in parallel
@@ -25,29 +25,47 @@ Bake fits BuildCharts well because it provides:
 - A structured place for args, tags, outputs, contexts, entitlements, provenance, and SBOM settings
 - A standard Docker-native interface that works locally and in CI
 
-## Benefits for BuildCharts users
-
-### Simpler execution
-
-After generation, the runtime command is predictable:
+### Typical flow
 
 ```bash
+buildcharts generate
 docker buildx bake --file .buildcharts/docker-bake.hcl
 ```
 
-You do not need to manually reconstruct build arguments, output settings, or target wiring in scripts.
+### Advanced Docker build features
+
+Bake exposes first-class support for features that matter in BuildCharts:
+- Outputs for build artifacts
+- Multi-platform builds
+- Advanced cache configurations
+  - Docker layer caching with `cache-from` and `cache-to`
+  - Docker registry caching, where published images and build cache are stored in a registry
+  - Remote cache backends such as `s3` and `azblob`
+- Deduplication of shared context transfer
+- Remote builders through the `kubernetes` driver
+- Dependencies between targets through target contexts
+- Entitlements
+- Provenance and SBOM attestation
+- Target overrides with `--set`
 
 ### Parallel targets
 
-Bake runs specified targets in parallel. This is useful in BuildCharts because a repository can generate separate `build`, `test`, `nuget`, and `docker` targets from one metadata model.
+Bake runs specified targets in parallel. In BuildCharts, a repository can generate separate `build`, `test`, `nuget`, and `docker` targets from one metadata model.
 
-### Single target
+### Specific targets
 
-You can run a single target when you only want one stage. For example, run only tests with:
+Run a single target to execute one stage. For example, to run only tests:
 
 ```bash
 docker buildx bake --file .buildcharts/docker-bake.hcl test
 ```
+
+To run test and nuget:
+
+```bash
+docker buildx bake --file .buildcharts/docker-bake.hcl test nuget
+```
+
 
 ### Better reuse of shared configuration
 
@@ -63,42 +81,21 @@ Bake supports commands such as:
 
 That makes it easier to inspect the generated build plan and troubleshoot failures after execution.
 
-### Better fit for advanced Docker build features
-
-Bake exposes first-class support for features that matter in BuildCharts:
-- outputs
-- multi-platform builds
-- cache configuration
-- entitlements
-- provenance and SBOM attestation
-- target overrides with `--set`
 
 ## SBOM and provenance
 
-There are two related but separate concerns:
-- securing the chart artifact itself
-- securing the images and outputs produced by the generated build
+BuildCharts executes the generated `docker-bake.hcl` through Docker Buildx, so provenance and SBOM attestations use the standard Buildx attestation flow.
 
-For the chart artifact, signing and policy verification are usually the most important controls.
-
-For built images, use Buildx attestations to attach:
-- provenance
-- SBOM
-
-This fits BuildCharts well because the generated `docker-bake.hcl` is executed by Docker Buildx, which already supports provenance and SBOM attestations in the image build flow.
-
-## Typical BuildCharts flow
+To inspect the generated SBOM locally before you push an image, override the generated `docker` target and use a local output:
 
 ```bash
-buildcharts generate
-docker buildx bake --file .buildcharts/docker-bake.hcl
+docker buildx bake \
+  --file .buildcharts/docker-bake.hcl docker \
+  --set docker.attest=type=sbom \
+  --set docker.output=type=local,dest=.buildcharts/output/sbom
 ```
 
-You can also target a specific generated stage:
-
-```bash
-docker buildx bake --file .buildcharts/docker-bake.hcl test
-```
+This writes the SBOM to `.buildcharts/output/sbom/sbom.spdx.json`.
 
 ## Read more
 
