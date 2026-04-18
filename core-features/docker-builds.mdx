@@ -1,0 +1,146 @@
+---
+title: "Docker builds"
+description: "BuildCharts uses BuildKit to execute generated builds."
+---
+
+BuildCharts generates a `docker-bake.hcl` file and runs it with [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/). Bake is the declarative interface. BuildKit is the engine that solves the build graph, runs independent work in parallel, deduplicates repeated work, and writes the final outputs.
+
+## How BuildCharts uses Bake
+
+In BuildCharts, the flow looks like this:
+- `build.yml` defines build intent
+- `Chart.yaml` maps target types to OCI-hosted implementations
+- `buildcharts generate` renders `.buildcharts/docker-bake.hcl`
+- `docker buildx bake` submits that plan to BuildKit
+
+Bake gives you a stable, inspectable build definition. BuildKit decides which steps can run in parallel, which cached results can be reused, and which parts of the graph can be skipped.
+
+## Docker Bake for orchestrated builds
+
+Docker Bake lets you define multiple related targets in one file and execute them as one coordinated build. In BuildCharts, that matters because one metadata model often expands into several targets such as `build`, `test`, `nuget`, and `docker`.
+
+When you run the generated Bake file, Buildx submits all selected targets to the same BuildKit builder by default. That setup gives you the best chance to reuse cache and share repeated work across targets. The tradeoff is that those targets also compete for the same CPU, memory, and I/O on that builder.
+
+```bash
+buildcharts generate
+docker buildx bake --file .buildcharts/docker-bake.hcl
+```
+
+You can still narrow the execution graph when you only want part of the pipeline:
+
+```bash
+docker buildx bake --file .buildcharts/docker-bake.hcl test
+docker buildx bake --file .buildcharts/docker-bake.hcl test nuget
+```
+
+### Parallel stages inside one build
+
+BuildKit uses a dependency graph, not a strict line-by-line execution model. When two stages do not depend on each other, it can run them at the same time.
+
+```dockerfile
+FROM node:20 AS frontend
+WORKDIR /src
+COPY web/package*.json ./
+RUN npm ci
+COPY web/ .
+RUN npm run build
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS backend
+WORKDIR /src
+COPY src/*.csproj ./
+RUN dotnet restore
+COPY src/ .
+RUN dotnet publish -c Release -o /out
+
+FROM alpine:3.20 AS final
+COPY --from=frontend /src/dist /app/wwwroot
+COPY --from=backend /out /app
+```
+
+In this example, `frontend` and `backend` can run in parallel. The `final` stage waits for both.
+
+### Parallel targets in one Bake file
+
+BuildCharts can emit several independent targets from one repository definition. Bake passes that full target set to BuildKit, which can start unrelated targets at the same time instead of serializing the whole run.
+
+### Multi-platform execution
+
+Buildx also lets the generated Bake file build for multiple platforms. BuildKit then evaluates one graph per platform. On builders with native workers per architecture, those platform builds can run in parallel as well.
+
+## BuildKit deduplication
+
+BuildKit can recognize when two parts of the build graph resolve to the same work and collapse them into one execution. Instead of rebuilding the same step for every target or stage, it computes the result once and reuses it wherever the inputs match.
+
+It does that by fingerprinting operations and inputs in its content-addressed build graph. When the builder sees matching work, it can reuse an existing result or let one in-flight execution satisfy multiple consumers.
+
+In practice, that often means:
+- pulling the same base image once
+- reusing identical `COPY` inputs across stages
+- executing the same `RUN` step once when the inputs match
+- deduplicating shared context transfer across related Bake targets
+
+This matters in BuildCharts because generated targets often share the same repository context, base images, variables, and chart-defined setup steps.
+
+## Concurrent builds
+
+If multiple build requests reach the same persistent BuildKit builder, BuildKit can handle them concurrently. In practice, that can mean multiple `docker buildx bake` commands, multiple CI jobs routed to the same builder, or one Bake file with several targets.
+
+When concurrent builds use the same persistent builder, BuildKit does not treat each build as fully isolated work. It can share pulled base images, reuse cached results, and deduplicate identical steps across builds when the inputs match.
+
+## Advanced BuildKit features
+
+Bake exposes first-class support for features that matter in BuildCharts:
+
+- Export build artifacts outputs
+- Multi-platform builds
+- Advanced cache configurations
+  - `cache-from` and `cache-to`
+  - Registry-backed cache
+  - Remote cache backends such as `s3` and `azblob`
+- Dependencies between targets through target contexts
+- Entitlements
+- Provenance and SBOM attestation
+- Flexible target overrides with `--set`
+
+## Inspect and troubleshoot builds
+
+The generated Bake file is easy to inspect before you run it:
+- `docker buildx bake --file .buildcharts/docker-bake.hcl --print`
+- `docker buildx bake --file .buildcharts/docker-bake.hcl --list`
+- `docker buildx history ls`
+- `docker buildx history inspect`
+
+These commands help you answer different questions:
+- `--print` shows the fully resolved build definition
+- `--list` shows available groups, targets, and variables
+- `history` commands help you inspect what BuildKit actually executed
+
+For deeper troubleshooting, you can import a `.dockerbuild` record into Docker Desktop and inspect the build there. That gives you a richer view of logs, traces, inputs, outputs, and cache usage than the CLI alone.
+
+```bash
+docker buildx history import --file ./artifacts/build.dockerbuild
+```
+
+## SBOM and provenance
+
+BuildCharts executes the generated `docker-bake.hcl` through Docker Buildx, so provenance and SBOM attestations use the standard Buildx and BuildKit attestation flow.
+
+To inspect the generated SBOM locally before you push an image, override the generated `docker` target and use a local output:
+
+```bash
+docker buildx bake \
+  --file .buildcharts/docker-bake.hcl docker \
+  --set docker.attest=type=sbom \
+  --set docker.output=type=local,dest=.buildcharts/output/sbom
+```
+
+This writes the SBOM to `.buildcharts/output/sbom/sbom.spdx.json`.
+
+## Read more
+
+- [BuildKit overview](https://docs.docker.com/build/buildkit/)
+- [Bake contexts and deduplication](https://docs.docker.com/build/bake/contexts/#deduplicate-context-transfer)
+- [Bake file reference](https://docs.docker.com/build/bake/reference/)
+- [Bake overview](https://docs.docker.com/build/bake/)
+- [docker buildx bake CLI reference](https://docs.docker.com/reference/cli/docker/buildx/bake/)
+- [Exporting build artifacts with Bake](https://docs.docker.com/guides/bake/#exporting-build-artifacts)
