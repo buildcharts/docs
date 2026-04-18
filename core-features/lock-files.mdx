@@ -5,13 +5,20 @@ description: "Chart.lock for repeatable chart resolution and controlled updates.
 
 `buildcharts update` creates a lock file with pinned chart dependencies.
 
-## What lock files does
+## What lock files do
 
 BuildCharts can pin chart dependencies from `charts/buildcharts/Chart.yaml` in `charts/buildcharts/Chart.lock`.
 
-The purpose of the lock file is to make chart resolution more repeatable across local runs and CI. Instead of always following the current state of a chart tag in the registry, BuildCharts can pin the exact resolved digest for each dependency. That reduces drift from upstream chart changes and lets teams roll out chart updates intentionally instead of picking them up implicitly.
+The purpose of the lock file is to make chart resolution more repeatable across local runs and CI. Instead of always following the current state of a chart tag in the registry, BuildCharts can pin the exact resolved digest for each dependency. That reduces drift from upstream chart changes and lets teams adopt chart updates intentionally instead of picking them up implicitly.
 
-This is also how you avoid the mutable tag problem when you want immutability. A tag such as `0.0.1` or `latest` can be moved or republished in the registry, but the digest recorded in `Chart.lock` points to one exact artifact. If the tag later points somewhere else, BuildCharts detects the mismatch instead of silently consuming changed chart content.
+This is also how you avoid the mutable tag problem when you want immutability. A tag such as `0.0.1` or `latest` can be moved or republished in the registry, but the digest recorded in `Chart.lock` points to one exact artifact. If the tag later has changed, BuildCharts detects the mismatch instead of silently consuming changed chart content.
+
+## Update strategies
+
+BuildCharts works with or without `charts/buildcharts/Chart.lock`. That gives you two dependency update models:
+
+- Without a lock file, BuildCharts has the option to follow the current chart tags from the registry, such as `latest`, `8.0`, or `8.0.x`, enabling different rollout strategies with semantic versioning.
+- With a lock file, BuildCharts pins chart digests. This is the more controlled model and usually fits best when you also have an automated update workflow around chart versions, for example through [Dependabot](https://github.com/dependabot) or [Renovate](https://github.com/renovatebot/renovate).
 
 ## `Chart.lock`
 
@@ -85,4 +92,4 @@ buildcharts generate --ignore-lock
 
 ## Related pages
 
-- [Charts](/charts)
+- [Charts](/core-features/charts)
