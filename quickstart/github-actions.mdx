@@ -7,6 +7,7 @@ description: "Run BuildCharts in GitHub Actions with Buildx Bake."
 
 - [buildcharts/setup-action](https://github.com/buildcharts/setup-action)
 - [buildcharts/generate-action](https://github.com/buildcharts/generate-action)
+- [buildcharts/summary-action](https://github.com/buildcharts/summary-action)
 
 ## Usage
 
@@ -38,6 +39,9 @@ jobs:
         env:
           VERSION: ${{ github.ref_name }}
           COMMIT: ${{ github.sha }}
+
+      - name: BuildCharts summary
+        uses: buildcharts/summary-action@v1
 ```
 
 ## Enable caching
@@ -63,15 +67,16 @@ Read more about [Cache storage backend](https://docs.docker.com/build/cache/back
 
 ## Add a build summary
 
-`buildcharts summary` appends Markdown to `GITHUB_STEP_SUMMARY` when that environment variable is present. Add this step after Bake if you want a job summary:
+[`buildcharts/summary-action`](https://github.com/buildcharts/summary-action) appends Markdown to `GITHUB_STEP_SUMMARY`. Add this step after Bake if you want a GHA job summary:
 
 ```yaml
 - name: Build summary
-  run: buildcharts summary
+  uses: buildcharts/summary-action@v1
 ```
 
-## Notes
+## What each action does
 
-- `buildcharts/setup-action@v1` installs the CLI.
-- `buildcharts/generate-action@v1` generates `.buildcharts/docker-bake.hcl`.
-- `docker/bake-action@v6` runs the generated plan. Add your own `set` overrides if you want to configure cache backends.
+- [`buildcharts/setup-action@v1`](https://github.com/buildcharts/setup-action) installs the CLI.
+- [`buildcharts/generate-action@v1`](https://github.com/buildcharts/generate-action) generates the build.
+- [`buildcharts/summary-action@v1`](https://github.com/buildcharts/summary-action) writes build summary to the GHA job summary.
+- [`docker/bake-action@v6`](https://github.com/docker/bake-action) runs the generated build plan.

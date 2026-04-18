@@ -44,10 +44,6 @@ The shipped Dockerfiles cover the common .NET workflows:
 
 These charts are implemented as reusable Dockerfiles behind the chart aliases you reference from `build.yml`.
 
-<Note>
-  You must define exactly one `build` target.
-</Note>
-
 ## Dependency chart
 
 ```yaml
@@ -116,6 +112,10 @@ targets:
     type: test
 ```
 
+<Note>
+  You must define exactly one `build` target.
+</Note>
+
 ### Parallelization: multiple targets vs `dotnet test`
 
 If you prefer, you can also put `build` and `test` directly on the solution target. This works well for .NET because `dotnet build` and `dotnet test` can run directly against a solution, so the solution can act as the shared source for both stages:
@@ -138,12 +138,14 @@ The tradeoff is execution strategy:
 Which model is faster depends on your solution shape, test layout, hardware, number of tests, and how test assemblies are distributed, so benchmark both if build time matters.
 
 <Tip>
-  In [.NET 9](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9/sdk#run-tests-in-parallel), tests for the same project run in parallel across different target frameworks.
+  From [.NET 9](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9/sdk#run-tests-in-parallel), tests for the same project run in parallel across different target frameworks.
 </Tip>
 
 ## Create a lock file (optional)
 
 `buildcharts generate` works without `charts/buildcharts/Chart.lock`, but `buildcharts update` gives you pinned chart digests and lets `generate` detect drift.
+
+If you want pinned chart digests and drift detection, run:
 
 ```bash
 buildcharts update
@@ -172,7 +174,7 @@ docker buildx bake --file .buildcharts/docker-bake.hcl
 ```
 
 
-## Signature verification
+## Signature verification (optional)
 
 The built-in .NET charts are published as OCI artifacts and signed with Cosign in GitHub Actions. You can verify a chart signature before using or trusting a chart digest.
 
@@ -185,7 +187,7 @@ cosign verify \
   docker.io/buildcharts/<chart>@sha256:<digest>
 ```
 
-If you use a lock file, the digest is available in `charts/buildcharts/Chart.lock`. That makes the lock file the natural source for verification input during CI or review.
+When using a lock file, the digest is available in `charts/buildcharts/Chart.lock`. That makes the lock file the natural source for verification input during CI or review.
 
 ## Next steps
 

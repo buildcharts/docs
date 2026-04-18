@@ -66,4 +66,4 @@ If you want to reduce supply-chain risk (for example vendor compromise or mutabl
 - Build and publish the `dotnet-buildcharts` tool package to your own NuGet feed, and restore it from there in CI.
 - Publish charts to your own OCI registry or organization, and point `charts/buildcharts/Chart.yaml` to your internal `repository: oci://...`.
 - Use [Chart lock files](/core-features/lock-files) to pin chart digests and make builds deterministic even if tags move.
-- Apply chart governance and validation in CI (review policies, signing, scanning). See [Trust and integrity](/charts#trust-and-integrity).
+- Apply chart governance and validation in CI (review policies, signing, scanning). See [Trust and integrity](/core-features/charts#trust-and-integrity).

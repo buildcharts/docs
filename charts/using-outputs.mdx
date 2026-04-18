@@ -1,6 +1,6 @@
 ---
 title: "Exporting build artifacts"
-description: "Export artifacts with Bake and consume them from .buildcharts/output."
+description: "Export build artifacts for local workflows and CI."
 ---
 
 Charts can export artifacts by writing files into `/output` inside the Dockerfile. The generated Bake plan then uses a local output to copy that content to `.buildcharts/output/<type>` on the host during `docker buildx bake`.
