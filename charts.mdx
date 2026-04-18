@@ -8,8 +8,8 @@ Charts are used for build composition and distributed using OCI-registries.
 ## What charts mean in BuildCharts
 
 Charts are how BuildCharts separates build intent from build implementation:
-- `build.yml` says what to build
-- charts say how that stage runs
+- Build intent stays in `build.yml`
+- Charts define how each stage runs
 
 That lets multiple repositories share the same versioned stage implementations without copying pipeline logic into every repository.
 
@@ -100,7 +100,7 @@ That also means authentication is registry authentication. You authenticate to t
 - Docker Hub
 - GitHub Container Registry (`ghcr.io`)
 - Azure Container Registry
-- another OCI-compatible registry
+- Another OCI-compatible registry
 
 ### Authenticate to private registries
 
@@ -118,9 +118,9 @@ The current implementation supports:
 - `credsStore`
 
 That means the common path is:
-- authenticate to the registry with Docker or the registry's normal Docker-compatible login flow
-- let Docker write credentials or helper configuration
-- run `buildcharts` and let it reuse those credentials
+- Authenticate to the registry with Docker or the registry's normal Docker-compatible login flow
+- Let Docker write credentials or helper configuration
+- Run `buildcharts` and let it reuse those credentials
 
 This also covers external Docker credential helpers. If Docker is configured to use a helper, BuildCharts uses the same helper.
 
@@ -151,8 +151,8 @@ If the lock file exists, `buildcharts generate` uses it to detect dependency dri
 BuildCharts stores and pulls charts as OCI artifacts from a container registry.
 
 OCI is the [Open Container Initiative](https://opencontainers.org/). OCI defines open specifications around container formats and distribution. The parts that matter most here are:
-- the OCI Image Specification, which defines how manifests, layers, descriptors, and media types are represented
-- the OCI Distribution Specification, which defines how clients push and pull content from registries
+- The OCI Image Specification, which defines how manifests, layers, descriptors, and media types are represented
+- The OCI Distribution Specification, which defines how clients push and pull content from registries
 
 In practice, this is why BuildCharts can treat a chart as content stored in the same kind of registry infrastructure that teams already use for container images. Using OCI-hosted charts gives BuildCharts a few practical benefits:
 
@@ -167,7 +167,7 @@ In practice, this is why BuildCharts can treat a chart as content stored in the 
 ORAS stands for [OCI Registry As Storage](https://oras.land/).
 
 BuildCharts uses the [ORAS C# client library](https://github.com/oras-project/oras-dotnet) to talk to the registry and pull chart content. In practice, `buildcharts` acts as an embedded ORAS client when it consumes charts:
-- the chart is stored in the registry as an OCI artifact
+- The chart is stored in the registry as an OCI artifact
 - BuildCharts resolves the manifest and digest
 - BuildCharts fetches the chart blob
 - BuildCharts unpacks it into `.buildcharts`
@@ -199,17 +199,17 @@ If you want to secure your chart supply chain, treat charts like other OCI artif
 This section is about securing the published BuildCharts OCI templates themselves: who published them, what content was published, and what policy decides whether they are trusted for use.
 
 The practical baseline is:
-- store charts in a controlled container registry
-- sign published chart artifacts
-- verify signatures and trust policy when consuming
-- consume immutable artifact references where possible (digest pinning)
+- Store charts in a controlled container registry
+- Sign published chart artifacts
+- Verify signatures and trust policy when consuming
+- Consume immutable artifact references where possible (digest pinning)
 
 ### Digest pinning
 
 `Chart.lock` is the first line of defense. It pins the resolved digest for each chart dependency so `buildcharts generate` can detect drift between:
 - `Chart.yaml`
 - `Chart.lock`
-- the current registry manifest digest
+- The current registry manifest digest
 
 That improves reproducibility, but digest pinning alone does not prove who published the artifact.
 
@@ -230,10 +230,10 @@ BuildCharts does not sign charts itself. If you need signed charts, use OCI-nati
 Trust and integrity also depend on how your chart source is managed before publication.
 
 A practical governance model is to keep BuildCharts OCI templates in a dedicated repository and protect that repository with:
-- branch protection
-- required pull requests
-- mandatory reviews
-- controlled publishing to the target registry
+- Branch protection
+- Required pull requests
+- Mandatory reviews
+- Controlled publishing to the target registry
 
 That gives teams one central place to review and approve changes to shared build logic before those changes are published and consumed by many repositories.
 
@@ -244,9 +244,9 @@ It is also useful to enforce automated quality gates before publishing chart art
 Typical checks include:
 - CI validation for chart packaging and publishing rules
 - Dockerfile linting
-- static analysis
-- policy checks
-- central Dockerfile and image scanning
+- Static analysis
+- Policy checks
+- Central Dockerfile and image scanning
 
 This is one of the main benefits of centralized charts. Instead of relying on every application repository to enforce the same checks, platform teams can validate and scan shared OCI templates once in the chart pipeline and publish only approved versions.
 
@@ -265,10 +265,10 @@ A practical model for teams using private or shared charts is:
 ## What BuildCharts does not do
 
 BuildCharts intentionally does not:
-- sign charts
-- verify signatures
-- manage trust stores or policy
-- generate SBOMs for pulled chart artifacts
+- Sign charts
+- Verify signatures
+- Manage trust stores or policy
+- Generate SBOMs for pulled chart artifacts
 
 Those controls belong in your chart publishing pipeline, registry policy, and image build policy.
 

@@ -8,10 +8,10 @@ description: "Create build summaries from the latest Docker Buildx history."
 ## What summary does
 
 After a Bake run, `buildcharts summary`:
-- reads the latest Docker Buildx history
-- reads your `build.yml` and chart config
-- writes `.buildcharts/output/SUMMARY.md`
-- writes `.buildcharts/output/buildcharts.dockerbuild`
+- Reads the latest Docker Buildx history
+- Reads your `build.yml` and chart config
+- Writes `.buildcharts/output/SUMMARY.md`
+- Writes `.buildcharts/output/buildcharts.dockerbuild`
 
 This gives you both a human-readable summary and a portable Buildx record you can inspect later.
 
@@ -32,34 +32,34 @@ buildcharts summary
 `.buildcharts/output/SUMMARY.md` is the readable summary output.
 
 Use it when you want:
-- a short build summary in CI artifacts
-- a markdown summary you can publish in job output
-- a simpler view than raw Buildx logs
+- A short build summary in CI artifacts
+- A markdown summary you can publish in job output
+- A simpler view than raw Buildx logs
 
 ### `buildcharts.dockerbuild`
 
 `.buildcharts/output/buildcharts.dockerbuild` is an exported Buildx history bundle.
 
 Use it when you want:
-- to inspect the build later in Docker Desktop
-- to move a CI build record to another machine
-- to debug a completed build without rerunning it immediately
+- To inspect the build later in Docker Desktop
+- To move a CI build record to another machine
+- To debug a completed build without rerunning it immediately
 
 ## CI integration
 
 `buildcharts summary` also integrates with common CI systems:
 
-- on GitHub Actions, it appends the generated markdown to `GITHUB_STEP_SUMMARY`
-- on Azure DevOps, it uploads the summary and `.dockerbuild` bundle as artifacts and publishes the summary to the job output when `TF_BUILD=true`
+- On GitHub Actions, it appends the generated markdown to `GITHUB_STEP_SUMMARY`
+- On Azure DevOps, it uploads the summary and `.dockerbuild` bundle as artifacts and publishes the summary to the job output when `TF_BUILD=true`
 
 ## Why use it
 
 Summary is useful when you want BuildCharts-friendly output after the build has already completed.
 
 It gives you:
-- a stable markdown artifact
-- a portable Buildx build record
-- a cleaner handoff between build execution and troubleshooting
+- A stable markdown artifact
+- A portable Buildx build record
+- A cleaner handoff between build execution and troubleshooting
 
 ## Related pages
 

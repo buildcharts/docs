@@ -140,10 +140,10 @@ types:
 ```
 
 produces one generated Bake target per matrix value. In the generated `docker-bake.hcl`, the `publish` target becomes a Bake matrix with:
-- one `item` entry for the source target
-- one `runtime` axis with both values
-- a target name pattern such as `${item.name}_${runtime}`
-- an injected build arg `RUNTIME="${runtime}"`
+- One `item` entry for the source target
+- One `runtime` axis with both values
+- A target name pattern such as `${item.name}_${runtime}`
+- An injected build arg `RUNTIME="${runtime}"`
 
 That means a single `type: publish` definition expands into two generated publish variants, one for `win-x64` and one for `win-arm64`.
 

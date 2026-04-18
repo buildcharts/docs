@@ -62,9 +62,9 @@ That export layout is why the samples can read test results from `.buildcharts/o
 ### Why Bake helps
 
 [Bake](https://docs.docker.com/build/bake/) is a strong execution layer for CI/CD and monorepos because it can:
-- parallelize independent targets (for example building multiple services, running tests, and packaging in one run)
-- reduce duplicated context transfers across targets, which matters on remote builders and in CI
-- reuse BuildKit caching and cache exports/imports to reduce build times across repeated runs
-- model complex build graphs declaratively with groups, targets, matrices, and `--set` overrides
+- Parallelize independent targets (for example building multiple services, running tests, and packaging in one run)
+- Reduce duplicated context transfers across targets, which matters on remote builders and in CI
+- Reuse BuildKit caching and cache exports/imports to reduce build times across repeated runs
+- Model complex build graphs declaratively with groups, targets, matrices, and `--set` overrides
 
 This helps teams maintain consistent build execution across dozens or hundreds of services without copy-pasting and drifting CI configuration.

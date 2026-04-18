@@ -10,16 +10,16 @@ This page covers common issues you may encounter when running `buildcharts`.
 `init` currently supports .NET repositories only and expects a `.sln` or `.slnx` file.
 
 Check:
-- you are running the command from the repository root
-- the repository contains a solution file
+- You are running the command from the repository root
+- The repository contains a solution file
 
 ## `buildcharts generate` cannot find `charts/buildcharts/Chart.yaml`
 
 BuildCharts expects to run from the repository root.
 
 Fix:
-- run the command from the repo root
-- or scaffold the repo first with `buildcharts init`
+- Run the command from the repo root
+- Or scaffold the repo first with `buildcharts init`
 
 ## `buildcharts generate` says the lock file is out of sync
 
@@ -42,8 +42,8 @@ buildcharts generate --ignore-lock
 Every `build.yml` must contain exactly one target with `type: build`.
 
 Check:
-- you have one and only one `build` target
-- the target type is spelled correctly
+- You have one and only one `build` target
+- The target type is spelled correctly
 
 ## `buildcharts generate` says a target type is unknown
 
@@ -66,26 +66,26 @@ If `build.yml` uses `type: test`, the alias must exist in `Chart.yaml`.
 This usually means the YAML shape does not match what BuildCharts expects for `variables` or target definitions.
 
 Common causes:
-- a variable scalar contains `=`
-- a variable name is empty
-- a variable mapping contains more than one entry
-- a variable mapping is missing `default`
-- a target mapping is missing `type`
+- A variable scalar contains `=`
+- A variable name is empty
+- A variable mapping contains more than one entry
+- A variable mapping is missing `default`
+- A target mapping is missing `type`
 - `type` is not a string or list of strings
 
 Fix:
-- validate the structure against the [Metadata](/core-features/metadata) page
-- keep `variables` as either a mapping or a sequence of scalars/mappings
-- make sure every target definition includes a valid `type`
+- Validate the structure against the [Metadata](/core-features/metadata) page
+- Keep `variables` as either a mapping or a sequence of scalars/mappings
+- Make sure every target definition includes a valid `type`
 
 ## `buildcharts generate` shows a warning for an unknown plugin
 
 If a plugin name is not registered, BuildCharts does not fail generation. It skips that plugin and prints a warning instead.
 
 Check:
-- the plugin name is spelled exactly right
-- the version suffix is included, for example `NuGetAuthenticate@v1`
-- the plugin exists in the built-in plugin list
+- The plugin name is spelled exactly right
+- The version suffix is included, for example `NuGetAuthenticate@v1`
+- The plugin exists in the built-in plugin list
 
 If you expected the plugin to modify the generated HCL or write files under `.buildcharts`, verify those outputs explicitly after generation.
 
@@ -94,18 +94,18 @@ If you expected the plugin to modify the generated HCL or write files under `.bu
 `buildcharts summary` uses the latest Docker Buildx history. It only works after you have run a Bake build.
 
 Fix:
-- run `buildcharts generate`
-- run `docker buildx bake --file .buildcharts/docker-bake.hcl`
-- run `buildcharts summary` again
+- Run `buildcharts generate`
+- Run `docker buildx bake --file .buildcharts/docker-bake.hcl`
+- Run `buildcharts summary` again
 
 ## `--use-inline-dockerfiles` fails with a missing Dockerfile
 
 When you use `buildcharts generate --use-inline-dockerfiles`, BuildCharts expects the pulled chart Dockerfiles to exist under `.buildcharts/<chart-name>/Dockerfile`.
 
 Fix:
-- rerun `buildcharts generate`
-- verify chart pull succeeded
-- verify the referenced chart alias exists in `Chart.yaml`
+- Rerun `buildcharts generate`
+- Verify chart pull succeeded
+- Verify the referenced chart alias exists in `Chart.yaml`
 
 ## Registry authentication failures
 

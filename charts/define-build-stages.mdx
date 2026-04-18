@@ -153,10 +153,10 @@ types:
 ```
 
 becomes a generated Bake matrix for `publish` where:
-- the same source target is reused
-- the `runtime` axis expands into one variant per value
-- the generated target name includes the matrix value
-- the chart receives `RUNTIME` as a build arg
+- The same source target is reused
+- The `runtime` axis expands into one variant per value
+- The generated target name includes the matrix value
+- The chart receives `RUNTIME` as a build arg
 
 In practice, that one `type: publish` entry turns into two generated publish variants, one for `win-x64` and one for `win-arm64`.
 
