@@ -74,10 +74,10 @@ BuildKit can recognize when two parts of the build graph resolve to the same wor
 It does that by fingerprinting operations and inputs in its content-addressed build graph. When the builder sees matching work, it can reuse an existing result or let one in-flight execution satisfy multiple consumers.
 
 In practice, that often means:
-- pulling the same base image once
-- reusing identical `COPY` inputs across stages
-- executing the same `RUN` step once when the inputs match
-- deduplicating shared context transfer across related Bake targets
+- Pulling the same base image once
+- Reusing identical `COPY` inputs across stages
+- Executing the same `RUN` step once when the inputs match
+- Deduplicating shared context transfer across related Bake targets
 
 This matters in BuildCharts because generated targets often share the same repository context, base images, variables, and chart-defined setup steps.
 

@@ -6,8 +6,8 @@ description: "Reuse generated stages inside Dockerfiles using Bake target contex
 You can make one BuildCharts stage depend on another, even when the stages are implemented in different chart Dockerfiles.
 
 BuildCharts does this through Docker Buildx Bake target contexts. A context maps a name to either:
-- another Bake target (`target:<name>`)
-- an image (`docker-image://...`)
+- Another Bake target (`target:<name>`)
+- An image (`docker-image://...`)
 
 This is separate from chart dependencies in `charts/buildcharts/Chart.yaml`. For that, see [Charts](/charts).
 

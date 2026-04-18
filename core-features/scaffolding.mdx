@@ -10,10 +10,10 @@ description: "Get started by automatically creating build metadata."
 Scaffolding is the step where BuildCharts inspects a repository, infers a reasonable starting build model, and writes the metadata files for you.
 
 At a high level, the goal is:
-- find recognizable project files
-- infer which build stage types the repository needs
-- generate a starter `build.yml`
-- generate a matching `charts/buildcharts/Chart.yaml`
+- Find recognizable project files
+- Infer which build stage types the repository needs
+- Generate a starter `build.yml`
+- Generate a matching `charts/buildcharts/Chart.yaml`
 
 This is automatic stage wiring. Instead of starting from an empty config, BuildCharts inspects the repository shape and scaffolds the most likely target types for each project.
 
@@ -27,8 +27,8 @@ After running, review the generated files and adjust them as needed.
 
 The scaffolded `build.yml` includes:
 - `VERSION` and `COMMIT` variables
-- one `build` target for the solution
-- additional `test`, `nuget`, or `docker` targets when matching projects are found
+- One `build` target for the solution
+- Additional `test`, `nuget`, or `docker` targets when matching projects are found
 
 BuildCharts does more than detect that a repository is `.NET`. It also maps each discovered file to an appropriate stage type automatically.
 
