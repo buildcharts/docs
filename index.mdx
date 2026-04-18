@@ -10,9 +10,9 @@ description: "Generate pipelines using declarative metadata and OCI-hosted build
 It sits between handwritten pipeline YAML and raw Dockerfiles. You declare what should happen, BuildCharts resolves the chart-backed implementation, and Docker Buildx Bake executes the generated plan.
 
 BuildCharts is designed for teams that want to standardize builds across many repositories without locking themselves into one CI provider. The model is simple:
-- intent stays in repository metadata
-- implementation lives in versioned OCI charts
-- execution runs through Docker Buildx Bake
+- Intent stays in repository metadata
+- Implementation lives in versioned OCI charts
+- Execution runs through [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/)
 
 That gives you a portable build layer that can be debugged locally and reused across repositories.
 
@@ -23,10 +23,10 @@ That gives you a portable build layer that can be debugged locally and reused ac
 ## What problem it solves
 
 BuildCharts exists to reduce common CI/CD problems such as:
-- duplicated or nested pipeline YAML across many repositories
-- platform-specific pipeline logic that is hard to move between providers
-- fragile template rollouts where repositories drift onto different versions
-- poor local debuggability, where troubleshooting requires repeated CI runs
+- Duplicated or nested pipeline YAML across many repositories.
+- Platform-specific pipeline logic that is hard to move between providers.
+- Fragile template rollouts where repositories drift onto different versions.
+- Poor local debuggability, where troubleshooting requires repeated CI runs.
 
 Instead of copying CI steps repo by repo, teams can centralize the build implementation in charts and let repositories consume versioned updates through normal dependency changes.
 

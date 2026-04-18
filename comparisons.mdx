@@ -8,14 +8,14 @@ BuildCharts overlaps with several familiar CI and build patterns, but its model 
 ## What BuildCharts optimizes for
 
 BuildCharts is not a hosted CI platform. It is a build plan generator:
-- you define intent in `build.yml`
+- You define intent in `build.yml`
 - BuildCharts resolves OCI-hosted chart templates
-- it generates `docker-bake.hcl`
+- It generates `docker-bake.hcl`
 - Docker Buildx Bake executes the plan locally or in CI
 
 That makes BuildCharts strongest when you want:
-- local and CI parity with the same Docker execution layer
-- centrally versioned build logic across many repositories
+- Local and CI parity with the same Docker execution layer
+- Centrally versioned build logic across many repositories
 - OCI-based distribution and digest pinning
 
 ## Scope
@@ -23,10 +23,10 @@ That makes BuildCharts strongest when you want:
 It does not replace your CI/CD platform.
 
 BuildCharts also does not:
-- manage deployments or runtime configuration
-- host secrets or artifacts for you
-- package or publish charts/templates for you
-- provide a built-in signing or trust system for charts
+- Manage deployments or runtime configuration
+- Host secrets or artifacts for you
+- Package or publish charts/templates for you
+- Provide a built-in signing or trust system for charts
 
 ## Comparison with common alternatives
 
@@ -42,17 +42,17 @@ BuildCharts also does not:
 ## When it fits
 
 BuildCharts tends to fit well when you:
-- already use Docker and BuildKit for builds
-- want to centralize build logic across many repositories
-- want the same build plan to run locally and in CI
-- benefit from parallel builds and BuildKit caching
+- Already use Docker and BuildKit for builds
+- Want to centralize build logic across many repositories
+- Want the same build plan to run locally and in CI
+- Benefit from parallel builds and BuildKit caching
 
 ## When it doesn't
 
 BuildCharts tends to be a poor fit when you:
-- cannot run Docker daemons or BuildKit in your environment
-- have highly bespoke build steps that do not map well to Docker-based stages
-- have very constrained runners where Bake parallelism and caching add more overhead than benefit
+- Cannot run Docker daemons or BuildKit in your environment
+- Have highly bespoke build steps that do not map well to Docker-based stages
+- Have very constrained runners where Bake parallelism and caching add more overhead than benefit
 
 ## Related systems and inspirations
 

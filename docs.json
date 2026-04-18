@@ -28,7 +28,7 @@
           "core-features/scaffolding",
           "core-features/metadata",
           "core-features/generate",
-          "core-features/docker-bake",
+          "core-features/docker-builds",
           "core-features/summary",
           "charts",
           "core-features/lock-files",
