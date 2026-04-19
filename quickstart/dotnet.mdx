@@ -118,7 +118,7 @@ targets:
 
 ### Parallelization: multiple targets vs `dotnet test`
 
-If you prefer, you can also put `build` and `test` directly on the solution target. This works well for .NET because `dotnet build` and `dotnet test` can run directly against a solution, so the solution can act as the shared source for both stages:
+`build` and `test` can also be placed directly on the solution target. This works well for .NET because `dotnet build` and `dotnet test` can run directly against a solution, so the solution can act as the shared source for both stages:
 
 ```yaml
 targets:
@@ -145,7 +145,7 @@ Which model is faster depends on your solution shape, test layout, hardware, num
 
 `buildcharts generate` works without `charts/buildcharts/Chart.lock`, but `buildcharts update` gives you pinned chart digests and lets `generate` detect drift.
 
-If you want pinned chart digests and drift detection, run:
+For pinned chart digests and drift detection, run:
 
 ```bash
 buildcharts update

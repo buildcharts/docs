@@ -31,7 +31,7 @@ Fix:
 buildcharts update
 ```
 
-If you intentionally want to skip lock validation for one run:
+To skip lock validation for one run:
 
 ```bash
 buildcharts generate --ignore-lock
@@ -113,4 +113,4 @@ Fix:
 - `<DOCKER_CONFIG>/config.json`
 - `~/.docker/config.json`
 
-If your OCI registry is private, authenticate with Docker before running BuildCharts.
+Private OCI registries require Docker authentication before running BuildCharts.

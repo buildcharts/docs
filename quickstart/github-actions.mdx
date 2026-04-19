@@ -46,7 +46,7 @@ jobs:
 
 ## Enable caching
 
-If you run builds frequently, configure a cache backend for BuildKit. On GitHub Actions, `type=gha` is a common choice.
+BuildKit supports cache backends. On GitHub Actions, `type=gha` is a common choice.
 
 Example using `docker/bake-action` to set cache options on the generated `_common` target:
 
@@ -65,9 +65,9 @@ Example using `docker/bake-action` to set cache options on the generated `_commo
 
 Read more about [Cache storage backend](https://docs.docker.com/build/cache/backends/) and the [GitHub Actions cache](https://docs.docker.com/build/cache/backends/gha/).
 
-## Add a build summary
+## Add build summary
 
-[`buildcharts/summary-action`](https://github.com/buildcharts/summary-action) appends Markdown to `GITHUB_STEP_SUMMARY`. Add this step after Bake if you want a GHA job summary:
+The [buildcharts/summary-action](https://github.com/buildcharts/summary-action) reads Docker Buildx history, parses the logs, and generates a summary.
 
 ```yaml
 - name: Build summary
