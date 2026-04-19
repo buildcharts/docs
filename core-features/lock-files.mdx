@@ -49,7 +49,7 @@ lockVersion: 1
 
 ## Refresh the lock file
 
-Run this when you change chart versions or want to pin current digests:
+Run this to change chart versions or pin current digests:
 
 ```bash
 buildcharts update
@@ -84,7 +84,7 @@ If `Chart.lock` does not exist, `generate` still works. It pulls the current tag
 
 ### Skip lock validation when needed
 
-Use this only when you intentionally want to generate without enforcing the lock file:
+This skips lock enforcement during generation:
 
 ```bash
 buildcharts generate --ignore-lock

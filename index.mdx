@@ -44,7 +44,7 @@ src/
 ## Workflow
 
 1. Create or scaffold `build.yml` and `charts/buildcharts/Chart.yaml`.
-2. Run `buildcharts update` if you want a fresh `Chart.lock`.
+2. Run `buildcharts update` to create or refresh `Chart.lock`.
 3. Run `buildcharts generate`.
 4. Run `docker buildx bake --file .buildcharts/docker-bake.hcl`.
 
