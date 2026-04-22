@@ -1,13 +1,13 @@
 ---
 title: "Summary"
-description: "Create build summaries from the latest Docker Buildx history."
+description: "Create build summaries using Docker build history."
 ---
 
 `buildcharts summary` turns the latest Docker Buildx history into BuildCharts output files you can read, upload, and inspect later.
 
 ## What summary does
 
-After a Bake run, `buildcharts summary`:
+After a Docker build, `buildcharts summary`:
 - Reads the latest Docker Buildx history
 - Reads your `build.yml` and chart config
 - Writes `.buildcharts/output/SUMMARY.md`
