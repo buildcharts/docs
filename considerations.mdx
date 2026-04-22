@@ -61,7 +61,7 @@ Plugins can help write local config files and environment variables for common e
 
 ## Run from your own ecosystem (optional)
 
-If you want to reduce supply-chain risk (for example vendor compromise or mutable upstream artifacts), you can fork and operate BuildCharts within your own ecosystem:
+Reducing supply-chain risk (for example vendor compromise or mutable upstream artifacts) may justify forking and operating BuildCharts within your own ecosystem:
 
 - Build and publish the `dotnet-buildcharts` tool package to your own NuGet feed, and restore it from there in CI.
 - Publish charts to your own OCI registry or organization, and point `charts/buildcharts/Chart.yaml` to your internal `repository: oci://...`.
