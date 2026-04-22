@@ -140,11 +140,7 @@ buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build@sha256:...
 
 ## Lock files
 
-BuildCharts supports an optional `charts/buildcharts/Chart.lock` file for more repeatable builds.
-
-When you run `buildcharts update`, BuildCharts resolves chart digests and writes that lock file.
-
-If the lock file exists, `buildcharts generate` uses it to detect dependency drift before it renders the Bake plan. If the lock file and the resolved chart state do not match, generation stops with a discrepancy warning and tells you to refresh the lock file. If it does not exist, generation still works, but chart resolution follows the current registry tags instead of pinned digests.
+For digest pinning, repeatable chart resolution, and lock validation during generation, see [Lock files](/core-features/lock-files).
 
 ## What OCI means here
 
@@ -206,7 +202,7 @@ The practical baseline is:
 
 ### Digest pinning
 
-`Chart.lock` is the first line of defense. It pins the resolved digest for each chart dependency so `buildcharts generate` can detect drift between:
+[`Chart.lock`](/core-features/lock-files) is the first line of defense. It pins the resolved digest for each chart dependency so `buildcharts generate` can detect drift between:
 - `Chart.yaml`
 - `Chart.lock`
 - The current registry manifest digest

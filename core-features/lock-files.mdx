@@ -1,11 +1,11 @@
 ---
 title: "Lock files"
-description: "Chart.lock for repeatable chart resolution and controlled updates."
+description: "Repeatable chart resolution and controlled updates."
 ---
 
 `buildcharts update` creates a lock file with pinned chart dependencies.
 
-## What lock files do
+## How lock files work
 
 BuildCharts can pin chart dependencies from `charts/buildcharts/Chart.yaml` in `charts/buildcharts/Chart.lock`.
 
@@ -17,35 +17,14 @@ This is also how you avoid the mutable tag problem when you want immutability. A
 
 BuildCharts works with or without `charts/buildcharts/Chart.lock`. That gives you two dependency update models:
 
-- Without a lock file, BuildCharts has the option to follow the current chart tags from the registry, such as `latest`, `8.0`, or `8.0.x`, enabling different rollout strategies with semantic versioning.
-- With a lock file, BuildCharts pins chart digests. This is the more controlled model and usually fits best when you also have an automated update workflow around chart versions, for example through [Dependabot](https://github.com/dependabot) or [Renovate](https://github.com/renovatebot/renovate).
-
-## `Chart.lock`
-
-`buildcharts update` resolves the current digest for each dependency and writes `charts/buildcharts/Chart.lock`.
-
-**Example**
-
-```yaml
-dependencies:
-- name: dotnet-build
-  version: 0.0.1
-  repository: oci://registry-1.docker.io/buildcharts/dotnet-build
-  digest: sha256:4da50de6250055a119d51c620e2ed825529d281b2d27a9e2bb1f17b912d1a11c
-- name: dotnet-docker
-  version: 0.0.2
-  repository: oci://registry-1.docker.io/buildcharts/dotnet-docker
-  digest: sha256:32b65ecc7aef0fee236814f0e1cdd63dc624fcda9d46e8202887624f55622e70
-- name: dotnet-nuget
-  version: 0.0.1
-  repository: oci://registry-1.docker.io/buildcharts/dotnet-nuget
-  digest: sha256:c58bf75a66bbcc271cd16c9480f67523e0b5d80fabec354ee591c0004af7d5e7
-- name: dotnet-test
-  version: 0.0.1
-  repository: oci://registry-1.docker.io/buildcharts/dotnet-test
-  digest: sha256:7b4bae285523bcc341b9be471bc5435f16e6a33322c1c3af3f75f70875c09207
-lockVersion: 1
-```
+<Steps>
+  <Step title="With a lock file">
+    BuildCharts pins chart digests instead of following mutable registry tags. This is the more controlled model and usually fits best when there is also an automated update workflow around chart versions, for example through [Dependabot](https://github.com/dependabot) or [Renovate](https://github.com/renovatebot/renovate).
+  </Step>
+  <Step title="Without a lock file">
+    BuildCharts follows the chart tags from the registry, such as `latest`, `8.0`, or `8.0.x`, enabling different rollout strategies with semantic versioning.
+  </Step>
+</Steps>
 
 ## Refresh the lock file
 
