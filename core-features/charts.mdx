@@ -94,39 +94,25 @@ Each chart dependency in `charts/buildcharts/Chart.yaml` points to a repository 
 repository: oci://registry-1.docker.io/buildcharts
 ```
 
-That registry is the dependency source for the chart. BuildCharts does not call a separate BuildCharts backend or package server. When you run `buildcharts update`, `buildcharts pull`, or `buildcharts generate`, BuildCharts resolves the chart reference against that registry and pulls the chart content from there.
+That registry is the dependency source for the chart. BuildCharts does not call a separate backend or package server. When you run `buildcharts update`, `buildcharts pull`, or `buildcharts generate`, BuildCharts resolves the chart manifest and pulls the chart blob from that registry.
 
 That also means authentication is registry authentication. You authenticate to the container registry that stores the chart, such as:
-- Docker Hub
+- Docker Hub (`docker.io`)
 - GitHub Container Registry (`ghcr.io`)
-- Azure Container Registry
+- Azure Container Registry (`<registry-name>.azurecr.io`)
 - Another OCI-compatible registry
 
 ### Authenticate to private registries
 
-If the registry is public, BuildCharts can pull the chart without credentials. If the registry is private, `buildcharts pull`, `buildcharts update`, and `buildcharts generate` need valid registry credentials before BuildCharts can resolve the manifest or pull the chart blob.
+BuildCharts uses the same credential model as Docker. Authenticate with the standard Docker login flow:
 
-BuildCharts reuses the existing Docker credential model.
-
-It reads Docker config from:
-- `<DOCKER_CONFIG>/config.json` (override location with `DOCKER_CONFIG`)
-- `~/.docker/config.json`
-
-The current implementation supports:
-- `credHelpers`
-- `auths`
-- `credsStore`
-
-That means the common path is:
-- Authenticate to the registry with Docker or the registry's normal Docker-compatible login flow
-- Let Docker write credentials or helper configuration
-- Run `buildcharts` and let it reuse those credentials
-
-This also covers external Docker credential helpers. If Docker is configured to use a helper, BuildCharts uses the same helper.
+```bash
+docker login <REGISTRY>
+```
 
 ### Pull a chart directly
 
-Use `buildcharts pull` when you want to inspect a single chart:
+Use `buildcharts pull` to inspect a single chart:
 
 ```bash
 buildcharts pull oci://registry-1.docker.io/buildcharts/dotnet-build:0.0.1 --untar
