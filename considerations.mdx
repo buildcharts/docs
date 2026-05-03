@@ -8,62 +8,69 @@ description: "Build-time dependencies and environment considerations."
 BuildCharts pulls charts from an OCI-compliant container registry during `buildcharts update` and `buildcharts generate`.
 
 That makes the registry a runtime dependency for generation:
-- Your builds depend on registry uptime and authentication.
+- Builds depend on registry uptime and authentication.
 - Registry outages or auth misconfiguration can block generation.
 
-BuildCharts partially mitigates this with a local blob cache. Charts are cached by digest under your temp directory (`<temp>/buildcharts/oci/blobs`). If the digest already exists in that cache, BuildCharts reuses the chart blob instead of downloading it again.
+BuildCharts partially mitigates this with a local blob cache. Charts are cached by digest under the temp directory (`<temp>/buildcharts/oci/blobs`). If the digest already exists in that cache, the cached chart blob is reused instead of downloaded again.
 
-Caching improves performance and reduces registry traffic, but you should still treat the registry as a dependency. You still need registry access to resolve digests and validate lock files.
+Caching improves performance and reduces registry traffic, but registry access is still required to resolve digests and validate lock files.
 
-If you use ephemeral CI runners, consider persisting the blob cache between runs.
+For ephemeral CI runners, consider persisting the blob cache between runs.
 
 <Note>
-  This is the same kind of dependency you already have when using helm charts or when building Docker images that reference base images from a registry. If your container registry is unavailable, builds and generation that depend on it will be affected.
+  This is the same kind of dependency you already have when using Helm charts or when building Docker images that reference base images from a registry. If the container registry is unavailable, builds and generation that depend on it will be affected.
 </Note>
 
 ## Docker toolchain dependency
 
-BuildCharts generates a plan that you execute with Docker Buildx/BuildKit. Changes in Docker tooling, builder configuration, or security posture can affect all builds that rely on it.
+BuildCharts generates a plan that runs through Docker Buildx/BuildKit. Changes in Docker tooling, builder configuration, or security posture can affect all builds that rely on it.
 
-If you operate BuildCharts at scale, standardize the Docker/Buildx/BuildKit versions you use in CI and on remote builders.
+At scale, standardize the Docker/Buildx/BuildKit versions used in CI and on remote builders.
 
-You can also pin the Dockerfile frontend syntax version in chart Dockerfiles to reduce surprises from Dockerfile parsing changes. Add a `# syntax=docker/dockerfile:1.1` directive as the first line. See [Dockerfile syntax directive](https://docs.docker.com/reference/dockerfile/#syntax). This pins the Dockerfile syntax frontend (which downloads as a docker image).
+The Dockerfile frontend syntax version can also be pinned in chart Dockerfiles to reduce surprises from Dockerfile parsing changes. For example, a `# syntax=docker/dockerfile:1.1` directive as the first line pins the Dockerfile syntax frontend. See [Dockerfile syntax directive](https://docs.docker.com/reference/dockerfile/#syntax).
 
 ## Generator dependency and fallbacks
 
-BuildCharts is a generator. If generation is blocked, your builds are blocked.
+BuildCharts is a generator. If generation is blocked, builds are blocked.
 
-As a fallback, you can check in the generated Bake plan (and optionally inline Dockerfiles) to remove the runtime generator dependency. You trade off chart update flow and can drift from upstream fixes and improvements.
+As a fallback, teams can check in the generated `docker-bake.hcl` together with the Dockerfiles. This keeps the generated build artifacts versioned in the repository instead of generating them during CI runs.
+
+That fallback comes with trade-offs:
+- **Artifact churn.** Chart updates require regenerating/committing generated artifacts.
+- **Drifting.** Repositories can fall behind upstream chart fixes and improvements.
+
+<Note>
+  This can be compared to using Helm but checking in the rendered manifests instead of rendering them at deploy time.
+</Note>
 
 ## Parallelism trade-offs
 
 Bake can execute many targets in parallel. On large repositories and shared runners, this can saturate CPU, I/O, and cache storage.
 
-If parallel execution overwhelms your runner, you can also limit BuildKit solver concurrency with `max-parallelism` in `buildkitd.toml`. See [Docker BuildKit resource limiting](https://docs.docker.com/build/buildkit/configure/#resource-limiting). This can reduce contention and make builds more predictable, but it also lowers peak throughput, so tune it alongside your cache strategy instead of treating it as a universal fix.
+If parallel execution overwhelms a runner, BuildKit solver concurrency can be limited with `max-parallelism` in `buildkitd.toml`. See [Docker BuildKit resource limiting](https://docs.docker.com/build/buildkit/configure/#resource-limiting). This can reduce contention and make builds more predictable, but it also lowers peak throughput, so it works best when tuned alongside cache strategy rather than treated as a universal fix.
 
 ## Caching trade-offs
 
-Treat cache strategy as part of your build design. Docker build cache lets BuildKit reuse previous build results instead of rebuilding every layer on every run. See [Docker build cache](https://docs.docker.com/build/cache/). In practice, good cache reuse can reduce build time and registry traffic, while poor cache design can leave you paying the complexity cost without the speed benefit.
+Cache strategy should be treated as part of build design. Docker build cache lets BuildKit reuse previous build results instead of rebuilding every layer on every run. See [Docker build cache](https://docs.docker.com/build/cache/). In practice, good cache reuse can reduce build time and registry traffic, while poor cache design can add complexity without delivering the speed benefit.
 
-This matters more on ephemeral CI runners, where the local builder cache disappears between jobs. In that case, external cache backends can help preserve useful cache state across runs. Docker documents several cache backends, including `inline`, `registry`, `local`, and `gha`, plus provider-specific backends such as `s3` for AWS S3 and `azblob` for Azure Blob Storage. See [Docker cache storage backends](https://docs.docker.com/build/cache/backends/). Choose a backend that matches your platform and access model, and remember that extra cache import/export steps also add I/O, storage cost, and troubleshooting surface area.
+This matters more on ephemeral CI runners, where the local builder cache disappears between jobs. In that case, external cache backends can help preserve useful cache state across runs. Docker documents several cache backends, including `inline`, `registry`, `local`, and `gha`, plus provider-specific backends such as `s3` for AWS S3 and `azblob` for Azure Blob Storage. See [Docker cache storage backends](https://docs.docker.com/build/cache/backends/). The selected backend should match the platform and access model, and extra cache import/export steps also add I/O, storage cost, and troubleshooting surface area.
 
 ## Template indirection and troubleshooting
 
-Chart indirection helps you reuse stages, but it can also obscure root causes when builds fail.
+Chart indirection helps reuse stages, but it can also obscure root causes when builds fail.
 
 Plan for troubleshooting workflows that inspect generated artifacts and execution output. See [Docker builds](/core-features/docker-builds) and [Troubleshooting](/troubleshooting/buildx-history).
 
 ## Secrets and credentials
 
-BuildCharts does not manage secrets. You still need to provision credentials and decide how they flow into builds.
+BuildCharts does not manage secrets. Credentials still need to be provisioned, and their flow into builds still needs to be defined.
 
-Plugins can help write local config files and environment variables for common ecosystems, but ownership of secret lifecycle, auditability, and access control stays with your CI/platform setup. See [Plugins](/core-features/plugins).
+Plugins can help write local config files and environment variables for common ecosystems, but ownership of secret lifecycle, auditability, and access control stays with the CI/platform setup. See [Plugins](/core-features/plugins).
 
 ## Run from your own ecosystem (optional)
 
-Reducing supply-chain risk (for example vendor compromise or mutable upstream artifacts) may justify forking and operating BuildCharts within your own ecosystem:
+Reducing supply-chain risk (for example vendor compromise or mutable upstream artifacts) may justify forking and operating BuildCharts within an internal ecosystem:
 
-- Build and publish the `dotnet-buildcharts` tool package to your own NuGet feed, and restore it from there in CI.
-- Publish charts to your own OCI registry or organization, and point `charts/buildcharts/Chart.yaml` to your internal `repository: oci://...`.
-- Use [Chart lock files](/core-features/lock-files) to pin chart digests and make builds deterministic even if tags move.
-- Apply chart governance and validation in CI (review policies, signing, scanning). See [Trust and integrity](/core-features/charts#trust-and-integrity).
+- Publish `dotnet-buildcharts` tool package to an internal NuGet feed, and restore it from there in CI.
+- Use [Chart lock files](/core-features/lock-files) to pin chart digests and make builds deterministic.
+- Apply chart governance and validation (review policies, chart signing, Dockerfile scanning). See [Trust and integrity](/core-features/charts#trust-and-integrity).
