@@ -49,8 +49,10 @@ Common uses:
 
 `buildcharts summary` also integrates with common CI systems:
 
-- On GitHub Actions, it appends the generated markdown to `GITHUB_STEP_SUMMARY`
-- On Azure DevOps, it uploads the summary and `.dockerbuild` bundle as artifacts and publishes the summary to the job output when `TF_BUILD=true`
+| CI system      | Behavior |
+| -------------- | -------- |
+| GitHub Actions | Appends the generated markdown to `GITHUB_STEP_SUMMARY` |
+| Azure DevOps   | Uploads the summary and `.dockerbuild` bundle as artifacts and publishes the summary to the job output when `TF_BUILD=true`. See [Azure Pipelines logging commands](https://learn.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops). |
 
 ## Why use it
 
