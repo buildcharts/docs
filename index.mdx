@@ -5,9 +5,9 @@ description: "Generate pipelines using declarative metadata and OCI-hosted build
 
 ## What BuildCharts is
 
-`buildcharts` is a thin generation layer for standardized builds. Build intent is defined in `build.yml`, reusable chart implementations are resolved from versioned OCI-hosted charts, and the result is a generated [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/) plan ready for local or CI execution.
+`buildcharts` is a thin generation layer for standardized builds. Build intent is defined in `build.yml`, reusable chart implementations are resolved from versioned OCI-hosted charts, and the result is a generated [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/) plan for local or CI execution.
 
-It keeps repository configuration focused on what should be built, while shared charts define how each build stage runs.
+It keeps repository configuration focused on what should be built, while shared charts define how each build stage runs. BuildCharts does not replace your CI system, container registry, or Docker toolchain.
 
 <Note>
     If you already know [Helm](https://helm.sh), the comparison is useful: both Helm and BuildCharts use versioned OCI charts. The difference is what the chart controls. Helm charts describe deployments to Kubernetes. BuildCharts describe build stages for Docker builds.
