@@ -55,11 +55,12 @@ src/
 
 ## Why use it
 
-- **Low lock-in.** No proprietary execution runtime is introduced. Build intent stays in the repository, reusable implementation stays in versioned OCI-hosted charts, and the generated output remains a standard Docker Buildx Bake plan. CI providers, build infrastructure, or registry hosting can change without replacing the overall model.
-- **Narrow responsibility.** BuildCharts is a thin generation and orchestration layer that standardizes builds without trying to own scheduling, secrets, artifact hosting, deployments, or runtime operations. The rest of the delivery stack stays where it already is.
-- **Reuse of standard technology.** OCI registries, Dockerfiles, BuildKit, and Docker Buildx Bake remain in place. The value comes from standardizing how those pieces are connected, not from replacing them with a custom backend.
-- **Simple fallback.** The generated Docker Buildx Bake plan is concrete and inspectable. It can be debugged locally, executed directly with `docker buildx bake`, or even committed when teams want to reduce generator dependency in exchange for a less dynamic chart update flow.
 - **Infrastructure as code for builds.** Helm charts are an infrastructure-as-code pattern for Kubernetes deployments. BuildCharts applies the same idea to build pipelines by treating them as platform-owned and versioned artifacts.
+- **Narrow responsibility.** BuildCharts is a thin generation and orchestration layer that standardizes builds without trying to own scheduling, secrets, artifact hosting, deployments, or runtime operations. The rest of the delivery stack stays where it already is.
+- **Low lock-in.** No proprietary execution runtime is introduced. Build intent stays in the repository, reusable implementation stays in versioned OCI-hosted charts, and the generated output remains a standard Docker Buildx Bake plan. CI providers, build infrastructure, or registry hosting can change without replacing the overall model.
+- **Reuse of standard technology.** OCI registries, Dockerfiles, BuildKit, and Docker Buildx Bake remain in place. The value comes from standardizing how those pieces are connected, not from replacing them with a custom backend.
+- **Isolated build tooling.** Build, test, and scanning tools can run inside Docker build stages instead of being installed directly on CI runners. For example, image scanners such as [Trivy](https://trivy.dev/latest/) can run as part of the containerized build flow, keeping tool dependencies versioned and limiting the host-side surface area for supply-chain risk.
+- **Simple fallback.** The generated Docker Buildx Bake plan is concrete and inspectable. It can be debugged locally, executed directly with `docker buildx bake`, or even committed when teams want to reduce generator dependency in exchange for a less dynamic chart update flow.
 
 ## What it optimizes for
 
