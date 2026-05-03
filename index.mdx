@@ -5,28 +5,40 @@ description: "Generate pipelines using declarative metadata and OCI-hosted build
 
 ## What BuildCharts is
 
-`buildcharts` is a thin build orchestration and generation layer for standardized builds. Build intent lives in `build.yml`, reusable chart implementations are resolved from an OCI registry, and the result is a Docker Buildx Bake plan that runs locally or in CI.
+`buildcharts` is a thin build orchestration and generation layer for standardized builds. Build intent is defined in `build.yml`, reusable chart implementations are resolved from versioned OCI-hosted charts, and the result is a [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/) plan for local or CI execution.
 
-It connects repository metadata, OCI-hosted build charts, and Docker Buildx Bake. It does not replace a CI system, container registry, or Docker toolchain. It provides a lightweight way to standardize builds while staying on standard Docker and OCI workflows.
+It connects repository metadata, OCI-hosted build charts, and Docker Buildx Bake. It does not replace a CI system, container registry, or Docker toolchain. It standardizes builds while staying on familiar Docker and OCI workflows.
 
-The model is simple:
-- Intent stays in repository metadata
-- Implementation lives in versioned OCI charts
-- Execution runs through [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/)
+At a glance:
+- `build.yml` defines build intent.
+- OCI-hosted charts provide reusable build implementation.
+- Docker executes the generated plan.
 
 <Note>
     If you already know [Helm](https://helm.sh), the comparison is useful: both Helm and BuildCharts use versioned OCI charts. The difference is what the chart controls. Helm charts describe deployments to Kubernetes. BuildCharts describe build stages for Docker builds.
 </Note>
 
-## What problem it solves
+## Problem domain
 
-BuildCharts exists to reduce common CI/CD problems such as:
-- Duplicated or nested pipeline YAML across many repositories.
-- Platform-specific pipeline logic that is hard to move between providers.
-- Fragile template rollouts where repositories drift onto different versions or adopt changes with a larger blast radius than intended.
-- Poor local debuggability, where troubleshooting requires repeated CI runs instead of reusing the same generated plan locally.
+At scale, CI/CD systems tend to run into the same structural problems:
+- Pipeline YAML is duplicated across many repositories with minor variations.
+- Shared templates are hard to version, test, and roll out incrementally.
+- CI behavior often diverges from local developer workflows.
+- CI providers become tightly coupled to build logic.
+- Small pipeline changes can have a large blast radius.
+- Centralized YAML is hard to maintain without a clear rollout model.
 
-Instead of copying CI steps repo by repo, BuildCharts keeps repository-local configuration focused on build intent, moves shared implementation into versioned charts, and generates a Bake plan that can run through the same Docker tooling locally or in CI.
+The core issue is not a lack of CI tooling. It is the lack of a portable build abstraction that separates what a project needs to build from how that build is implemented.
+
+## Motivation
+
+BuildCharts provides a portable way to move ad-hoc CI scripts, tool setup, and shared build logic into versioned chart Dockerfiles. Repositories keep lightweight build intent in `build.yml`, while the generated Docker plan can run locally or in CI with the same Docker tooling.
+
+The goal is a single, portable approach that replaces ad-hoc scripts with consistent Docker-based build steps while staying flexible and provider-agnostic.
+
+<Note>
+  For a deeper architectural discussion of the problem space, goals, trade-offs, and governance model, read the [Assessment and Rationale](https://github.com/buildcharts/buildcharts/blob/main/docs/assessment.md) on GitHub.
+</Note>
 
 ## File layout
 
@@ -41,25 +53,23 @@ src/
 
 ## Workflow
 
-1. Create or scaffold `build.yml` and `charts/buildcharts/Chart.yaml`.
+1. Create `build.yml` and `charts/buildcharts/Chart.yaml`, or scaffold them with `buildcharts init`.
 2. Run `buildcharts update` to create or refresh `Chart.lock`.
 3. Run `buildcharts generate`.
 4. Run `docker buildx bake --file .buildcharts/docker-bake.hcl`.
 
 ## Why use it
 
-- **Low lock-in.** No proprietary execution runtime is introduced. Build intent stays in the repository, reusable implementation stays in OCI-hosted charts, and the generated output remains a standard Docker Buildx Bake plan. CI providers, build infrastructure, or registry hosting can change without replacing the overall model.
-- **Thin layer.** Build generation and orchestration are standardized without trying to own scheduling, secrets, artifact hosting, deployments, or runtime operations. The rest of the delivery stack stays where it already is.
-- **Reuse of standard technology.** Existing technologies such as repo-local YAML, OCI registries, Dockerfiles, BuildKit, and Bake remain in place. The innovation is in how those pieces are connected and applied to standardized builds, not in replacing them with a custom backend.
-- **Simple fallback.** The generated Bake plan is concrete and inspectable. It can be debugged locally, executed directly with `docker buildx bake` against the generated `docker-bake.hcl`, or checked into the repository when reducing generator dependency matters more than chart update flow.
-- **Shared build logic.** Shared charts enable versioned build standardization across many repositories while keeping repository-level configuration small and readable.
-- **Local and CI parity.** The same generated Bake plan can run on a developer machine or in CI, which makes failures easier to reproduce and troubleshoot.
+- **Low lock-in.** No proprietary execution runtime is introduced. Build intent stays in the repository, reusable implementation stays in versioned OCI-hosted charts, and the generated output remains a standard Docker Buildx Bake plan. CI providers, build infrastructure, or registry hosting can change without replacing the overall model.
+- **Narrow responsibility.** BuildCharts is a thin generation and orchestration layer that standardizes builds without trying to own scheduling, secrets, artifact hosting, deployments, or runtime operations. The rest of the delivery stack stays where it already is.
+- **Reuse of standard technology.** OCI registries, Dockerfiles, BuildKit, and Docker Buildx Bake remain in place. The value comes from standardizing how those pieces are connected, not from replacing them with a custom backend.
+- **Simple fallback.** The generated Docker Buildx Bake plan is concrete and inspectable. It can be debugged locally, executed directly with `docker buildx bake`, or even committed when teams want to reduce generator dependency in exchange for a less dynamic chart update flow.
 
 ## What it optimizes for
 
 <Steps>
   <Step title="Shared build logic" icon="layer-group">
-    Centralize build logic in versioned OCI charts instead of duplicating pipeline YAML across repositories.
+    Centralize shared build logic in versioned OCI charts while keeping repository-local configuration focused on build intent.
   </Step>
   <Step title="Shared governance" icon="shield">
     Centralize governance in shared chart implementations, including Dockerfile linting, security scanning, policy checks, and compliance controls, instead of re-creating them per repository.
@@ -68,13 +78,13 @@ src/
     Keep repository configuration lightweight and developer-friendly by expressing build intent in `build.yml` while chart implementations define how it runs.
   </Step>
   <Step title="Local and CI parity" icon="laptop-code">
-    Run the same generated Docker Buildx Bake plan locally and in CI for stronger reproducibility and faster troubleshooting.
+    Run the same generated Docker Buildx Bake plan on a developer machine and in CI to make failures easier to reproduce and troubleshoot.
   </Step>
   <Step title="Provider-agnostic execution" icon="arrows-left-right">
     Stay provider-agnostic by generating Docker-native build plans instead of embedding build logic in provider-specific pipeline steps.
   </Step>
   <Step title="Dependency-based rollout" icon="code-branch">
-    Roll out changes through normal dependency management: choose broader tracks such as `1.0`, pin exact versions such as `1.0.1`, use optional lock files for repeatability, and automate update PRs with Renovate or Dependabot.
+    Treat shared build logic as a dependency: follow chart tags such as `latest`, `8.0`, or `8.0.x` for semantic-version-based rollout, or use `Chart.lock` to pin resolved digests for a more controlled and repeatable model. Automate update PRs with [Renovate](https://docs.renovatebot.com/) or [Dependabot](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/about-dependabot-version-updates).
   </Step>
   <Step title="Controlled rollout" icon="shield-halved">
     Reduce drift and blast radius by reviewing and versioning chart changes centrally before individual services adopt them.
@@ -83,11 +93,6 @@ src/
     Extend the model with built-in plugins and custom charts for organization-specific build requirements.
   </Step>
 </Steps>
-
-<Note>
-  For a deeper architectural discussion of the problem space, goals, trade-offs, and governance model, read the [Assessment and Rationale](https://github.com/eddietisma/buildcharts/blob/main/docs/assessment.md) on GitHub.
-</Note>
-
 
 ## Get started
 
