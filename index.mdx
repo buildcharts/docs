@@ -5,14 +5,9 @@ description: "Generate pipelines using declarative metadata and OCI-hosted build
 
 ## What BuildCharts is
 
-`buildcharts` is a thin build orchestration and generation layer for standardized builds. Build intent is defined in `build.yml`, reusable chart implementations are resolved from versioned OCI-hosted charts, and the result is a [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/) plan for local or CI execution.
+`buildcharts` is a thin generation layer for standardized builds. Build intent is defined in `build.yml`, reusable chart implementations are resolved from versioned OCI-hosted charts, and the result is a generated [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/) plan ready for local or CI execution.
 
-It connects repository metadata, OCI-hosted build charts, and Docker Buildx Bake. It does not replace a CI system, container registry, or Docker toolchain. It standardizes builds while staying on familiar Docker and OCI workflows.
-
-At a glance:
-- `build.yml` defines build intent.
-- OCI-hosted charts provide reusable build implementation.
-- Docker executes the generated plan.
+It keeps repository configuration focused on what should be built, while shared charts define how each build stage runs.
 
 <Note>
     If you already know [Helm](https://helm.sh), the comparison is useful: both Helm and BuildCharts use versioned OCI charts. The difference is what the chart controls. Helm charts describe deployments to Kubernetes. BuildCharts describe build stages for Docker builds.
@@ -64,6 +59,7 @@ src/
 - **Narrow responsibility.** BuildCharts is a thin generation and orchestration layer that standardizes builds without trying to own scheduling, secrets, artifact hosting, deployments, or runtime operations. The rest of the delivery stack stays where it already is.
 - **Reuse of standard technology.** OCI registries, Dockerfiles, BuildKit, and Docker Buildx Bake remain in place. The value comes from standardizing how those pieces are connected, not from replacing them with a custom backend.
 - **Simple fallback.** The generated Docker Buildx Bake plan is concrete and inspectable. It can be debugged locally, executed directly with `docker buildx bake`, or even committed when teams want to reduce generator dependency in exchange for a less dynamic chart update flow.
+- **Infrastructure as code for builds.** Helm charts are an infrastructure-as-code pattern for Kubernetes deployments. BuildCharts applies the same idea to build pipelines by treating them as platform-owned and versioned artifacts.
 
 ## What it optimizes for
 
