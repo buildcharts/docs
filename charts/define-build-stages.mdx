@@ -1,13 +1,13 @@
 ---
-title: "Define build stages"
+title: "Build stages"
 description: "Model build, test, package, and image stages with target definitions."
 ---
 
-Use `targets` in `build.yml` to describe the stages BuildCharts should generate.
+Use `targets` in `build.yml` to turn repository sources into Docker Buildx Bake targets.
 
-## Start with one build stage
+## Required build target
 
-Every `build.yml` must contain exactly one target with `type: build`.
+Each `build.yml` must contain exactly one target with `type: build`.
 
 ```yaml
 targets:
@@ -17,11 +17,11 @@ targets:
       base: mcr.microsoft.com/dotnet/sdk:10.0
 ```
 
-BuildCharts validates this rule during `buildcharts generate`.
+The generator validates this rule during `buildcharts generate`.
 
-## Add more stages to a project
+## Multiple stages per target
 
-A project can declare multiple stages by using a sequence:
+Use a sequence when the same source path should run through multiple stages:
 
 ```yaml
 targets:
@@ -35,33 +35,14 @@ targets:
     - type: docker
       with:
         base: mcr.microsoft.com/dotnet/runtime:10.0
-        tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
+        tags: ["docker.io/example/app:local"]
 ```
 
 Each `type` must match an alias in `charts/buildcharts/Chart.yaml`.
 
-## Use built-in target variables
+## Share settings across stages
 
-Every generated target gets a small set of built-in build args automatically.
-
-For example:
-
-```yaml
-targets:
-  src/MyApp/MyApp.csproj:
-    type: build
-```
-
-BuildCharts injects:
-
-| Variable           | Meaning                                                      |
-| ------------------ | ------------------------------------------------------------ |
-| `BUILDCHARTS_SRC`  | The target source path, for example `src/MyApp/MyApp.csproj` |
-| `BUILDCHARTS_TYPE` | The generated target type, for example `build`               |
-
-## Reuse one `with` block across multiple stages
-
-If stages share the same configuration, use `type: [build, test]`:
+Use `type: [build, test]` when multiple stages share the same `with` configuration:
 
 ```yaml
 targets:
@@ -71,11 +52,11 @@ targets:
       base: mcr.microsoft.com/dotnet/sdk:10.0
 ```
 
-BuildCharts expands that into two stage definitions internally.
+The generator expands this shorthand into separate stage definitions.
 
-## Pass stage-specific settings
+## Configure stage settings
 
-The current generator recognizes these keys under `with`:
+The generator recognizes these keys under `with`:
 
 | Key          | What it controls                   |
 | ------------ | ---------------------------------- |
@@ -83,7 +64,7 @@ The current generator recognizes these keys under `with`:
 | `tags`       | Image tags for `docker` stages     |
 | `dockerfile` | Override the chart Dockerfile path |
 | `allow`      | BuildKit entitlements              |
-| `args`       | Build args passed into the chart   |
+| `args`       | Build args passed into the chart Dockerfile |
 
 Example:
 
@@ -100,35 +81,93 @@ targets:
         base: mcr.microsoft.com/dotnet/runtime:10.0
         dockerfile: ./Dockerfile
         allow: ["network.host"]
-        tags: ["docker.io/example/library:${VERSION}-${COMMIT}"]
+        tags: ["docker.io/example/library:local"]
 ```
 
-## Custom build arguments
+## Shared variables
 
-You can define custom `ARG` values in chart Dockerfiles and pass values from `build.yml` through `with.args`.
+Use top-level `variables` for values reused across generated targets, such as image tags or version metadata.
+
+```yaml
+variables:
+  VERSION: "1.0.0-local"
+  COMMIT: "local"
+```
+
+Reference variables from stage settings with `${VARIABLE}`:
+
+```yaml
+targets:
+  src/App/App.csproj:
+    type: docker
+    with:
+      tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
+```
+
+Map variables through `with.args` when a chart expects a custom build arg name:
+
+```yaml
+targets:
+  src/App/App.csproj:
+    type: docker
+    with:
+      args:
+        APP_VERSION: "${VERSION}"
+        SOURCE_COMMIT: "${COMMIT}"
+```
+
+Variables become Bake variables and are also passed to chart Dockerfiles as build args through the generated `_common` target.
+
+## Use built-in build args
+
+Every generated target also gets a small set of built-in build args.
+
+For example:
+
+```yaml
+targets:
+  src/MyApp/MyApp.csproj:
+    type: build
+```
+
+The generator injects:
+
+| Variable           | Meaning                                                      |
+| ------------------ | ------------------------------------------------------------ |
+| `BUILDCHARTS_SRC`  | The target source path, for example `src/MyApp/MyApp.csproj` |
+| `BUILDCHARTS_TYPE` | The generated target type, for example `build`               |
+
+## Pass custom build arguments
+
+Use `with.args` for chart-specific Dockerfile `ARG`s. Values can be literals or variable references.
 
 Dockerfile example:
 
 ```dockerfile
 ARG SOURCELINK_STRICT=1
+ARG APP_VERSION
 ```
 
 `build.yml` example:
 
 ```yaml
+variables:
+  VERSION: "1.0.0-local"
+
 targets:
   src/Library/Library.csproj:
     - type: nuget
       with:
         args:
           SOURCELINK_STRICT: 0
+          APP_VERSION: "${VERSION}"
 ```
 
-BuildCharts writes these values into the generated Bake target, so the chart Dockerfile receives them as standard build args at execution time.
+The generator writes these values into the generated Bake target, so the chart Dockerfile receives them as standard build args at execution time.
 
-## Expand a stage with a matrix
+## Expand stages with a matrix
 
-Use `types` when every target of the same type should fan out across a matrix:
+Use `types.<type>.matrix` when every target of the same type should fan out across a matrix:
 
 ```yaml
 types:
@@ -164,11 +203,13 @@ This is conceptually similar to:
 - [Azure DevOps strategy matrix](https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/jobs-job-strategy?view=azure-pipelines)
 - [GitHub Actions matrix strategy](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs)
 
-The difference is that BuildCharts expands the matrix into Docker Buildx Bake targets instead of CI jobs. The matrix values become Bake target variants and build args that your chart Dockerfiles can consume.
+The difference is that BuildCharts expands the matrix into Docker Buildx Bake targets instead of CI jobs. Matrix values become Bake target variants and build args that chart Dockerfiles can consume.
 
 Read more about [Docker matrix targets](https://docs.docker.com/build/bake/matrices/).
 
-## Dockerfile example
+## Read values in a chart Dockerfile
+
+Declare an `ARG` for each built-in arg, shared variable, or `with.args` value the chart needs to consume:
 
 ```dockerfile
 ###################################
@@ -182,6 +223,18 @@ ARG BUILDCHARTS_SRC
 # The generated target type, for example `build`
 ARG BUILDCHARTS_TYPE
 
+# Top-level variables from build.yml
+ARG VERSION
+ARG COMMIT
+
+# Values mapped through with.args
+ARG APP_VERSION
+ARG SOURCE_COMMIT
+
 RUN echo "BUILDCHARTS_SRC=$BUILDCHARTS_SRC" && \
-    echo "BUILDCHARTS_TYPE=$BUILDCHARTS_TYPE" && 
+    echo "BUILDCHARTS_TYPE=$BUILDCHARTS_TYPE" && \
+    echo "VERSION=$VERSION" && \
+    echo "COMMIT=$COMMIT" && \
+    echo "APP_VERSION=$APP_VERSION" && \
+    echo "SOURCE_COMMIT=$SOURCE_COMMIT"
 ```
