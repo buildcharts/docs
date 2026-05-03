@@ -10,11 +10,33 @@ BuildCharts uses separate files for separate concerns.
 - `charts/buildcharts/Chart.yaml` maps those target types to versioned OCI-hosted chart implementations.
 - `charts/buildcharts/Chart.lock` optionally pins the resolved chart digests for repeatability and drift detection.
 
-This separation is deliberate. Repository owners declare what they want to build. Shared charts define how that build is implemented. Docker Buildx Bake remains the execution layer.
+This separation is deliberate. Repositories declare what should be built. Shared charts define how it is implemented. Docker Buildx Bake remains the execution layer.
 
 ### `build.yml`
 
 This file defines variables, plugins, targets, and optional type matrices. Each target declares a `type`, but BuildCharts does not implement that type directly. Instead, it uses the type as an alias lookup into `charts/buildcharts/Chart.yaml`.
+
+Example:
+
+```yaml
+version: v1beta
+
+variables:
+  VERSION: "1.0.0-local"
+  COMMIT: "local"
+
+targets:
+  buildcharts.sln:
+    type: build
+    with:
+      base: mcr.microsoft.com/dotnet/sdk:10.0
+
+  src/App/App.csproj:
+    type: docker
+    with:
+      base: mcr.microsoft.com/dotnet/runtime:10.0
+      tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
+```
 
 These rules matter on every run:
 - Exactly one `build` target must be defined.
@@ -39,9 +61,20 @@ Running `buildcharts update` resolves those dependencies and can record the reso
 
 This file is optional. When it exists, `buildcharts generate` validates it against `Chart.yaml` and the registry digest unless `--ignore-lock` is used. This keeps chart version selection flexible in `Chart.yaml` while still pinning the exact artifact used during generation.
 
+Example:
+
+```yaml
+dependencies:
+  - name: dotnet-build
+    version: 0.0.1
+    repository: oci://registry-1.docker.io/buildcharts/dotnet-build
+    digest: sha256:...
+lockVersion: 1
+```
+
 ## Generation flow
 
-During `buildcharts generate`, BuildCharts acts as a generator, not as the executor:
+During `buildcharts generate`, BuildCharts acts as a generator:
 
 1. It removes the previous `.buildcharts` output.
 2. It reads `build.yml`, `Chart.yaml`, and `Chart.lock` if it exists.
@@ -59,13 +92,17 @@ The important boundary is that BuildCharts stops after generation. The generated
 
 ## Execution flow
 
-After generation, `docker buildx bake` reads the generated HCL and hands execution to BuildKit. This keeps BuildCharts lightweight by leaving execution to Docker instead of introducing a separate runtime. See [Docker builds](/core-features/docker-builds).
+After generation, execution flows through Docker Buildx Bake and BuildKit:
+- BuildCharts writes the generated HCL.
+- Docker Buildx Bake reads the generated Bake file.
+- BuildKit executes the selected targets.
 
-BuildCharts generates one Bake target per type. The default group or a single type such as `docker buildx bake test` can then be executed.
+```bash
+# Run default group target
+docker buildx bake --file .buildcharts/docker-bake.hcl
 
-The generated outputs depend on the type:
-- `build` targets use `type=cacheonly`
-- `docker` targets use `type=docker`
-- Every other type exports to `.buildcharts/output/<type>`
+# Run specific target
+docker buildx bake --file .buildcharts/docker-bake.hcl test
+```
 
-That export layout is why samples can read test results from `.buildcharts/output/test` and NuGet packages from `.buildcharts/output/nuget`.
+From there, [Docker builds](/core-features/docker-builds) covers execution options, [Exporting build artifacts](/charts/using-outputs) covers output behavior by target type, and [Examples](/examples) shows complete workflows.
