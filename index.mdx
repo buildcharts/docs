@@ -35,7 +35,7 @@ The goal is a single, portable approach that replaces ad-hoc scripts with consis
   For a deeper architectural discussion of the problem space, goals, trade-offs, and governance model, read the [Assessment and Rationale](https://github.com/buildcharts/buildcharts/blob/main/docs/assessment.md) on GitHub.
 </Note>
 
-## File layout
+## Workflow
 
 ```text
 src/
@@ -45,8 +45,6 @@ src/
 │       ├── Chart.yaml   # Chart dependency data
 │       └── Chart.lock   # Optional lock file
 ```
-
-## Workflow
 
 1. Create `build.yml` and `charts/buildcharts/Chart.yaml`, or scaffold them with `buildcharts init`.
 2. Run `buildcharts update` to create or refresh `Chart.lock`.
@@ -62,34 +60,34 @@ src/
 - **Isolated build tooling.** Build, test, and scanning tools can run inside Docker build stages instead of being installed directly on CI runners. For example, image scanners such as [Trivy](https://trivy.dev/latest/) can run as part of the containerized build flow, keeping tool dependencies versioned and limiting the host-side surface area for supply-chain risk.
 - **Simple fallback.** The generated Docker Buildx Bake plan is concrete and inspectable. It can be debugged locally, executed directly with `docker buildx bake`, or even committed when teams want to reduce generator dependency in exchange for a less dynamic chart update flow.
 
-## What it optimizes for
+## What BuildCharts optimizes for
 
-<Steps>
-  <Step title="Shared build logic" icon="layer-group">
+<CardGroup cols={2}>
+  <Card title="Shared build logic" icon="layer-group">
     Centralize shared build logic in versioned OCI charts while keeping repository-local configuration focused on build intent.
-  </Step>
-  <Step title="Shared governance" icon="shield">
+  </Card>
+  <Card title="Shared governance" icon="shield">
     Centralize governance in shared chart implementations, including Dockerfile linting, security scanning, policy checks, and compliance controls, instead of re-creating them per repository.
-  </Step>
-  <Step title="Lightweight repo config" icon="file-lines">
+  </Card>
+  <Card title="Lightweight repo config" icon="file-lines">
     Keep repository configuration lightweight and developer-friendly by expressing build intent in `build.yml` while chart implementations define how it runs.
-  </Step>
-  <Step title="Local and CI parity" icon="laptop-code">
+  </Card>
+  <Card title="Local and CI parity" icon="laptop-code">
     Run the same generated Docker Buildx Bake plan on a developer machine and in CI to make failures easier to reproduce and troubleshoot.
-  </Step>
-  <Step title="Provider-agnostic execution" icon="arrows-left-right">
+  </Card>
+  <Card title="Provider-agnostic execution" icon="arrows-left-right">
     Stay provider-agnostic by generating Docker-native build plans instead of embedding build logic in provider-specific pipeline steps.
-  </Step>
-  <Step title="Dependency-based rollout" icon="code-branch">
-    Treat shared build logic as a dependency: follow chart tags such as `latest`, `8.0`, or `8.0.x` for semantic-version-based rollout, or use `Chart.lock` to pin resolved digests for a more controlled and repeatable model. Automate update PRs with [Renovate](https://docs.renovatebot.com/) or [Dependabot](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/about-dependabot-version-updates).
-  </Step>
-  <Step title="Controlled rollout" icon="shield-halved">
+  </Card>
+  <Card title="Dependency-based rollout" icon="code-branch">
+    Treat shared build logic as a dependency: follow chart tags such as `latest`, `8.0`, or `8.0.x` for semantic-version-based rollout, or use `Chart.lock` to pin resolved digests for a more controlled and repeatable model.
+  </Card>
+  <Card title="Controlled rollout" icon="shield-halved">
     Reduce drift and blast radius by reviewing and versioning chart changes centrally before individual services adopt them.
-  </Step>
-  <Step title="Extensibility" icon="plug">
+  </Card>
+  <Card title="Extensibility" icon="plug">
     Extend the model with built-in plugins and custom charts for organization-specific build requirements.
-  </Step>
-</Steps>
+  </Card>
+</CardGroup>
 
 ## Get started
 
