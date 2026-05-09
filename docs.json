@@ -7,7 +7,10 @@
     "light": "#9e41e1",
     "dark": "#7718BC"
   },
-  "favicon": "/logo/buildcharts.png",
+  "favicon": {
+    "light": "/logo/buildcharts.png",
+    "dark": "/logo/buildcharts.png"
+  },
   "navigation": {
     "groups": [
       {
@@ -112,5 +115,10 @@
   "metadata": {
     "timestamp": true
   },
-  "description": "A framework for defining and generating CI/CD pipelines using declarative metadata."
+  "description": "A framework for defining and generating CI/CD pipelines using declarative metadata.",
+  "fonts": {
+    "body": {
+      "family": "Inter"
+    }
+  }
 }
