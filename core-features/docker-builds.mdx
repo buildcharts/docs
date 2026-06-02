@@ -3,7 +3,7 @@ title: "Docker builds"
 description: "BuildCharts uses BuildKit to execute generated builds."
 ---
 
-BuildCharts generates a `docker-bake.hcl` file and runs it with [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/). Bake is the declarative interface. BuildKit is the engine that solves the build graph, runs independent work in parallel, deduplicates repeated work, and writes the final outputs.
+BuildCharts generates `.buildcharts/docker-bake.hcl` and runs it with [Docker Buildx Bake](https://docs.docker.com/reference/cli/docker/buildx/bake/). Bake is the declarative interface. BuildKit is the engine that solves the build graph, runs independent work in parallel, deduplicates repeated work, and writes the final outputs.
 
 ## How BuildCharts uses Bake
 
@@ -124,7 +124,7 @@ docker buildx history import --file ./artifacts/build.dockerbuild
 
 ## SBOM and provenance
 
-BuildCharts executes the generated `docker-bake.hcl` through Docker Buildx, so provenance and SBOM attestations use the standard Buildx and BuildKit attestation flow.
+BuildCharts executes the generated `.buildcharts/docker-bake.hcl` through Docker Buildx, so provenance and SBOM attestations use the standard Buildx and BuildKit attestation flow.
 
 To inspect the generated SBOM locally before you push an image, override the generated `docker` target and use a local output:
 

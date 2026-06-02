@@ -33,7 +33,7 @@ The Dockerfile frontend syntax version can also be pinned in chart Dockerfiles t
 
 BuildCharts is a generator. If generation is blocked, builds are blocked.
 
-As a fallback, teams can check in the generated `docker-bake.hcl` together with the Dockerfiles. This keeps the generated build artifacts versioned in the repository instead of generating them during CI runs.
+As a fallback, teams can check in the generated `.buildcharts/docker-bake.hcl` together with the Dockerfiles. This keeps the generated build artifacts versioned in the repository instead of generating them during CI runs.
 
 That fallback comes with trade-offs:
 - **Artifact churn.** Chart updates require regenerating/committing generated artifacts.

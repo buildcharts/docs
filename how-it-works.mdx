@@ -29,18 +29,21 @@ targets:
   buildcharts.sln:
     type: build
     with:
-      base: mcr.microsoft.com/dotnet/sdk:10.0
+      contexts:
+        base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
 
   src/App/App.csproj:
     type: docker
     with:
-      base: mcr.microsoft.com/dotnet/runtime:10.0
+      contexts:
+        base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
       tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
 ```
 
 These rules matter on every run:
 - Exactly one `build` target must be defined.
 - Every target `type` must match an alias declared in `charts/buildcharts/Chart.yaml`.
+- Target contexts are declared under `with.contexts`.
 - Plugins run during generation, not during Bake execution.
 
 ### `charts/buildcharts/Chart.yaml`

@@ -14,7 +14,8 @@ targets:
   buildcharts.sln:
     type: build
     with:
-      base: mcr.microsoft.com/dotnet/sdk:10.0
+      contexts:
+        base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
 ```
 
 The generator validates this rule during `buildcharts generate`.
@@ -28,13 +29,16 @@ targets:
   src/App/App.csproj:
     - type: build
       with:
-        base: mcr.microsoft.com/dotnet/sdk:10.0
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
     - type: test
       with:
-        base: mcr.microsoft.com/dotnet/sdk:10.0
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
     - type: docker
       with:
-        base: mcr.microsoft.com/dotnet/runtime:10.0
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
         tags: ["docker.io/example/app:local"]
 ```
 
@@ -49,7 +53,8 @@ targets:
   src/App/App.csproj:
     type: [build, test]
     with:
-      base: mcr.microsoft.com/dotnet/sdk:10.0
+      contexts:
+        base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
 ```
 
 The generator expands this shorthand into separate stage definitions.
@@ -58,12 +63,12 @@ The generator expands this shorthand into separate stage definitions.
 
 The generator recognizes these keys under `with`:
 
-| Key          | What it controls                   |
-| ------------ | ---------------------------------- |
-| `base`       | Named `base` image context         |
-| `tags`       | Image tags for `docker` stages     |
-| `dockerfile` | Override the chart Dockerfile path |
-| `allow`      | BuildKit entitlements              |
+| Key          | What it controls                         |
+| ------------ | ---------------------------------------- |
+| `contexts`   | Docker Bake named contexts               |
+| `tags`       | Image tags for `docker` stages           |
+| `dockerfile` | Override the chart Dockerfile path       |
+| `allow`      | BuildKit entitlements                    |
 | `args`       | Build args passed into the chart Dockerfile |
 
 Example:
@@ -78,11 +83,36 @@ targets:
 
     - type: docker
       with:
-        base: mcr.microsoft.com/dotnet/runtime:10.0
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
         dockerfile: ./Dockerfile
         allow: ["network.host"]
         tags: ["docker.io/example/library:local"]
 ```
+
+## Configure build contexts
+
+Use `with.contexts` to pass Docker Bake named contexts into a target. The common `base` context lets a chart Dockerfile choose its base image without hardcoding it in the chart:
+
+```yaml
+targets:
+  src/App/App.csproj:
+    type: docker
+    with:
+      contexts:
+        base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
+```
+
+Use `types.<type>.contexts` when every target of a type should receive the same context:
+
+```yaml
+types:
+  nuget:
+    contexts:
+      git: .git
+```
+
+The context name `build` is reserved. BuildCharts automatically connects non-`build` targets to the generated `build` target as `target:build`.
 
 ## Shared variables
 

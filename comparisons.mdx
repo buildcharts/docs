@@ -10,7 +10,7 @@ BuildCharts overlaps with several familiar CI and build patterns, but its model 
 BuildCharts is not a hosted CI platform. It is a build plan generator:
 - You define intent in `build.yml`
 - BuildCharts resolves OCI-hosted chart templates
-- It generates `docker-bake.hcl`
+- It generates `.buildcharts/docker-bake.hcl`
 - Docker Buildx Bake executes the plan locally or in CI
 
 That makes BuildCharts strongest when you want:

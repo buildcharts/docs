@@ -82,7 +82,8 @@ targets:
   src/App/App.csproj:
     type: docker
     with:
-      base: mcr.microsoft.com/dotnet/runtime:10.0
+      contexts:
+        base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
       tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
 ```
 
@@ -93,7 +94,8 @@ targets:
   src/App/App.csproj:
     type: [build, test]
     with:
-      base: mcr.microsoft.com/dotnet/sdk:10.0
+      contexts:
+        base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
 ```
 
 Sequence of entries:
@@ -103,17 +105,28 @@ targets:
   src/App/App.csproj:
     - type: build
       with:
-        base: mcr.microsoft.com/dotnet/sdk:10.0
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
 
     - type: docker
       with:
-        base: mcr.microsoft.com/dotnet/runtime:10.0
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
         tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
 ```
 
 ### `types`
 
-Optional type-level matrix expansion.
+Optional type-level contexts and matrix expansion.
+
+Use `types.<type>.contexts` when every generated target of the same type should receive the same Docker Bake named context:
+
+```yaml
+types:
+  nuget:
+    contexts:
+      git: .git
+```
 
 Use `types.<type>.matrix` when you want to expand every target of a given type across one or more axes:
 
@@ -155,13 +168,16 @@ Each target can define these supported options under `with`.
 
 | Key          | Effect                                                 |
 | ------------ | ------------------------------------------------------ |
-| `base`       | Adds a named `base` context using `docker-image://...` |
+| `contexts`   | Adds Docker Bake named contexts                        |
 | `tags`       | Sets Bake tags for the generated target                |
 | `dockerfile` | Overrides the default chart Dockerfile path            |
 | `allow`      | Sets BuildKit entitlements such as `network.host`      |
 | `args`       | Adds per-target build args                             |
 
 Notes:
+- `contexts` is a mapping of HCL identifier names to non-empty context values.
+- Use `docker-image://...` when a chart Dockerfile expects a named image context such as `base`.
+- The context name `build` is reserved. BuildCharts automatically wires non-`build` targets to `target:build`.
 - `args` values can be strings or arrays
 - Array values are emitted as comma-separated strings in the generated HCL
 - If you omit `dockerfile`, BuildCharts uses `./.buildcharts/<chart-name>/Dockerfile`
@@ -185,15 +201,22 @@ targets:
   buildcharts.sln:
     type: build
     with:
-      base: mcr.microsoft.com/dotnet/sdk:10.0
+      contexts:
+        base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
 
   src/BuildCharts.Tool/BuildCharts.Tool.csproj:
     - type: nuget
     - type: docker
       with:
-        base: mcr.microsoft.com/dotnet/runtime:10.0
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
         tags: ["docker.io/buildcharts/buildcharts:${VERSION}-${COMMIT}"]
 
-  tests/BuildCharts.Tool/BuildCharts.Tests.csproj:
+  test/BuildCharts.Tests/BuildCharts.Tests.csproj:
     type: test
+
+types:
+  nuget:
+    contexts:
+      git: .git
 ```

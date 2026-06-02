@@ -50,7 +50,8 @@ targets:
   src/App/App.csproj:
     - type: docker
       with:
-        base: mcr.microsoft.com/dotnet/runtime:10.0
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
         tags: ["docker.io/example/app:${VERSION}-${COMMIT}"]
 ```
 

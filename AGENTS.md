@@ -27,6 +27,12 @@
 - Bold for UI elements: Click **Settings**
 - Code formatting for file names, commands, paths, and code references
 
+## Commit messages
+
+- Follow the existing Conventional Commits-style format: `docs(scope): summary`
+- Use a short documentation area as the scope, such as `index`, `metadata`, `charts`, `nuget`, `plugins`, or `site`
+- Keep the summary concise and lowercase unless a product name requires casing
+
 ## Content boundaries
 
 {/* Define what should and shouldn't be documented */}

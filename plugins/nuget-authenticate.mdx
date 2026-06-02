@@ -22,7 +22,7 @@ With this configuration in place, running `buildcharts generate` automatically i
 - Otherwise installs the [Microsoft Artifacts Credential Provider](https://github.com/microsoft/artifacts-credprovider) under `.buildcharts/plugins/NuGetAuthenticate@v1`
 - Writes secret files under `.buildcharts/secrets`
 - Writes `ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`, a JSON payload describing the endpoint(s) and associated credentials
-- Patches the generated `docker-bake.hcl` so these secrets are mounted into the Docker build
+- Patches the generated `.buildcharts/docker-bake.hcl` so these secrets are mounted into the Docker build
 
 ## Environment variables
 

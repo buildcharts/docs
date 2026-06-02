@@ -1,19 +1,27 @@
 ---
 title: "Handle dependencies"
-description: "Reuse generated stages inside Dockerfiles using Bake target contexts."
+description: "Reuse generated targets and named contexts inside chart Dockerfiles."
 ---
 
-You can make one BuildCharts stage depend on another, even when the stages are implemented in different chart Dockerfiles.
+Use contexts when a chart Dockerfile needs content from another generated target, a base image, or a local path. This lets stages depend on each other without merging their chart Dockerfiles.
 
-BuildCharts does this through Docker Buildx Bake target contexts. A context maps a name to either:
-- Another Bake target (`target:<name>`)
-- An image (`docker-image://...`)
+## Use additional contexts
 
-This is separate from chart dependencies in `charts/buildcharts/Chart.yaml`. For that, see [Charts](/core-features/charts).
+A context maps a name to an input:
 
-## Use the default build stage context
+| Input type            | Value example                     |
+| --------------------- | --------------------------------- |
+| Generated Bake target | `target:<name>`                   |
+| Docker image          | `docker-image://alpine:3.20`      |
+| Local path            | `.git`                            |
+| Git URL               | `https://github.com/org/repo.git` |
+| HTTP URL              | `https://example.com/context.tar` |
 
-For every generated target except `build`, BuildCharts wires a context named `build` to the `build` target:
+Read more in the [Docker Bake contexts documentation](https://docs.docker.com/build/bake/contexts/).
+
+## Use the default build context
+
+For every generated target except `build`, BuildCharts adds a context named `build` that points to the generated `build` target:
 
 ```hcl
 contexts = {
@@ -21,20 +29,121 @@ contexts = {
 }
 ```
 
-This allows chart Dockerfiles to use `build` as an upstream stage, for example:
+Chart Dockerfiles can use `build` as an upstream stage:
 
 ```dockerfile
 FROM build AS pre-docker
 ```
 
-This works because `target:build` refers to the generated Bake target named `build`.
+This works because `target:build` refers to the generated Bake target named `build`. BuildCharts requires exactly one `build` target in `build.yml`, so the context is stable and unambiguous.
 
-BuildCharts requires exactly one `build` target in `build.yml`, so this `build` context is stable and unambiguous.
+Keep `build` for this automatic context. Do not define `build` under `with.contexts` or `types.<type>.contexts`.
 
-## Depend on other targets
+## Add a target dependency
 
-This is currently not configurable in `build.yml`, but you can still do it with Bake overrides at execution time.
+Use `with.contexts` when one target needs a named dependency that other targets do not.
 
-```bash
-docker buildx bake --file .buildcharts/docker-bake.hcl docker --set docker.contexts.publish=target:publish
+```yaml
+targets:
+  src/App/App.csproj:
+    - type: build
+      with:
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
+    - type: publish
+    - type: docker
+      with:
+        contexts:
+          publish: target:publish
+        tags: ["docker.io/example/app:local"]
 ```
+
+The generated `docker` target receives:
+- The automatic `build = "target:build"` context
+- The configured `publish = "target:publish"` context
+
+Use the configured context in the chart Dockerfile like any named stage:
+
+```dockerfile
+FROM publish AS published-app
+
+FROM base AS docker
+COPY --from=published-app /output /app
+```
+
+## Share a dependency by type
+
+Use `types.<type>.contexts` when every target of a type needs the same dependency.
+
+```yaml
+targets:
+  src/App/App.csproj:
+    - type: build
+      with:
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
+    - type: publish
+    - type: docker
+      with:
+        tags: ["docker.io/example/app:local"]
+
+types:
+  docker:
+    contexts:
+      publish: target:publish
+```
+
+This keeps repeated context wiring out of each target definition.
+
+## Use image and local contexts
+
+Contexts can also point to images or local paths.
+
+```yaml
+targets:
+  src/App/App.csproj:
+    - type: build
+      with:
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/sdk:10.0
+    - type: docker
+      with:
+        contexts:
+          base: docker-image://mcr.microsoft.com/dotnet/runtime:10.0
+
+  src/Library/Library.csproj:
+    type: nuget
+
+types:
+  nuget:
+    contexts:
+      git: .git
+```
+
+A `docker` chart can consume the `base` image context:
+
+```dockerfile
+FROM base AS runtime
+```
+
+A `nuget` chart can copy from the `git` local context:
+
+```dockerfile
+COPY --from=git HEAD /.git/HEAD
+```
+
+For commands that need the full `.git` directory, bind mount it for the duration of the `RUN` step:
+
+```dockerfile
+RUN --mount=type=bind,from=git,source=.,target=/src/.git,readonly \
+    git -C /src rev-parse HEAD
+```
+
+## Context naming rules
+
+Use context names that are valid HCL identifiers:
+- Start with a letter or `_`
+- Contain only letters, numbers, and `_`
+- Use non-empty values
+
+Keep each context name unique per generated target. Do not define the same context name in both `with.contexts` and `types.<type>.contexts`.

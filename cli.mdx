@@ -60,7 +60,7 @@ Pulled: registry-1.docker.io/buildcharts/dotnet-nuget:0.0.1 (582 bytes)
 Digest: sha256:6b6b99dd94c8b9f388890770fc3f1249c07561c9347d9eb98802c3bf44fbf47a
 
 ✅ Generated files:
-  • docker-bake.hcl
+  • .buildcharts/docker-bake.hcl
 ```
 
 ## `buildcharts init`
@@ -202,13 +202,18 @@ Digest: sha256:978e3277b9618f6a0a56978b96d0b3fd23246cd77b972b66820c53e145c42de4 
 
 ```bash
 buildcharts version
+buildcharts --version
 ```
 
-Prints tool and runtime version details.
+`buildcharts version` prints tool and runtime version details.
+`buildcharts --version` prints the short root-command version output.
 
 **Example**
 
 ```bash
+# buildcharts --version
+buildcharts v1.0.0, build a882a7c19eb72f60a9cf1da3a4aee00691bdc4ba
+
 # buildcharts version
 buildcharts
  version:       1.0.0+a882a7c19eb72f60a9cf1da3a4aee00691bdc4ba
