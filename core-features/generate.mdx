@@ -34,7 +34,7 @@ If the lock file is out of sync, BuildCharts stops and tells you to refresh it. 
 4. Writes `.buildcharts/docker-bake.hcl`.
 
 <Tip>
-  Currently `build.yml` is transformed using a Docker bake HCL specific generator. However since it acts as an interface with minimal intent you can easily clone the code and implement your own generators.
+  `build.yml` currently targets Docker Bake HCL through a dedicated generator. Since the interface is intentionally minimal, future work may add more generators. You can also clone the project and build your own.
 </Tip>
 
 ## Usage
