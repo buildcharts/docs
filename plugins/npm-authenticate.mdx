@@ -3,9 +3,9 @@ title: "NpmAuthenticate@v1"
 description: "Authenticate private npm feeds in Docker builds."
 ---
 
-Use this plugin to authenticate registries in your project's `.npmrc`. It exposes
-the authenticated configuration as a BuildKit secret named `npmrc` and leaves
-your source file unchanged.
+This plugin obtains credentials from the environment or Azure Artifacts Credential
+Provider. It writes an authenticated `.npmrc` as a BuildKit secret and leaves your
+source file unchanged.
 
 ## Usage
 
@@ -31,44 +31,58 @@ The npm charts already mount this secret for pnpm.
 ## What it does
 
 - Reads default and scoped registries from `.npmrc`.
-- Prefers matching npm service connections, then job tokens, then existing credentials.
-- Uses the Azure Artifacts Credential Provider for local sign-in when Azure DevOps Services feed credentials are missing.
-- Writes `.buildcharts/secrets/npmrc` and adds it to the generated Bake secrets.
+- Uses endpoint credentials from the environment, otherwise an environment token, otherwise the Azure Artifacts Credential Provider.
+- Writes npm credentials to `.buildcharts/secrets/npmrc` and adds the generated Bake secret.
+- Preserves existing credentials when no environment credentials replace them.
 
 ## Environment variables
 
-| Variable | Description |
-| --- | --- |
-| `NPM_AUTHENTICATE_WORKING_FILE` | Source configuration file. Defaults to `.npmrc` in the current directory. |
-| `NPM_AUTHENTICATE_HELPER_VERSION` | Exact credential provider release, such as `1.4.1`. Unset or empty selects latest. |
-| `NPM_AUTHENTICATE_CUSTOM_ENDPOINTS` | Comma-separated npm service connection IDs. |
+- `ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`
+- `ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN`
+- `AZURE_ARTIFACTS_ENV_ACCESS_TOKEN`
+- `SYSTEM_ACCESSTOKEN`
+- `VSS_NUGET_ACCESSTOKEN`
+- `VSS_NUGET_EXTERNAL_FEED_ENDPOINTS`
 
-In Azure Pipelines, pass these environment variables to the step running BuildCharts:
+Endpoint JSON takes precedence over tokens. Token variables are checked in this
+order: `ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN`, `VSS_NUGET_ACCESSTOKEN`,
+`SYSTEM_ACCESSTOKEN`, then `AZURE_ARTIFACTS_ENV_ACCESS_TOKEN`.
+
+Set each endpoint to its registry URL from `.npmrc`:
+
+```json
+{
+  "endpointCredentials": [
+    {
+      "endpoint": "https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/",
+      "username": "buildcharts",
+      "password": "<access-token>"
+    }
+  ]
+}
+```
+
+In Azure Pipelines, pass the job token to the step running BuildCharts:
 
 ```yaml
 env:
   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: $(System.TeamFoundationCollectionUri)
-  SYSTEM_SERVERTYPE: $(System.ServerType)
 ```
 
-The job identity needs feed access. `ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN`
-is also accepted when `SYSTEM_ACCESSTOKEN` is empty.
+The job identity needs feed access. A standalone token applies to Azure Artifacts
+registries. Use endpoint JSON to supply credentials for a specific registry.
 
-For selected service connections, supply `ENDPOINT_URL_<ID>` and
-`ENDPOINT_AUTH_<ID>` with Azure agent authorization JSON. Supported schemes are
-`Token` with `apitoken`, and `UsernamePassword` with `username` and `password`.
-Uppercase IDs and replace spaces and periods with underscores. Selecting an ID
-does not retrieve credentials or grant feed access.
+`NPM_AUTHENTICATE_WORKING_FILE` selects the source file and defaults to `.npmrc`.
+`NPM_AUTHENTICATE_HELPER_VERSION` pins the credential provider release; unset or
+empty selects latest. NuGet uses its separate `NUGET_AUTHENTICATE_HELPER_VERSION`.
 
 ## Notes
 
-- Exclude `.npmrc` and `.buildcharts` from the Docker build context. Keep the generated secret until Bake finishes and exclude it from published artifacts.
-- Local sign-in runs through `dotnet` on Windows, Linux, and macOS and may open a browser or show a device code. CI disables interactive sign-in and fails when Azure feed credentials are missing. Azure DevOps Server requires supplied credentials.
-- Provider versions use separate folders under `.buildcharts/plugins/NpmAuthenticate@v1`. Existing installations are reused until generation clears `.buildcharts`. NuGet has a separate `NUGET_AUTHENTICATE_HELPER_VERSION` override.
+- Exclude `.npmrc` and `.buildcharts` from the Docker build context and published artifacts.
+- Local sign-in runs through `dotnet` on Windows, Linux, and macOS and may open a browser or show a device code. CI requires supplied credentials.
+- Provider versions are cached under `.buildcharts/plugins/NpmAuthenticate@v1` until generation clears `.buildcharts`.
 
 ## Read more
 
 - [Configure npm authentication for Azure Artifacts](https://learn.microsoft.com/en-us/azure/devops/artifacts/npm/npmrc)
-- [Azure DevOps npmAuthenticate@0](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/npm-authenticate-v0?view=azure-pipelines)
 - [Azure Artifacts Credential Provider](https://github.com/microsoft/artifacts-credprovider)
