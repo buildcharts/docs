@@ -36,6 +36,8 @@ The npm charts already mount this secret for pnpm.
 
 ## Environment variables
 
+- `NPM_AUTHENTICATE_WORKING_FILE`: Source file. Defaults to `.npmrc`.
+- `NPM_AUTHENTICATE_HELPER_VERSION`: Exact Credential Provider release version. Defaults to latest.
 - `ARTIFACTS_CREDENTIALPROVIDER_EXTERNAL_FEED_ENDPOINTS`
 - `ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN`
 - `AZURE_ARTIFACTS_ENV_ACCESS_TOKEN`
@@ -74,10 +76,6 @@ env:
 
 The job identity needs feed access. A standalone token applies to Azure Artifacts
 registries. Use endpoint JSON to supply credentials for a specific registry.
-
-`NPM_AUTHENTICATE_WORKING_FILE` selects the source file and defaults to `.npmrc`.
-`NPM_AUTHENTICATE_HELPER_VERSION` pins the credential provider release; unset or
-empty selects latest. NuGet uses its separate `NUGET_AUTHENTICATE_HELPER_VERSION`.
 
 ## Notes
 
