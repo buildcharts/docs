@@ -11,8 +11,6 @@ It follows the same model as [npmAuthenticate@0](https://learn.microsoft.com/en-
 
 ## Usage
 
-Add your feed URLs to `.npmrc`, then enable the plugin in `build.yml`:
-
 ```yaml
 plugins:
   - NpmAuthenticate@v1
@@ -45,6 +43,10 @@ The npm charts already mount this secret for pnpm.
 - `SYSTEM_ACCESSTOKEN`
 - `VSS_NUGET_ACCESSTOKEN` (legacy)
 - `VSS_NUGET_EXTERNAL_FEED_ENDPOINTS` (legacy)
+
+<Note>
+  `ARTIFACTS_CREDENTIALPROVIDER_*` is the preferred prefix. The older `VSS_NUGET_*` variables are legacy names kept for compatibility. See the [Artifacts Credential Provider environment variables](https://github.com/microsoft/artifacts-credprovider#environment-variables).
+</Note>
 
 Endpoint JSON takes precedence over tokens. Token variables are checked in this
 order: `ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN`, `VSS_NUGET_ACCESSTOKEN`,
@@ -80,9 +82,8 @@ empty selects latest. NuGet uses its separate `NUGET_AUTHENTICATE_HELPER_VERSION
 
 ## Notes
 
-- Exclude `.npmrc` and `.buildcharts` from the Docker build context and published artifacts.
-- Local sign-in runs through `dotnet` on Windows, Linux, and macOS and may open a browser or show a device code. CI requires supplied credentials.
-- Provider versions are cached under `.buildcharts/plugins/NpmAuthenticate@v1` until generation clears `.buildcharts`.
+- The plugin only authenticates Azure DevOps-hosted npm feeds.
+- If no matching npm sources are found, the plugin skips authentication.
 
 ## Read more
 
