@@ -49,34 +49,6 @@ The npm charts already mount this secret for pnpm.
   `ARTIFACTS_CREDENTIALPROVIDER_*` is the preferred prefix. The older `VSS_NUGET_*` variables are legacy names kept for compatibility. See the [Artifacts Credential Provider environment variables](https://github.com/microsoft/artifacts-credprovider#environment-variables).
 </Note>
 
-Endpoint JSON takes precedence over tokens. Token variables are checked in this
-order: `ARTIFACTS_CREDENTIALPROVIDER_ACCESSTOKEN`, `VSS_NUGET_ACCESSTOKEN`,
-`SYSTEM_ACCESSTOKEN`, then `AZURE_ARTIFACTS_ENV_ACCESS_TOKEN`.
-
-Set each endpoint to its registry URL from `.npmrc`:
-
-```json
-{
-  "endpointCredentials": [
-    {
-      "endpoint": "https://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/",
-      "username": "buildcharts",
-      "password": "<access-token>"
-    }
-  ]
-}
-```
-
-In Azure Pipelines, pass the job token to the step running BuildCharts:
-
-```yaml
-env:
-  SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-```
-
-The job identity needs feed access. A standalone token applies to Azure Artifacts
-registries. Use endpoint JSON to supply credentials for a specific registry.
-
 ## Notes
 
 - The plugin only authenticates Azure DevOps-hosted npm feeds.
