@@ -29,8 +29,9 @@ The npm charts already mount this secret for pnpm.
 
 ## What it does
 
-- Reads default and scoped registries from `.npmrc`.
+- Reads default and scoped Azure Artifacts registries from `.npmrc`.
 - Uses endpoint credentials from the environment, otherwise an environment token, otherwise the Azure Artifacts Credential Provider.
+- Validates credentials returned by the provider. If rejected, forces one refresh before failing.
 - Writes npm credentials to `.buildcharts/secrets/npmrc` and adds the generated Bake secret.
 - Preserves existing credentials when no environment credentials replace them.
 
